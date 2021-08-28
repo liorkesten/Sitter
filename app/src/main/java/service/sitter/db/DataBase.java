@@ -46,6 +46,7 @@ public class DataBase implements IDataBase {
     }
 
     /**
+     * Creates DataBase instance
      * @return IDataBase
      */
     public static IDataBase getInstance() {
