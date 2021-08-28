@@ -1,4 +1,4 @@
-package huji.postpc.exercises.sitter.db;
+package service.sitter.db;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import huji.postpc.exercises.sitter.models.Request;
+import service.sitter.models.Request;
 
 public class DataBase implements IDataBase {
     private static DataBase instance;
@@ -46,7 +46,7 @@ public class DataBase implements IDataBase {
     }
 
     /**
-     * @return
+     * @return IDataBase
      */
     public static IDataBase getInstance() {
         if (instance == null) {

@@ -1,4 +1,4 @@
-package huji.postpc.exercises.sitter.requests;
+package service.sitter.requests;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import huji.postpc.exercises.sitter.R;
-import huji.postpc.exercises.sitter.models.Request;
+import service.sitter.R;
+import service.sitter.models.Request;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestViewHolder> {
     private final List<Request> requests = new ArrayList<>();
@@ -29,8 +29,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestViewHolder> {
      * @param requests are list of new requests that the adapter should load.
      */
     public void setRequests(List<Request> requests) {
-        requests.clear();
-        requests.addAll(requests);
+        this.requests.clear();
+        this.requests.addAll(requests);
         notifyDataSetChanged();
     }
 

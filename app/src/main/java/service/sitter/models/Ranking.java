@@ -1,4 +1,4 @@
-package huji.postpc.exercises.sitter.models;
+package service.sitter.models;
 
 public class Ranking {
     private int count;
@@ -8,8 +8,8 @@ public class Ranking {
         return count / (float) total;
     }
 
-    public void AddRank(RankValue rank) {
-        count += 1;
-        total += rank;
-    }
+//    public void AddRank(RankValue rank) {
+//        count += 1;
+//        total += rank.;
+//    }
 }

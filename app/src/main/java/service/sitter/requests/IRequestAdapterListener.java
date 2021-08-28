@@ -1,6 +1,6 @@
-package huji.postpc.exercises.sitter.requests;
+package service.sitter.requests;
 
-import huji.postpc.exercises.sitter.models.Request;
+import service.sitter.models.Request;
 
 public interface IRequestAdapterListener {
     void onRequestClick(Request request);

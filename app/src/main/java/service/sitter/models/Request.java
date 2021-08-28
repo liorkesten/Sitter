@@ -1,4 +1,4 @@
-package huji.postpc.exercises.sitter.models;
+package service.sitter.models;
 
 import java.util.Date;
 import java.util.List;

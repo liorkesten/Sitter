@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "831028009831",
+    "project_id": "sitter-ae625",
+    "storage_bucket": "sitter-ae625.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831028009831:android:af6614256018eaa5056dc2",
+        "android_client_info": {
+          "package_name": "service.sitter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831028009831-hqf0a3hi3ednhlhrncn1tktslhpuhp00.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbtwR5TmvA3cI7TmEJ3MMMimgvMzOkORc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831028009831-hqf0a3hi3ednhlhrncn1tktslhpuhp00.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-package huji.postpc.exercises.sitter.db;
+package service.sitter.db;
 
 public interface IDataBase {
 }

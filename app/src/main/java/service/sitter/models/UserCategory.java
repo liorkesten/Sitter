@@ -1,4 +1,4 @@
-package huji.postpc.exercises.sitter.models;
+package service.sitter.models;
 
 public enum UserCategory {
     Babysitter,

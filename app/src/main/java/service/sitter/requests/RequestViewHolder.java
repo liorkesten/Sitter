@@ -1,4 +1,4 @@
-package huji.postpc.exercises.sitter.requests;
+package service.sitter.requests;
 
 import android.view.View;
 import android.widget.TextView;
