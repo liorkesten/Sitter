@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         db.addConnection(new Connection("lior", "dana"));
         db.addRecommendation(new Recommendation());
 
+        // bla
+//        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
