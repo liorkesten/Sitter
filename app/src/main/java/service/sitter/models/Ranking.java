@@ -8,8 +8,8 @@ public class Ranking {
         return count / (float) total;
     }
 
-//    public void AddRank(RankValue rank) {
-//        count += 1;
-//        total += rank.;
-//    }
+    public void AddRank(RankValue rank) {
+        count += 1;
+        total += rank.ordinal();
+    }
 }

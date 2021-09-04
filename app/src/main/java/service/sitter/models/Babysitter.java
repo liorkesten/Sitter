@@ -8,4 +8,8 @@ public class Babysitter extends User {
     private int age;
     private List<String> hobbies;
     private String notes;
+
+    public Babysitter(String firstName, String lastName, String emailAddress, String phoneNumber, String location, String image) {
+        super(firstName, lastName, emailAddress, phoneNumber, UserCategory.Babysitter, location, image);
+    }
 }

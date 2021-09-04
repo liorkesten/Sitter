@@ -1,38 +1,92 @@
 package service.sitter.models;
 
+import android.location.Location;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 public class Request {
-    private final String requestId;
+    private final String uuid;
     // publisher is the parent that published the request
-    private String publisherId;
+    private final String publisherId;
     // receiver is the babysitter that approved the request
-    private String receiverId;
+    private final String receiverId;
+    // date without time
     private Date date;
-    private Date startTime;
-    private Date endTime;
-    private String location; // TODO Location
+    private int startTime;
+    private int endTime;
+    // TODO Location
+    private Location location;
     private List<Child> children;
     private int pricePerHour;
     private String description;
     private RequestStatus status;
 
-    public Request(String publisherId, String receiverId, Date startTime, Date endTime,
-                   String location, List<Child> children, int pricePerHour, String description) {
-        this.requestId = UUID.randomUUID().toString();
+    public Request(String publisherId, String receiverId, Date date, LocalTime startTime, LocalTime endTime,
+                   Location location, List<Child> children, int pricePerHour, String description) {
+        this.uuid = UUID.randomUUID().toString();
+
         this.publisherId = publisherId;
         this.receiverId = receiverId;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.date = date;
+        this.startTime = startTime.toSecondOfDay();
+        this.endTime = endTime.toSecondOfDay();
         this.location = location;
         this.children = children;
         this.pricePerHour = pricePerHour;
         this.description = description;
+
+        status = RequestStatus.Pending;
     }
 
-    public String getUUID() {
-        return requestId;
+    public String getUuid() {
+        return uuid;
+    }
+
+    public String getPublisherId() {
+        return publisherId;
+    }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+//    public LocalDate getDate() {
+//        return date.toInstant()
+//                .atZone(ZoneId.systemDefault())
+//                .toLocalDate();
+//    }
+
+    public LocalTime getStartTime() {
+        return LocalTime.ofSecondOfDay(startTime);
+    }
+
+    public LocalTime getEndTime() {
+        return LocalTime.ofSecondOfDay(endTime);
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public List<Child> getChildren() {
+        return children;
+    }
+
+    public int getPricePerHour() {
+        return pricePerHour;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public RequestStatus getStatus() {
+        return status;
     }
 }

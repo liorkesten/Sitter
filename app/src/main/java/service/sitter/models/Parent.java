@@ -9,4 +9,8 @@ public class Parent extends User {
     private List<Child> children;
     // The default price per hour that the parent would pay for babysitter.
     private int defaultPricePerHour;
+
+    public Parent(String firstName, String lastName, String emailAddress, String phoneNumber, String location, String image) {
+        super(firstName, lastName, emailAddress, phoneNumber, UserCategory.Parent, location, image);
+    }
 }
