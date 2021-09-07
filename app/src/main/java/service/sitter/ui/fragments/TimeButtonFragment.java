@@ -14,19 +14,17 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.Calendar;
 
 import service.sitter.R;
-import service.sitter.interfaces.IOnButtonClickListener;
-import service.sitter.ui.home.HomeViewModel;
+import service.sitter.interfaces.IOnTimeButtonClickListener;
 
 public class TimeButtonFragment extends Fragment {
-    public IOnButtonClickListener listener = null;
-    private String buttonTitle;
+    public IOnTimeButtonClickListener listener = null;
+    private String buttonText;
     private TimeButtonViewModel timeButtonViewModel;
 
 
-    public TimeButtonFragment(String buttonTitle, IOnButtonClickListener listener)
-    {
+    public TimeButtonFragment(String buttonText, IOnTimeButtonClickListener listener) {
         super(R.layout.fragment_time_button);
-        this.buttonTitle = buttonTitle;
+        this.buttonText = buttonText;
         this.listener = listener;
 
 
@@ -39,25 +37,21 @@ public class TimeButtonFragment extends Fragment {
                 new ViewModelProvider(this).get(TimeButtonViewModel.class);
 
         Button buttonTime = (Button) view.findViewById(R.id.button_time_dialog);
-        buttonTime.setText(buttonTitle);
-        buttonTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                TimePickerDialog tp = new TimePickerDialog(getActivity(), (view1, hourOfDay, minute) -> {
-                    buttonTime.setText(hourOfDay + ":" + minute);
-                    timeButtonViewModel.setTime(hourOfDay + ":" + minute);
-
-
-                }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
-
-                tp.show();
-                if (listener != null){
-                    buttonTitle = listener.onButtonClicked();
-                    Log.d("TimeButtonFragment", buttonTitle);
-                    buttonTime.setText(buttonTitle);
+        buttonTime.setText(buttonText);
+        buttonTime.setOnClickListener(v -> {
+            Calendar cal = Calendar.getInstance();
+            TimePickerDialog tp = new TimePickerDialog(getActivity(), (view1, hourOfDay, minute) -> {
+                buttonText = hourOfDay + ":" + minute;
+                buttonTime.setText(buttonText);
+                timeButtonViewModel.setTime(hourOfDay + ":" + minute);
+                if (listener != null) {
+                    listener.onButtonClicked(buttonText);
+                    Log.d("TimeButtonFragment", buttonText);
                 }
-            }
+            }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+
+            tp.show();
+
         });
     }
 }

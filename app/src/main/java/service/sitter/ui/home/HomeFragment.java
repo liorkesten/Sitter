@@ -12,11 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
 import service.sitter.R;
 import service.sitter.databinding.FragmentHomeBinding;
+import service.sitter.ui.fragments.PaymentFragment;
 import service.sitter.ui.fragments.TimeButtonFragment;
 import service.sitter.ui.fragments.TimeFragment;
 
@@ -24,9 +27,9 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-    Button btnDatePicker, btnStartTime, btnEndTime;
-    EditText txtDate, txtStartTime, txtEndTime;
-    private int mYear, mMonth, mDay, mHour, mMinute;
+    private String startTime = "";
+    private String endTime = "";
+    private int payment = 1;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,17 +47,25 @@ public class HomeFragment extends Fragment {
 //        }
 
 
-//        MutableLiveData<String> startTimeLiveData = new LiveData<String>();
-        TimeFragment startTimeFragment = new TimeFragment();
-//        Log.d("HomeFragment", )
-        TimeFragment endTimeFragment = new TimeFragment();
+        TimeFragment startTimeFragment = new TimeFragment("16:00", "Start Time");
+        TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
+        PaymentFragment paymentFragment = new PaymentFragment();
 
+        startTimeFragment.getTimeLivaData().observe(getViewLifecycleOwner(), newStartTime -> startTime = newStartTime);
+        endTimeFragment.getTimeLivaData().observe(getViewLifecycleOwner(), newEndTime -> endTime = newEndTime);
+        paymentFragment.getTimeLivaData().observe(getViewLifecycleOwner(), payment -> this.payment = payment);
 
+        ((Button) root.findViewById(R.id.publishRequestButton)).setOnClickListener(l -> {
+            Log.d("HomeFragment startTime", startTime);
+            Log.d("HomeFragment endTime", endTime);
+            Log.d("HomeFragment payment", String.valueOf(payment));
+        });
 
-            getChildFragmentManager()
+        getChildFragmentManager()
                 .beginTransaction()
                 .add(R.id.start_time_fragment_container_view, startTimeFragment)
                 .add(R.id.end_time_fragment_container_view, endTimeFragment)
+                .add(R.id.payment_fragment_container_view, paymentFragment)
                 .commit();
 
 

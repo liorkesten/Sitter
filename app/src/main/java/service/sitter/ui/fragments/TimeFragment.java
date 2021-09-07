@@ -1,38 +1,39 @@
 package service.sitter.ui.fragments;
 
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TimePicker;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
-
-import java.util.Calendar;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import service.sitter.R;
 
 public class TimeFragment extends Fragment {
 
     private String currentTime;
+    private MutableLiveData<String> currentTimeLiveData;
+    private final String defaultTime;
+    private final String title;
 
-//    public TimeFragment() {
-//        super(R.layout.fragment_time);
-//    }
+    public TimeFragment(String defaultTime, String title) {
+        super(R.layout.fragment_time);
+        this.defaultTime = defaultTime;
+        this.title = title;
+        currentTimeLiveData = new MutableLiveData<>();
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_time, container, false);
         Log.d("TimePickerFragment onViewCreated", "created");
-        currentTime = "Lior";
-
-        TimeButtonFragment timeButtonFragment = new TimeButtonFragment("00:00", null);
+        ((TextView) view.findViewById(R.id.timeTitle)).setText(this.title);
+        TimeButtonFragment timeButtonFragment = new TimeButtonFragment(this.defaultTime, time -> currentTimeLiveData.setValue(time));
 
         getChildFragmentManager()
                 .beginTransaction()
@@ -41,5 +42,9 @@ public class TimeFragment extends Fragment {
 
 
         return view;
+    }
+
+    public LiveData<String> getTimeLivaData() {
+        return currentTimeLiveData;
     }
 }
