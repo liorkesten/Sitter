@@ -1,6 +1,7 @@
 package service.sitter.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 
@@ -42,20 +44,17 @@ public class HomeFragment extends Fragment {
 //        }
 
 
-
-        FragmentContainerView startTimeFragmentContainer = root.findViewById(R.id.start_time_fragment_container_view);
-        FragmentContainerView endTimeFragmentContainer = root.findViewById(R.id.end_time_fragment_container_view);
-
+//        MutableLiveData<String> startTimeLiveData = new LiveData<String>();
         TimeFragment startTimeFragment = new TimeFragment();
+//        Log.d("HomeFragment", )
         TimeFragment endTimeFragment = new TimeFragment();
-        TimeButtonFragment timeDialogButtonFragment = new TimeButtonFragment("end time", null);
 
-//        getFragmentManager().beginTransaction()
-//                .replace(timeFragmentContainer.getId(), startTimePickerFragment).commit();
 
-        getParentFragmentManager().beginTransaction()
-                .replace(startTimeFragmentContainer.getId(), startTimeFragment)
-                .replace(endTimeFragmentContainer.getId(), endTimeFragment)
+
+            getChildFragmentManager()
+                .beginTransaction()
+                .add(R.id.start_time_fragment_container_view, startTimeFragment)
+                .add(R.id.end_time_fragment_container_view, endTimeFragment)
                 .commit();
 
 
