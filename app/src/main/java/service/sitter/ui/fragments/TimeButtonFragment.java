@@ -11,11 +11,11 @@ import androidx.fragment.app.Fragment;
 import service.sitter.R;
 import service.sitter.interfaces.IOnButtonClickListener;
 
-public class TimeDialogButtonFragment extends Fragment {
+public class TimeButtonFragment extends Fragment {
     public IOnButtonClickListener listener = null;
     private String buttonTitle;
 
-    public TimeDialogButtonFragment(String buttonTitle, IOnButtonClickListener listener)
+    public TimeButtonFragment(String buttonTitle, IOnButtonClickListener listener)
     {
         super(R.layout.fragment_time_dialog_button);
         this.buttonTitle = buttonTitle;

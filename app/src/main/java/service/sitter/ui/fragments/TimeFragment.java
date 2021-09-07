@@ -4,8 +4,6 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
@@ -17,18 +15,23 @@ import java.util.Calendar;
 
 import service.sitter.R;
 
-public class TimePickerFragment  extends Fragment {
+public class TimeFragment extends Fragment {
 
 
-    public TimePickerFragment() {
-        super(R.layout.fragment_time_picker);
+    public TimeFragment() {
+        super(R.layout.fragment_time);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 //        EditText editTextTime = view.findViewById(R.id.edit_text_time);
+//        Bundle args = getArguments();
+//        String title = args.getString("title", "SELECT TIME");
 
-        TimeDialogButtonFragment timeDialogButtonFragment = new TimeDialogButtonFragment("SELECT START TIME", () -> {
+        Log.d("TimePickerFragment onViewCreated", "created");
+        FragmentContainerView buttonFragmentContainer = this.getView().findViewById(R.id.button_time_dialog_fragment_container_view);
+
+        TimeButtonFragment timeButtonFragment = new TimeButtonFragment("select111111", () -> {
             Calendar cal = Calendar.getInstance();
             TimePickerDialog tp = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                 @Override
@@ -45,11 +48,8 @@ public class TimePickerFragment  extends Fragment {
             return cal.get(Calendar.HOUR_OF_DAY) + ":" + Calendar.MINUTE;
         });
 
-
-        getFragmentManager().beginTransaction()
-                .replace(view.findViewById(R.id.button_start_time_dialog_fragment_container_view).getId(), timeDialogButtonFragment).commit();
-
-
+        getParentFragmentManager().beginTransaction()
+                .add(buttonFragmentContainer.getId(), timeButtonFragment).commit();
 
 
 //        btnStartTime.setOnClickListener(v -> {

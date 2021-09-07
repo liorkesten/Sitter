@@ -28,32 +28,35 @@
                 android:id="@+id/date_fragment_container_view"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 tools:background="#000099"
                 android:background="#000099"
             />
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/time_fragment_container_view"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/date_fragment_container_view"
-                tools:background="#009900"
-                android:background="#009900"
-            />
+        <LinearLayout
+            android:id="@+id/linear2"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/start_time_fragment_container_view"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent"
+                    android:layout_width="0dp"
+                    tools:background="#009900"
+                    android:background="#009900"
+                />
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/end_time_fragment_container_view"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent"
+                    android:layout_width="0dp"
+                    tools:background="#000000"
+                    android:background="#000000"
+                    />
+        </LinearLayout>
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/location_fragment_container_view"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/time_fragment_container_view"
                 tools:background="#990000"
                 android:background ="#990000"
             />
@@ -61,10 +64,6 @@
                 android:id="@+id/children_fragment_container_view"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/location_fragment_container_view"
                 tools:background="#999900"
                 android:background="#999900"
             />
@@ -72,10 +71,6 @@
                 android:id="@+id/payment_fragment_container_view"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/children_fragment_container_view"
                 tools:background="#999999"
                 android:background="#999999"
             />
@@ -83,10 +78,6 @@
                 android:id="@+id/description_fragment_container_view"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/payment_fragment_container_view"
                 tools:background="#444444"
                 android:background="#444444"
             />
@@ -94,10 +85,6 @@
                 android:id="@+id/button_publish_fragment_container_view"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/description_fragment_container_view"
                 tools:background="#222200"
                 android:background="#222200"
             />

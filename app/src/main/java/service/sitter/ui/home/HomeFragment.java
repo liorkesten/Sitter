@@ -1,45 +1,22 @@
 package service.sitter.ui.home;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TimePicker;
-
-import java.util.Calendar;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
 
 import service.sitter.R;
 import service.sitter.databinding.FragmentHomeBinding;
-import service.sitter.ui.fragments.TimePickerFragment;
+import service.sitter.ui.fragments.TimeButtonFragment;
+import service.sitter.ui.fragments.TimeFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -65,12 +42,21 @@ public class HomeFragment extends Fragment {
 //        }
 
 
-        FragmentContainerView timeFragmentContainer = root.findViewById(R.id.time_fragment_container_view);
 
-        TimePickerFragment timePickerFragment = new TimePickerFragment();
-        getFragmentManager().beginTransaction()
-                .replace(timeFragmentContainer.getId(), timePickerFragment).commit();
+        FragmentContainerView startTimeFragmentContainer = root.findViewById(R.id.start_time_fragment_container_view);
+        FragmentContainerView endTimeFragmentContainer = root.findViewById(R.id.end_time_fragment_container_view);
 
+        TimeFragment startTimeFragment = new TimeFragment();
+        TimeFragment endTimeFragment = new TimeFragment();
+        TimeButtonFragment timeDialogButtonFragment = new TimeButtonFragment("end time", null);
+
+//        getFragmentManager().beginTransaction()
+//                .replace(timeFragmentContainer.getId(), startTimePickerFragment).commit();
+
+        getParentFragmentManager().beginTransaction()
+                .replace(startTimeFragmentContainer.getId(), startTimeFragment)
+                .replace(endTimeFragmentContainer.getId(), endTimeFragment)
+                .commit();
 
 
         return root;
