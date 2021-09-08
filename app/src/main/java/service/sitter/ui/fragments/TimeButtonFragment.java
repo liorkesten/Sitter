@@ -19,7 +19,6 @@ import service.sitter.interfaces.IOnTimeButtonClickListener;
 public class TimeButtonFragment extends Fragment {
     public IOnTimeButtonClickListener listener = null;
     private String buttonText;
-    private TimeButtonViewModel timeButtonViewModel;
 
 
     public TimeButtonFragment(String buttonText, IOnTimeButtonClickListener listener) {
@@ -33,9 +32,6 @@ public class TimeButtonFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        timeButtonViewModel =
-                new ViewModelProvider(this).get(TimeButtonViewModel.class);
-
         Button buttonTime = (Button) view.findViewById(R.id.button_time_dialog);
         buttonTime.setText(buttonText);
         buttonTime.setOnClickListener(v -> {
@@ -47,7 +43,6 @@ public class TimeButtonFragment extends Fragment {
 
                 buttonText = hourOfDayAsStr + ":" + minuteAsStr;
                 buttonTime.setText(buttonText);
-                timeButtonViewModel.setTime(hourOfDayAsStr + ":" + minuteAsStr);
                 if (listener != null) {
                     listener.onButtonClicked(buttonText);
                     Log.d("TimeButtonFragment", buttonText);

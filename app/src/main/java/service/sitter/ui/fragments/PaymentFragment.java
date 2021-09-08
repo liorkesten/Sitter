@@ -39,7 +39,7 @@ public class PaymentFragment extends Fragment {
         return view;
     }
 
-    public LiveData<Integer> getTimeLivaData() {
+    public LiveData<Integer> getLiveData() {
         return paymentLiveData;
     }
 
