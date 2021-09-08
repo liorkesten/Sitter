@@ -23,6 +23,7 @@ import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
 import service.sitter.ui.fragments.DateFragment;
+import service.sitter.ui.fragments.LocationFragment;
 import service.sitter.ui.fragments.PaymentFragment;
 import service.sitter.ui.fragments.TimeFragment;
 
@@ -43,6 +44,7 @@ public class HomeFragment extends Fragment {
         TimeFragment startTimeFragment = new TimeFragment("16:00", "Start Time");
         TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
         PaymentFragment paymentFragment = new PaymentFragment();
+        LocationFragment locationFragment = new LocationFragment();
 
 //        homeViewModel =
 //                new ViewModelProvider(this).get(HomeViewModel.class);
@@ -74,6 +76,7 @@ public class HomeFragment extends Fragment {
                 .add(R.id.date_fragment_container_view, dateFragment)
                 .add(R.id.start_time_fragment_container_view, startTimeFragment)
                 .add(R.id.end_time_fragment_container_view, endTimeFragment)
+                .add(R.id.location_fragment_container_view, locationFragment)
                 .add(R.id.payment_fragment_container_view, paymentFragment)
                 .commit();
 
