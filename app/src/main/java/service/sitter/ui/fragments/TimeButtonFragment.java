@@ -41,9 +41,13 @@ public class TimeButtonFragment extends Fragment {
         buttonTime.setOnClickListener(v -> {
             Calendar cal = Calendar.getInstance();
             TimePickerDialog tp = new TimePickerDialog(getActivity(), (view1, hourOfDay, minute) -> {
-                buttonText = hourOfDay + ":" + minute;
+                // H
+                String hourOfDayAsStr = (hourOfDay == 0)? "00" : String.valueOf(hourOfDay);
+                String minuteAsStr = (minute == 0)? "00" : String.valueOf(minute);
+
+                buttonText = hourOfDayAsStr + ":" + minuteAsStr;
                 buttonTime.setText(buttonText);
-                timeButtonViewModel.setTime(hourOfDay + ":" + minute);
+                timeButtonViewModel.setTime(hourOfDayAsStr + ":" + minuteAsStr);
                 if (listener != null) {
                     listener.onButtonClicked(buttonText);
                     Log.d("TimeButtonFragment", buttonText);

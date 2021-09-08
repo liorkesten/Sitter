@@ -1,188 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linear"
+    android:id="@+id/scrollViewLogin"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:paddingBottom="70dp"
     tools:context=".ui.home.HomeFragment">
 
-
-    <!--    <ScrollView-->
-    <!--        android:id="@+id/scroll_view"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
-    <!--        app:layout_constraintRight_toRightOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/linear">-->
-
-    <!--        <LinearLayout-->
-    <!--            android:id="@+id/nested_linear_layout"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:orientation="vertical">-->
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/date_fragment_container_view"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#000099"
-        tools:background="#000099" />
-
     <LinearLayout
-        android:id="@+id/linear2"
+        android:id="@+id/linear"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/start_time_fragment_container_view"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="#009900"
-            tools:background="#009900" />
+            android:id="@+id/date_fragment_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#000099"
+            tools:background="#000099" />
+
+        <LinearLayout
+            android:id="@+id/linear2"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/start_time_fragment_container_view"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="#009900"
+                tools:background="#009900" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/end_time_fragment_container_view"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="#882244"
+                tools:background="#882244" />
+        </LinearLayout>
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/end_time_fragment_container_view"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="#882244"
-            tools:background="#882244" />
+            android:id="@+id/location_fragment_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#990000"
+            tools:background="#990000" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/children_fragment_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#999900"
+            tools:background="#999900" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/payment_fragment_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#999999"
+            tools:background="#999999" />
+
+        <EditText
+            android:id="@+id/description_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:autofillHints="Add a Comment"
+            android:hint="@string/comment_hint"
+            android:inputType="textMultiLine"
+            android:lines="4"
+            android:maxLines="5"
+            android:minLines="3" />
+
+
+        <Button
+            android:id="@+id/publish_request_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="8dp"
+            android:text="@string/publish_request_button"
+            android:textColor="@color/secondary" />
+
     </LinearLayout>
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/location_fragment_container_view"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#990000"
-        tools:background="#990000" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/children_fragment_container_view"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#999900"
-        tools:background="#999900" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/payment_fragment_container_view"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#999999"
-        tools:background="#999999" />
-
-<!--    <androidx.fragment.app.FragmentContainerView-->
-<!--        android:id="@+id/description_fragment_container_view"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="150dp"-->
-<!--        android:background="#444444"-->
-<!--        tools:background="#444444" />-->
+</ScrollView>
 
 
-    <Button
-        android:id="@+id/publishRequestButton"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:layout_weight="1"
-        android:text="@string/publishRequestButton">
-
-    </Button>
 
 
-    <!--        </LinearLayout>-->
-    <!--    </ScrollView>-->
-</LinearLayout>
 
 
-    <!--    <EditText-->
-    <!--        android:id="@+id/edit_text_date_request"-->
-    <!--        android:layout_width="200dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginTop="82dp"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_alignParentLeft="true"-->
-    <!--        android:layout_alignParentStart="true" />-->
 
-    <!--    <Button-->
-    <!--        android:id="@+id/btn_date_request"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="SELECT DATE"-->
-    <!--        android:layout_alignBottom="@+id/edit_text_date_request"-->
-    <!--        android:layout_toEndOf="@+id/edit_text_date_request" />-->
 
-    <!--    <EditText-->
-    <!--        android:id="@+id/edit_text_start_time_request"-->
-    <!--        android:layout_width="200dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentLeft="true"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_marginTop="4dp"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/edit_text_date_request"-->
-    <!--        />-->
 
-    <!--    <Button-->
-    <!--        android:id="@+id/btn_start_time_request"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="SELECT START TIME"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/btn_date_request"-->
-    <!--        android:layout_alignBottom="@+id/edit_text_start_time_request"-->
-    <!--        android:layout_toRightOf="@+id/edit_text_start_time_request"-->
-    <!--        android:layout_toEndOf="@+id/edit_text_start_time_request" />-->
 
-    <!--    <EditText-->
-    <!--        android:id="@+id/edit_text_end_time_request"-->
-    <!--        android:layout_width="200dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentStart="true"-->
-    <!--        android:layout_alignParentLeft="true"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:layout_marginTop="4dp"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/edit_text_start_time_request"-->
-    <!--        />-->
 
-    <!--    <Button-->
-    <!--        android:id="@+id/btn_end_time_request"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="SELECT END TIME"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/btn_start_time_request"-->
-    <!--        android:layout_alignBottom="@+id/edit_text_end_time_request"-->
-    <!--        android:layout_toRightOf="@+id/edit_text_end_time_request"-->
-    <!--        android:layout_toEndOf="@+id/edit_text_end_time_request" />-->
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/text_view_location_request"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/btn_end_time_request"-->
-    <!--        android:text="Location"-->
-    <!--        tools:layout_editor_absoluteX="23dp"-->
-    <!--        tools:layout_editor_absoluteY="184dp" />-->
 
-    <!--    <EditText-->
-    <!--        android:id="@+id/edit_text_comment_request"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:ems="10"-->
-    <!--        android:gravity="start|top"-->
-    <!--        android:hint="@string/comment_hint"-->
-    <!--        android:inputType="textMultiLine"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/btn_end_time_request"/>-->
 
-    <!--    <Button-->
-    <!--        android:id="@+id/btn_publish_request"-->
-    <!--        android:background="@color/primary_color"-->
-    <!--        android:textColor="@color/secondary_color"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="Publish"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/edit_text_comment_request"-->
-    <!--        />-->
+
+
+
+
+
+

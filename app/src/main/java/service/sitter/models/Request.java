@@ -15,7 +15,7 @@ public class Request {
     // publisher is the parent that published the request
     private final String publisherId;
     // receiver is the babysitter that approved the request
-    private final String receiverId;
+    private String receiverId;
     // date without time
     private Date date;
     private int startTime;
@@ -27,12 +27,10 @@ public class Request {
     private String description;
     private RequestStatus status;
 
-    public Request(String publisherId, String receiverId, Date date, LocalTime startTime, LocalTime endTime,
+    public Request(String publisherId, Date date, LocalTime startTime, LocalTime endTime,
                    Location location, List<Child> children, int pricePerHour, String description) {
         this.uuid = UUID.randomUUID().toString();
-
         this.publisherId = publisherId;
-        this.receiverId = receiverId;
         this.date = date;
         this.startTime = startTime.toSecondOfDay();
         this.endTime = endTime.toSecondOfDay();
@@ -88,5 +86,9 @@ public class Request {
 
     public RequestStatus getStatus() {
         return status;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
     }
 }

@@ -1,6 +1,8 @@
 package service.sitter.ui.home;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,17 +12,17 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
+import java.time.LocalTime;
+
 import service.sitter.R;
 import service.sitter.databinding.FragmentHomeBinding;
+import service.sitter.db.DataBase;
+import service.sitter.db.IDataBase;
+import service.sitter.models.Request;
 import service.sitter.ui.fragments.PaymentFragment;
-import service.sitter.ui.fragments.TimeButtonFragment;
 import service.sitter.ui.fragments.TimeFragment;
 
 public class HomeFragment extends Fragment {
@@ -33,34 +35,51 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-
-        View root = binding.getRoot();
-//        ScrollView scrollView = (ScrollView) root.findViewById(R.id.scroll_view);
-//        LinearLayout linearLayout = (LinearLayout) scrollView.findViewById(R.id.nested_linear_layout);
-
-//        if(linearLayout.getParent() != null) {
-//            ((ViewGroup)linearLayout.getParent()).removeView(linearLayout); // <- fix
-//        }
-
-
+        // Set Logic Business Components
+//        IDataBase db = DataBase.getInstance();
         TimeFragment startTimeFragment = new TimeFragment("16:00", "Start Time");
         TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
         PaymentFragment paymentFragment = new PaymentFragment();
+//        homeViewModel =
+//                new ViewModelProvider(this).get(HomeViewModel.class);
 
+        // Set UI Components
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        Button publishRequestButton = root.findViewById(R.id.publish_request_button);
+        EditText descriptionEditText = root.findViewById(R.id.description_edit_text);
+
+        // Listener adding text
+        descriptionEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.d("HomeFragment", s.toString());
+            }
+        });
+
+
+        // Get Request Data
         startTimeFragment.getTimeLivaData().observe(getViewLifecycleOwner(), newStartTime -> startTime = newStartTime);
         endTimeFragment.getTimeLivaData().observe(getViewLifecycleOwner(), newEndTime -> endTime = newEndTime);
         paymentFragment.getTimeLivaData().observe(getViewLifecycleOwner(), payment -> this.payment = payment);
 
-        ((Button) root.findViewById(R.id.publishRequestButton)).setOnClickListener(l -> {
-            Log.d("HomeFragment startTime", startTime);
-            Log.d("HomeFragment endTime", endTime);
-            Log.d("HomeFragment payment", String.valueOf(payment));
+
+        // Adding Request
+        publishRequestButton.setOnClickListener(l -> {
+            Request request = new Request("111", null, LocalTime.parse(startTime), LocalTime.parse(endTime), null, null, payment, descriptionEditText.getText().toString());
+//            db.addRequest(request);
         });
 
+        // Rendering Fragment
         getChildFragmentManager()
                 .beginTransaction()
                 .add(R.id.start_time_fragment_container_view, startTimeFragment)
