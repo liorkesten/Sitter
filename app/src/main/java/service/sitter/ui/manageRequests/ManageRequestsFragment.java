@@ -1,5 +1,6 @@
 package service.sitter.ui.manageRequests;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import service.sitter.R;
@@ -37,20 +40,9 @@ public class ManageRequestsFragment extends Fragment {
         binding = FragmentManageRequestsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-
-        RecyclerView recyclerViewUpcoming = root.findViewById(R.id.recycler_view_upcoming_requests);
-        RequestAdapter upcomingRequestsAdapter = new RequestAdapter(request -> { /*TODO Implement this listener*/});
-//        ChildAdapter childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
-        recyclerViewUpcoming.setAdapter(upcomingRequestsAdapter);
-        List<Request> requests = new ArrayList<>();
-//        children.add(new Child("Dana", 5));
-//        children.add(new Child("Noam", 3));
-//        children.add(new Child("Lior", 27));
-//        children.add(new Child("Nir", 26));
-//        children.add(new Child("Roy", 26));
-//        children.add(new Child("Keren", 26));
-        upcomingRequestsAdapter.setRequests(requests);
-        recyclerViewUpcoming.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        setRecyclerView(root, R.id.recycler_view_upcoming_requests);
+        setRecyclerView(root, R.id.recycler_view_approved_requests);
+        setRecyclerView(root, R.id.recycler_view_history_requests);
 
 
 //        final TextView textView = binding.textDashboard;
@@ -61,6 +53,19 @@ public class ManageRequestsFragment extends Fragment {
 //            }
 //        });
         return root;
+    }
+
+    private void setRecyclerView(View root, int recyclerViewId) {
+        RecyclerView recyclerViewUpcoming = root.findViewById(recyclerViewId);
+        RequestAdapter upcomingRequestsAdapter = new RequestAdapter(request -> { /*TODO Implement this listener*/});
+        recyclerViewUpcoming.setAdapter(upcomingRequestsAdapter);
+        List<Request> requests = new ArrayList<>();
+        List<Child> children = new ArrayList<>();
+        requests.add(new Request("111", new Date("10/10/10"), LocalTime.parse("10:00"), LocalTime.parse("11:00"), new Location("noam"), children, 100, "New request"));
+        requests.add(new Request("222", new Date("11/11/10"), LocalTime.parse("10:00"), LocalTime.parse("11:00"), new Location("noam"), children, 100, "New request"));
+
+        upcomingRequestsAdapter.setRequests(requests);
+        recyclerViewUpcoming.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
     }
 
     @Override

@@ -27,6 +27,23 @@ public class Request {
     private String description;
     private RequestStatus status;
 
+    @Override
+    public String toString() {
+        return "Request{" +
+                "uuid='" + uuid + '\'' +
+                ", publisherId='" + publisherId + '\'' +
+                ", receiverId='" + receiverId + '\'' +
+                ", date=" + date +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", location=" + location +
+                ", children=" + children +
+                ", pricePerHour=" + pricePerHour +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                '}';
+    }
+
     public Request(String publisherId, Date date, LocalTime startTime, LocalTime endTime,
                    Location location, List<Child> children, int pricePerHour, String description) {
         this.uuid = UUID.randomUUID().toString();

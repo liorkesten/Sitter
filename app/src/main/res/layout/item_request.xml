@@ -88,26 +88,26 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Lior Kesten"/>
+        android:text="Lior Kesten"
+        android:textSize="20sp" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="85dp"
         android:layout_height="85dp"
-        app:cardCornerRadius="150dp"
-        app:cardBackgroundColor="@color/white">
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="150dp">
 
         <androidx.cardview.widget.CardView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            app:cardCornerRadius="150dp"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            app:cardCornerRadius="150dp">
 
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/ic_launcer"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcer" />
 
         </androidx.cardview.widget.CardView>
 
@@ -115,6 +115,7 @@
 
 
     <Button
+        android:id="@+id/status_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="@drawable/round_button"
