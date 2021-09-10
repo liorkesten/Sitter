@@ -36,11 +36,12 @@ public class HomeFragment extends Fragment {
     private String startTime = "";
     private String endTime = "";
     private int payment = 1;
+    private String location = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Set Logic Business Components
-//        IDataBase db = DataBase.getInstance();
+        IDataBase db = DataBase.getInstance();
         DateFragment dateFragment = new DateFragment("10/10/21");
         TimeFragment startTimeFragment = new TimeFragment("16:00", "Start Time");
         TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
@@ -74,13 +75,14 @@ public class HomeFragment extends Fragment {
         startTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newStartTime -> startTime = newStartTime);
         endTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newEndTime -> endTime = newEndTime);
         paymentFragment.getLiveData().observe(getViewLifecycleOwner(), payment -> this.payment = payment);
+        locationFragment.getLiveData().observe(getViewLifecycleOwner(), location -> this.location = location);
 
 
         // Adding Request
         publishRequestButton.setOnClickListener(l -> {
             Log.d("HomeFragment", this.date);
             Request request = new Request("111", null, LocalTime.parse(startTime), LocalTime.parse(endTime), null, null, payment, descriptionEditText.getText().toString());
-//            db.addRequest(request);
+            db.addRequest(request);
         });
 
         // Rendering Fragment
