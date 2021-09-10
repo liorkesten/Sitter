@@ -11,4 +11,7 @@
     <string name="itemRequestDateTitle">Date:</string>
     <string name="itemRequestTimeTitle">Time:</string>
     <string name="itemRequestDescriptionTitle">Description:</string>
+    <string name="upcoming_requests_title">Upcoming Requests</string>
+    <string name="approved_requests_title">Approved Requests</string>
+    <string name="history_requests_title">History Requests</string>
 </resources>

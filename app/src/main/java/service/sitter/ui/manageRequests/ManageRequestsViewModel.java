@@ -1,16 +1,16 @@
-package service.sitter.ui.dashboard;
+package service.sitter.ui.manageRequests;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class DashboardViewModel extends ViewModel {
+public class ManageRequestsViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public DashboardViewModel() {
+    public ManageRequestsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is manage requests fragment");
     }
 
     public LiveData<String> getText() {
