@@ -1,5 +1,7 @@
 package service.sitter.recyclerview.children;
 
+import static java.lang.System.exit;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,9 +50,22 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
     public void onBindViewHolder(@NonNull @NotNull ChildViewHolder holder, int position) {
         Child child = children.get(position);
         holder.getNameTextView().setText(child.getName());
-//        holder.getAgeTextView().setText(child.getAge());
+        String age = Integer.toString(child.getAge());
+        holder.getAgeTextView().setText(age);
+        switch (child.getImage()) {
+            case "Daria":
+                holder.getImageView().setImageResource(R.drawable.daria);
+                break;
+            case "Gali":
+                holder.getImageView().setImageResource(R.drawable.gali);
+                break;
+            case "Mika":
+                holder.getImageView().setImageResource(R.drawable.mika);
+                break;
+            default:
+                exit(120);
+        }
 
-        // Adapter passes the rootView that was clicked. The activity should initialize the adapter with specific listener.
         holder.rootView.setOnClickListener(v -> listener.onRequestClick(child));
     }
 

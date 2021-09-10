@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/date_fragment_container_view"
             android:layout_width="match_parent"
@@ -50,10 +49,15 @@
             android:layout_height="100dp"
             tools:background="#990000" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Children:" />
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id = "@+id/recyclerViewChildren"
+            android:id="@+id/recyclerViewChildren"
             android:layout_width="match_parent"
-            android:layout_height="100dp"/>
+            android:layout_height="100dp" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/payment_fragment_container_view"
