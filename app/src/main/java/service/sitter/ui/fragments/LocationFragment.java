@@ -30,7 +30,7 @@ import service.sitter.R;
 
 public class LocationFragment extends Fragment {
     private MutableLiveData<String> locationLiveData;
-    private String location;
+    private String location = "no-location";
     private AutocompleteSupportFragment autocompleteSupportFragment;
 
     public LocationFragment() {
