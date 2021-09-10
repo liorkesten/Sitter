@@ -73,7 +73,8 @@ public class HomeFragment extends Fragment {
 
 
         // Get Request Data
-        dateFragment.getLiveData().observe(getViewLifecycleOwner(), newDate -> this.date = newDate);
+        dateFragment.getLiveData().
+                observe(getViewLifecycleOwner(), newDate -> this.date = newDate);
         startTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newStartTime -> startTime = newStartTime);
         endTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newEndTime -> endTime = newEndTime);
         paymentFragment.getLiveData().observe(getViewLifecycleOwner(), payment -> this.payment = payment);
