@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="service.sitter.ui.dashboard.DashboardFragment"
+        android:name="service.sitter.ui.manageRequests.ManageRequestsFragment"
         android:label="@string/title_manage"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_manage_requests" />
 
     <fragment
         android:id="@+id/navigation_notifications"

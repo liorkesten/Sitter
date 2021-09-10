@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
         Button publishRequestButton = root.findViewById(R.id.publish_request_button);
         EditText descriptionEditText = root.findViewById(R.id.description_edit_text);
-        RecyclerView recyclerView = root.findViewById(R.id.recyclerViewChildren);
+        RecyclerView recyclerView = root.findViewById(R.id.recycler_view_children);
         ChildAdapter childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
         recyclerView.setAdapter(childAdapter);
         List<Child> children = new ArrayList<>();
@@ -70,7 +70,8 @@ public class HomeFragment extends Fragment {
 
 
         // Get Request Data
-        dateFragment.getLiveData().observe(getViewLifecycleOwner(), newDate -> this.date = newDate);
+        dateFragment.getLiveData().
+                observe(getViewLifecycleOwner(), newDate -> this.date = newDate);
         startTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newStartTime -> startTime = newStartTime);
         endTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newEndTime -> endTime = newEndTime);
         paymentFragment.getLiveData().observe(getViewLifecycleOwner(), payment -> this.payment = payment);

@@ -55,9 +55,9 @@
             android:text="Children:" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewChildren"
+            android:id = "@+id/recycler_view_children"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"/>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/payment_fragment_container_view"
