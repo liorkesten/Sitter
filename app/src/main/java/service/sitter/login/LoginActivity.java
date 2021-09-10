@@ -1,4 +1,5 @@
 package service.sitter.login;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -6,17 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.Profile;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
-import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -126,58 +122,43 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
     }
 
     private void setListeners() {
-        facebookLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Perform Facebook login
-                smartLogin = SmartLoginFactory.build(LoginType.Facebook);
-                smartLogin.login(config);
-            }
+        facebookLoginButton.setOnClickListener(v -> {
+            // Perform Facebook login
+            smartLogin = SmartLoginFactory.build(LoginType.Facebook);
+            smartLogin.login(config);
         });
 
-        googleLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Perform Google login
-                smartLogin = SmartLoginFactory.build(LoginType.Google);
-                smartLogin.login(config);
-            }
+        googleLoginButton.setOnClickListener(v -> {
+            // Perform Google login
+            smartLogin = SmartLoginFactory.build(LoginType.Google);
+            smartLogin.login(config);
         });
 
-        customSigninButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Perform custom sign in
-                smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-                smartLogin.login(config);
-            }
+        customSigninButton.setOnClickListener(v -> {
+            // Perform custom sign in
+            smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+            smartLogin.login(config);
         });
 
-        customSignupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Perform custom sign up
-                smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-                smartLogin.signup(config);
-            }
+        customSignupButton.setOnClickListener(v -> {
+            // Perform custom sign up
+            smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+            smartLogin.signup(config);
         });
 
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentUser != null) {
-                    if (currentUser instanceof SmartFacebookUser) {
-                        smartLogin = SmartLoginFactory.build(LoginType.Facebook);
-                    } else if(currentUser instanceof SmartGoogleUser) {
-                        smartLogin = SmartLoginFactory.build(LoginType.Google);
-                    } else {
-                        smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-                    }
-                    boolean result = smartLogin.logout(LoginActivity.this);
-                    if (result) {
-                        refreshLayout();
-                        Toast.makeText(LoginActivity.this, "User logged out successfully", Toast.LENGTH_SHORT).show();
-                    }
+        logoutButton.setOnClickListener(v -> {
+            if (currentUser != null) {
+                if (currentUser instanceof SmartFacebookUser) {
+                    smartLogin = SmartLoginFactory.build(LoginType.Facebook);
+                } else if(currentUser instanceof SmartGoogleUser) {
+                    smartLogin = SmartLoginFactory.build(LoginType.Google);
+                } else {
+                    smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+                }
+                boolean result = smartLogin.logout(LoginActivity.this);
+                if (result) {
+                    refreshLayout();
+                    Toast.makeText(LoginActivity.this, "User logged out successfully", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -195,14 +176,16 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
 
     @Override
     public void onLoginSuccess(SmartUser user) {
+        Log.d("Lior","success");
         Toast.makeText(this, user.toString(), Toast.LENGTH_SHORT).show();
         refreshLayout();
-        Intent intent = new Intent(this, SetProfile.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onLoginFailure(SmartLoginException e) {
+        Log.d("Noam","success");
         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
