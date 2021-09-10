@@ -1,8 +1,6 @@
 package service.sitter.ui.home;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +10,19 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import service.sitter.R;
 import service.sitter.databinding.FragmentHomeBinding;
-import service.sitter.db.DataBase;
-import service.sitter.db.IDataBase;
+import service.sitter.models.Child;
 import service.sitter.models.Request;
+import service.sitter.recyclerview.children.ChildAdapter;
 import service.sitter.ui.fragments.DateFragment;
 import service.sitter.ui.fragments.LocationFragment;
 import service.sitter.ui.fragments.PaymentFragment;
@@ -54,6 +55,18 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
         Button publishRequestButton = root.findViewById(R.id.publish_request_button);
         EditText descriptionEditText = root.findViewById(R.id.description_edit_text);
+        RecyclerView recyclerView = root.findViewById(R.id.recyclerViewChildren);
+        ChildAdapter childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
+        recyclerView.setAdapter(childAdapter);
+        List<Child> children = new ArrayList<>();
+        children.add(new Child("Dana", 5));
+        children.add(new Child("Noam", 3));
+        children.add(new Child("Lior", 27));
+        children.add(new Child("Nir", 26));
+        children.add(new Child("Roy", 26));
+        children.add(new Child("Keren", 26));
+        childAdapter.setChildren(children);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
 
         // Get Request Data

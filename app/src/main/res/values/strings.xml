@@ -8,4 +8,7 @@
     <string name="publish_request_button">PUBLISH REQUEST</string>
     <string name="date_title">Choose a date</string>
     <string name="select_location">Select Location</string>
+    <string name="itemRequestDateTitle">Date:</string>
+    <string name="itemRequestTimeTitle">Time:</string>
+    <string name="itemRequestDescriptionTitle">Description:</string>
 </resources>

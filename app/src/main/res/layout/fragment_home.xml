@@ -50,11 +50,10 @@
             android:layout_height="100dp"
             tools:background="#990000" />
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/children_fragment_container_view"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id = "@+id/recyclerViewChildren"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            tools:background="#999900" />
+            android:layout_height="100dp"/>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/payment_fragment_container_view"

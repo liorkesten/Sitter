@@ -1,4 +1,4 @@
-package service.sitter.requests;
+package service.sitter.recyclerview.requests;
 
 import android.view.View;
 import android.widget.TextView;
