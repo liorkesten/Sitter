@@ -44,7 +44,7 @@ public class TimeFragment extends Fragment {
         return view;
     }
 
-    public LiveData<String> getTimeLivaData() {
+    public LiveData<String> getLiveData() {
         return currentTimeLiveData;
     }
 }
