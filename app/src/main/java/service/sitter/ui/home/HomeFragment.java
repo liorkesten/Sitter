@@ -62,18 +62,16 @@ public class HomeFragment extends Fragment {
         ChildAdapter childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
         recyclerView.setAdapter(childAdapter);
         List<Child> children = new ArrayList<>();
-        children.add(new Child("Dana", 5));
-        children.add(new Child("Noam", 3));
-        children.add(new Child("Lior", 27));
-        children.add(new Child("Nir", 26));
-        children.add(new Child("Roy", 26));
-        children.add(new Child("Keren", 26));
+        children.add(new Child("Daria", 1, "Daria"));
+        children.add(new Child("Gali", 3, "Gali"));
+        children.add(new Child("Mika", 5, "Mika"));
         childAdapter.setChildren(children);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
 
         // Get Request Data
-        dateFragment.getLiveData().observe(getViewLifecycleOwner(), newDate -> this.date = newDate);
+        dateFragment.getLiveData().
+                observe(getViewLifecycleOwner(), newDate -> this.date = newDate);
         startTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newStartTime -> startTime = newStartTime);
         endTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newEndTime -> endTime = newEndTime);
         paymentFragment.getLiveData().observe(getViewLifecycleOwner(), payment -> this.payment = payment);
