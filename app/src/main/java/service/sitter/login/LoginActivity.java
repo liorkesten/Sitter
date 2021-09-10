@@ -191,14 +191,16 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
 
     @Override
     public void onLoginSuccess(SmartUser user) {
+        Log.d("Lior","success");
         Toast.makeText(this, user.toString(), Toast.LENGTH_SHORT).show();
         refreshLayout();
-        Intent intent = new Intent(this, SetProfile.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, SetProfile.class);
+//        startActivity(intent);
     }
 
     @Override
     public void onLoginFailure(SmartLoginException e) {
+        Log.d("Noam","success");
         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
