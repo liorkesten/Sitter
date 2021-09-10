@@ -1,6 +1,9 @@
 package service.sitter.recyclerview.children;
 
+import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,8 +18,8 @@ public class ChildViewHolder extends RecyclerView.ViewHolder {
     public final View rootView;
     private TextView nameTextView;
     private TextView ageTextView;
-    private ImageView imageView;
-
+    private ImageButton imageChildButtonView;
+    private boolean isSelected;
 
     public ChildViewHolder(@NonNull @NotNull View itemView) {
         super(itemView);
@@ -25,8 +28,17 @@ public class ChildViewHolder extends RecyclerView.ViewHolder {
         rootView = itemView;
         nameTextView = itemView.findViewById(R.id.itemChildName);
         ageTextView = itemView.findViewById(R.id.itemChildAge);
-        imageView = itemView.findViewById(R.id.item_child_image);
+        imageChildButtonView = itemView.findViewById(R.id.item_child_image_button);
+
+        imageChildButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isSelected = !isSelected;
+                imageChildButtonView.setBackgroundColor(isSelected ? Color.GREEN : Color.TRANSPARENT);
+            }
+        });
     }
+
 
     public View getRootView() {
         return rootView;
@@ -48,11 +60,11 @@ public class ChildViewHolder extends RecyclerView.ViewHolder {
         view.setVisibility(View.VISIBLE);
     }
 
-    public ImageView getImageView() {
-        return imageView;
+    public ImageButton getImageView() {
+        return imageChildButtonView;
     }
 
-    public void setImageView(ImageView imageView) {
-        this.imageView = imageView;
+    public void setImageView(ImageButton imageView) {
+        this.imageChildButtonView = imageView;
     }
 }
