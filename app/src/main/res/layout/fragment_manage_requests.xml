@@ -27,7 +27,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_upcoming_requests"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="200dp" />
 
         <TextView
             android:id="@+id/approved_requests_title"
@@ -40,7 +40,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_approved_requests"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="200dp" />
 
         <TextView
             android:id="@+id/history_requests_title"
@@ -53,7 +53,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_history_requests"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="200dp" />
 
 
     </LinearLayout>

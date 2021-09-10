@@ -39,14 +39,14 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestViewHolder> {
     @Override
     public RequestViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_reuqest, parent, false);
+        View view = inflater.inflate(R.layout.item_request, parent, false);
         return new RequestViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull RequestViewHolder holder, int position) {
         Request request = requests.get(position);
-        holder.textView.setText(request.toString()); // TODO Change from to string.
+        holder.textView.setText(request.getPublisherId()); // TODO Change from to string.
 
         // Adapter passes the rootView that was clicked. The activity should intilizae the adapter with specific listener.
         holder.rootView.setOnClickListener(v -> listener.onRequestClick(request));
