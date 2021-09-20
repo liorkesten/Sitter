@@ -62,26 +62,6 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
         config.setGoogleApiClient(null);
         facebookLoginButton = findViewById(R.id.facebook_login_button);
 
-//        callbackManager = CallbackManager.Factory.create();
-//        login.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                AccessToken accessToken = loginResult.getAccessToken();
-//                Profile profile = Profile.getCurrentProfile();
-//                Intent intent = new Intent(this, SetProfile.class);
-//                startActivity(intent);
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//
-//            }
-//
-//            @Override
-//            public void onError(FacebookException error) {
-//
-//            }
-//        });
     }
 
     @Override
