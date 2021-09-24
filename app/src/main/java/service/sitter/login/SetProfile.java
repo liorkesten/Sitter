@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
+import com.google.android.libraries.places.api.model.Place;
 
 import java.time.LocalTime;
 import java.util.Set;
@@ -30,7 +31,7 @@ import service.sitter.ui.fragments.LocationFragment;
 public class SetProfile extends AppCompatActivity {
 
     private IDataBase db = DataBase.getInstance();
-    private String location = "";
+    private Place location;
     private String phoneNumber = "";
     boolean isParent = true;
     private static final String TAG = SetProfile.class.getSimpleName();
