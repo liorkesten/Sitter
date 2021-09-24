@@ -48,4 +48,9 @@
     <string name="upcoming_requests_title">Upcoming Requests</string>
     <string name="approved_requests_title">Approved Requests</string>
     <string name="history_requests_title">History Requests</string>
+    <string name="parent">Parent</string>
+    <string name="babysitter">Babysitter</string>
+    <string name="set_profile_title_babysitter_or_parent">Who Are You?</string>
+    <string name="title_phone_number">Enter your phone number</string>
+    <string name="babysitter_mobility_switch">Has Car</string>
 </resources>

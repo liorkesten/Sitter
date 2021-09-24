@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
+import service.sitter.models.Babysitter;
 import service.sitter.models.Connection;
+import service.sitter.models.Parent;
 import service.sitter.models.Recommendation;
 import service.sitter.models.Request;
 import service.sitter.models.User;
@@ -29,4 +31,12 @@ public interface IDataBase {
     public boolean addUser(@NonNull @NotNull User user);
 
     public boolean deleteUser(String userUuid);
+
+    public boolean addParent(@NonNull @NotNull Parent parent);
+
+    public boolean deleteParent(@NonNull @NotNull Parent parent);
+
+    public boolean addBabysitter(@NonNull @NotNull Babysitter babysitter);
+
+    public boolean deleteBabysitter(@NonNull @NotNull Babysitter babysitter);
 }

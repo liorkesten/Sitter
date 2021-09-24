@@ -11,7 +11,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import service.sitter.models.Babysitter;
 import service.sitter.models.Connection;
+import service.sitter.models.Parent;
 import service.sitter.models.Recommendation;
 import service.sitter.models.Request;
 import service.sitter.models.User;
@@ -79,6 +81,26 @@ public class DataBase implements IDataBase {
 
     public boolean deleteUser(String userUuid) {
         return usersDb.deleteUser(userUuid);
+    }
+
+    @Override
+    public boolean addParent(@NonNull Parent parent) {
+        return usersDb.addParent(parent);
+    }
+
+    @Override
+    public boolean deleteParent(@NonNull Parent parent) {
+        return usersDb.deleteParent(parent);
+    }
+
+    @Override
+    public boolean addBabysitter(@NonNull Babysitter babysitter) {
+        return usersDb.addBabysitter(babysitter);
+    }
+
+    @Override
+    public boolean deleteBabysitter(@NonNull Babysitter babysitter) {
+        return usersDb.deleteBabysitter(babysitter);
     }
 
 
