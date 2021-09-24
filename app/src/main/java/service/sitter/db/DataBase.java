@@ -2,13 +2,11 @@ package service.sitter.db;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import service.sitter.models.Connection;
@@ -79,6 +77,27 @@ public class DataBase implements IDataBase {
 
     public boolean deleteUser(String userUuid) {
         return usersDb.deleteUser(userUuid);
+    }
+
+    @Override
+    public LiveData<List<Request>> getLiveDataPendingRequestsOfParent(String parentId) {
+        return requestsDb.getLiveDataPendingRequestsOfParent(parentId);
+    }
+
+    @Override
+    public LiveData<List<Request>> getLiveDataApprovedRequestsOfParent(String parentId) {
+        return requestsDb.getLiveDataApprovedRequestsOfParent(parentId);
+    }
+
+    @Override
+    public LiveData<List<Request>> getLiveDataDeletedRequestsOfParent(String parentId) {
+        return requestsDb.getLiveDataDeletedRequestsOfParent(parentId);
+
+    }
+
+    @Override
+    public LiveData<List<Request>> getLiveDataArchivedRequestsOfParent(String parentId) {
+        return requestsDb.getLiveDataArchivedRequestsOfParent(parentId);
     }
 
 

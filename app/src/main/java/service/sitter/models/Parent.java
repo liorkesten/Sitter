@@ -1,16 +1,31 @@
 package service.sitter.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parent extends User {
-    // Parent connections.
-    private List<Connection> connections;
     // Array of the children.
-    private List<Child> children;
+    private final List<Child> children;
     // The default price per hour that the parent would pay for babysitter.
     private int defaultPricePerHour;
 
-    public Parent(String firstName, String lastName, String emailAddress, String phoneNumber, String location, String image) {
+    public Parent(String firstName, String lastName, String emailAddress, String phoneNumber,
+                  String location, String image, List<Child> children, int defaultPricePerHour) {
         super(firstName, lastName, emailAddress, phoneNumber, UserCategory.Parent, location, image);
+
+        this.children = new ArrayList<>(children);
+        this.defaultPricePerHour = defaultPricePerHour;
+    }
+
+    public List<Child> getChildren() {
+        return children;
+    }
+
+    public int getDefaultPricePerHour() {
+        return defaultPricePerHour;
+    }
+
+    public void setDefaultPricePerHour(int defaultPricePerHour) {
+        this.defaultPricePerHour = defaultPricePerHour;
     }
 }

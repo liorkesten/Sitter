@@ -1,8 +1,15 @@
 package service.sitter.models;
 
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class User {
+    private static final String TAG = User.class.getSimpleName();
+
+
     private final String uuid;
     private final String firstName;
     private final String lastName;
@@ -15,6 +22,8 @@ public abstract class User {
     private final String location;
     //TODO Change to image
     private final String image;
+    private final List<Connection> connections;
+
 
     public User(String firstName, String lastName, String emailAddress, String phoneNumber, UserCategory category, String location, String image) {
         uuid = UUID.randomUUID().toString();
@@ -25,6 +34,8 @@ public abstract class User {
         this.category = category;
         this.location = location;
         this.image = image;
+
+        this.connections = new ArrayList<>();
     }
 
     public String getUuid() {
@@ -57,5 +68,14 @@ public abstract class User {
 
     public String getImage() {
         return image;
+    }
+
+    public List<Connection> getConnections() {
+        return connections;
+    }
+
+    public void addConnection(Connection newConnection) {
+        Log.d(TAG, String.format("Adding new connection <%s> to <%s> user.", newConnection, this));
+        this.connections.add(newConnection);
     }
 }
