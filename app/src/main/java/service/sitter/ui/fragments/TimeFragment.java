@@ -25,7 +25,7 @@ public class TimeFragment extends Fragment {
         super(R.layout.fragment_time);
         this.defaultTime = defaultTime;
         this.title = title;
-        currentTimeLiveData = new MutableLiveData<>();
+        currentTimeLiveData = new MutableLiveData<>(this.defaultTime);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

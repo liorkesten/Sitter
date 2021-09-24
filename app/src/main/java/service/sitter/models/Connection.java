@@ -1,10 +1,6 @@
 package service.sitter.models;
 
-import com.google.type.DateTime;
-
 import java.time.Instant;
-import java.time.LocalTime;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -17,18 +13,20 @@ public class Connection {
     private final String sideAUId;
     private final String sideBUId;
 
+
     /**
-     * Ctor for connection
+     * Ctor for Connection
      *
-     * @param sideAUId
-     * @param sideBUId
+     * @param userA
+     * @param userB
      */
-    public Connection(String sideAUId, String sideBUId) {
+    public Connection(User userA, User userB) {
+
         uuid = UUID.randomUUID().toString();
 
         this.creationTimestamp = Instant.now();
-        this.sideAUId = sideAUId;
-        this.sideBUId = sideBUId;
+        this.sideAUId = userA.getUuid();
+        this.sideBUId = userB.getUuid();
     }
 
     public String getUuid() {

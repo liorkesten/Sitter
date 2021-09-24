@@ -1,7 +1,6 @@
 package service.sitter.ui.home;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.libraries.places.api.model.Place;
 
-import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,19 +32,21 @@ import service.sitter.ui.fragments.TimeFragment;
 
 public class HomeFragment extends Fragment {
 
+    private static final String TAG = HomeFragment.class.getSimpleName();
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-    private String date = "";
+    private LocalDate date = LocalDate.now();
     private String startTime = "";
     private String endTime = "";
     private int payment = 1;
-    private String location = "";
+    private Place location;
+    private List<Child> children = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Set Logic Business Components
         IDataBase db = DataBase.getInstance();
-        DateFragment dateFragment = new DateFragment("10/10/21");
+        DateFragment dateFragment = new DateFragment();
         TimeFragment startTimeFragment = new TimeFragment("16:00", "Start Time");
         TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
         PaymentFragment paymentFragment = new PaymentFragment();
@@ -58,30 +60,38 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
         Button publishRequestButton = root.findViewById(R.id.publish_request_button);
         EditText descriptionEditText = root.findViewById(R.id.description_edit_text);
-        RecyclerView recyclerView = root.findViewById(R.id.recycler_view_children);
+        RecyclerView childrenRecyclerView = root.findViewById(R.id.recycler_view_children);
+
         ChildAdapter childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
-        recyclerView.setAdapter(childAdapter);
+        childrenRecyclerView.setAdapter(childAdapter);
+
         List<Child> children = new ArrayList<>();
+        // TODO Extract children from parent.
         children.add(new Child("Daria", 1, "Daria"));
         children.add(new Child("Gali", 3, "Gali"));
         children.add(new Child("Mika", 5, "Mika"));
         childAdapter.setChildren(children);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
+        childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+
+        // Set default values:
+        date = dateFragment.getLiveData().getValue();
+        startTime = startTimeFragment.getLiveData().getValue();
+        endTime = endTimeFragment.getLiveData().getValue();
+        payment = paymentFragment.getLiveData().getValue();
+        location = locationFragment.getLiveData().getValue();
 
         // Get Request Data
-        dateFragment.getLiveData().
-                observe(getViewLifecycleOwner(), newDate -> this.date = newDate);
-        startTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newStartTime -> startTime = newStartTime);
-        endTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newEndTime -> endTime = newEndTime);
+        dateFragment.getLiveData().observe(getViewLifecycleOwner(), newDate -> this.date = newDate);
+        startTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newStartTime -> this.startTime = newStartTime);
+        endTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newEndTime -> this.endTime = newEndTime);
         paymentFragment.getLiveData().observe(getViewLifecycleOwner(), payment -> this.payment = payment);
         locationFragment.getLiveData().observe(getViewLifecycleOwner(), location -> this.location = location);
 
-
         // Adding Request
         publishRequestButton.setOnClickListener(l -> {
-            Log.d("HomeFragment", this.date);
-            Request request = new Request("111", null, LocalTime.parse(startTime), LocalTime.parse(endTime), null, null, payment, descriptionEditText.getText().toString());
+            //TODO Change the publisherId to id from SP.
+            Request request = new Request("111", this.date, startTime, endTime, location, null, payment, descriptionEditText.getText().toString());
             db.addRequest(request);
         });
 

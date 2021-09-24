@@ -52,6 +52,7 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
         holder.getNameTextView().setText(child.getName());
         String age = Integer.toString(child.getAge());
         holder.getAgeTextView().setText(age);
+        //TODO Delete this images - fetch from DB.
         switch (child.getImage()) {
             case "Daria":
                 holder.getImageView().setImageResource(R.drawable.daria);

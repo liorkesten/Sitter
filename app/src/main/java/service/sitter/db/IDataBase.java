@@ -1,8 +1,11 @@
 package service.sitter.db;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import service.sitter.models.Babysitter;
 import service.sitter.models.Connection;
@@ -16,21 +19,30 @@ import service.sitter.models.User;
  */
 public interface IDataBase {
 
-    public boolean addRequest(@NonNull @NotNull Request request);
+    boolean addRequest(@NonNull @NotNull Request request);
 
-    public boolean deleteRequest(String requestUuid);
+    boolean deleteRequest(String requestUuid);
 
-    public boolean addRecommendation(@NonNull @NotNull Recommendation recommendation);
+    boolean addRecommendation(@NonNull @NotNull Recommendation recommendation);
 
-    public boolean deleteRecommendation(String recommendationUuid);
+    boolean deleteRecommendation(String recommendationUuid);
 
-    public boolean addConnection(@NonNull @NotNull Connection connection);
+    boolean addConnection(@NonNull @NotNull Connection connection);
 
-    public boolean deleteConnection(String connectionUuid);
+    boolean deleteConnection(String connectionUuid);
 
-    public boolean addUser(@NonNull @NotNull User user);
+    boolean addUser(@NonNull @NotNull User user);
 
-    public boolean deleteUser(String userUuid);
+    boolean deleteUser(String userUuid);
+
+
+    LiveData<List<Request>> getLiveDataPendingRequestsOfParent(String parentId);
+
+    LiveData<List<Request>> getLiveDataApprovedRequestsOfParent(String parentId);
+
+    LiveData<List<Request>> getLiveDataDeletedRequestsOfParent(String parentId);
+
+    LiveData<List<Request>> getLiveDataArchivedRequestsOfParent(String parentId);
 
     public boolean addParent(@NonNull @NotNull Parent parent);
 
