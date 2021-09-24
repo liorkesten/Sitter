@@ -122,8 +122,10 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
 
         customSignupButton.setOnClickListener(v -> {
             // Perform custom sign up
-            smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-            smartLogin.signup(config);
+            //smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+            //smartLogin.signup(config);
+            Intent intentRegister = new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivity(intentRegister);
         });
 
         logoutButton.setOnClickListener(v -> {
@@ -165,7 +167,7 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
 
     @Override
     public void onLoginFailure(SmartLoginException e) {
-        Log.d("Noam","success");
+        Log.d("Noam","Failed to login");
         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
@@ -173,7 +175,7 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
     public SmartUser doCustomLogin() {
         SmartUser user = new SmartUser();
         user.setEmail(emailEditText.getText().toString());
-
+        Log.d("Dana","custom Login");
         Intent intent=new Intent(LoginActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
@@ -185,7 +187,9 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
     @Override
     public SmartUser doCustomSignup() {
         SmartUser user = new SmartUser();
-        user.setEmail(emailEditText.getText().toString());
+        Intent intentRegister = new Intent(LoginActivity.this, SignUpActivity.class);
+        startActivity(intentRegister);
+        //user.setEmail(emailEditText.getText().toString());
         return user;
     }
 
