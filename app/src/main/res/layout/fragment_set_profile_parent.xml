@@ -27,5 +27,11 @@
         android:text="ADD CHILD"
         android:textColor="@color/secondary" />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/payment_fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        tools:background="#999999" />
+
 
 </LinearLayout>

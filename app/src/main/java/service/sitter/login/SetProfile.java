@@ -5,9 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -16,6 +21,7 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.google.android.libraries.places.api.model.Place;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +34,23 @@ import service.sitter.db.RequestsDataBase;
 import service.sitter.login.fragments.SetProfileBabysitterFragment;
 import service.sitter.login.fragments.SetProfileParentFragment;
 import service.sitter.models.Child;
+import service.sitter.models.Parent;
 import service.sitter.models.Request;
 import service.sitter.ui.fragments.LocationFragment;
 
 public class SetProfile extends AppCompatActivity {
 
-    private IDataBase db = DataBase.getInstance();
+    private final IDataBase db = DataBase.getInstance();
     private Place location;
     private String phoneNumber = "";
     boolean isParent = true;
+    ImageButton imageButtonProfilePicture;
+    EditText phoneNumberEditText;
+    TextView usernameTextView;
+    Uri profilePictureUri;
+    private int payment;
     private List<Child> children;
+    private static final int RESULT_CODE_IMAGE = 100;
     private static final String TAG = SetProfile.class.getSimpleName();
     private SetProfileParentFragment setProfileParentFragment;
     private SetProfileBabysitterFragment setProfileBabysitterFragment;
@@ -49,6 +62,9 @@ public class SetProfile extends AppCompatActivity {
         setContentView(R.layout.activity_set_profile);
 
         // set UI components
+        imageButtonProfilePicture = findViewById(R.id.profile_picture_image_button);
+        phoneNumberEditText = findViewById(R.id.phone_number_edit_text);
+        usernameTextView = findViewById(R.id.user_name_text_view);
         LocationFragment locationFragment = new LocationFragment();
         SetProfileParentFragment setProfileBottomFrameFragment = new SetProfileParentFragment();
         RadioGroup radioGroup = findViewById(R.id.parent_or_babysitter_radio_group);
@@ -71,6 +87,14 @@ public class SetProfile extends AppCompatActivity {
 
         });
 
+        // profile picture button listener
+        imageButtonProfilePicture.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), RESULT_CODE_IMAGE); //activity result method call
+        });
+
         // Get Profile Data
         locationFragment.getLiveData().observe(this, location -> this.location = location);
 
@@ -91,14 +115,48 @@ public class SetProfile extends AppCompatActivity {
 
     private void addUser() {
         boolean wasSaved = false;
+        String firstName = usernameTextView.getText().toString().split(" ")[1];
+        String lastName = usernameTextView.getText().toString().split(" ")[2];
         if (isParent) {
             Log.d(TAG, "creating new Parent");
-            setProfileParentFragment.getLiveData().
+            setProfileParentFragment.getLiveDataChildren().
                     observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
-            Log.d(TAG, children.toString());
+            setProfileParentFragment.getLiveDataPayment().
+                    observe(this, newPayment -> this.payment = newPayment);
+            Parent parent = new Parent(
+                    firstName,
+                    lastName,
+                    "hello@gmail.com",
+                    phoneNumberEditText.getText().toString(),
+                    location.toString(),
+                    imageButtonProfilePicture.toString(),
+                    children,
+                    payment);
+            Log.d(TAG, parent.toString());
+
         } else {
             Log.d(TAG, "creating new Babysitter");
         }
         Log.d(TAG, "user was added successfully: " + wasSaved);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // hardcoded -1
+        if (resultCode == -1) {
+            if (requestCode == RESULT_CODE_IMAGE) {
+                profilePictureUri = data.getData();
+                Bitmap bitmapImage = null;
+                try {
+                    bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), profilePictureUri);
+                    imageButtonProfilePicture.setImageBitmap(bitmapImage);
+                    db.uploadImage(profilePictureUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        }
     }
 }

@@ -31,6 +31,7 @@ import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
 import service.sitter.models.Child;
 import service.sitter.recyclerview.children.ChildAdapter;
+import service.sitter.ui.fragments.PaymentFragment;
 
 public class SetProfileParentFragment extends Fragment {
     ImageView imageView;
@@ -38,6 +39,8 @@ public class SetProfileParentFragment extends Fragment {
     private FragmentSetProfileParentBinding binding;
     MutableLiveData<List<Child>> mutableLiveDataChildren;
     List<Child> children;
+    private int payment = 1;
+    private MutableLiveData<Integer> mutableLiveDataPayment;
     Uri lastChildUri;
     ChildAdapter childAdapter;
     private static final int RESULT_CODE_IMAGE = 100;
@@ -47,6 +50,7 @@ public class SetProfileParentFragment extends Fragment {
     public SetProfileParentFragment() {
         super(R.layout.fragment_set_profile_parent);
         mutableLiveDataChildren = new MutableLiveData<>();
+        mutableLiveDataPayment = new MutableLiveData<>(payment);
         children = new ArrayList<>();
         db = DataBase.getInstance();
     }
@@ -56,6 +60,7 @@ public class SetProfileParentFragment extends Fragment {
         Log.d(TAG, "created");
         binding = FragmentSetProfileParentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        PaymentFragment paymentFragment = new PaymentFragment();
         RecyclerView recyclerView = root.findViewById(R.id.recycler_view_children);
         childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
         recyclerView.setAdapter(childAdapter);
@@ -70,6 +75,11 @@ public class SetProfileParentFragment extends Fragment {
 
         // child button listener
         addChildButton.setOnClickListener(v -> openDialogAddChild());
+        paymentFragment.getLiveData().observe(getViewLifecycleOwner(), payment -> {
+            this.payment = payment;
+            mutableLiveDataPayment.setValue(payment);
+        });
+
 
         return root;
     }
@@ -108,13 +118,16 @@ public class SetProfileParentFragment extends Fragment {
         // cancel
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
 
-
         builder.show();
     }
 
 
-    public LiveData<List<Child>> getLiveData() {
+    public LiveData<List<Child>> getLiveDataChildren() {
         return mutableLiveDataChildren;
+    }
+
+    public LiveData<Integer> getLiveDataPayment() {
+        return mutableLiveDataPayment;
     }
 
     @Override
