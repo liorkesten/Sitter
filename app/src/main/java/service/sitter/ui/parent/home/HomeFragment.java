@@ -1,4 +1,4 @@
-package service.sitter.ui.home;
+package service.sitter.ui.parent.home;
 
 import static java.lang.System.exit;
 

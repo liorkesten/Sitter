@@ -1,4 +1,4 @@
-package service.sitter.ui.manageRequests;
+package service.sitter.ui.parent.manageRequests;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

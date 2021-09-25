@@ -1,4 +1,4 @@
-package service.sitter.ui.connections;
+package service.sitter.ui.parent.connections;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

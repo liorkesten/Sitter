@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="service.sitter.ui.home.HomeFragment"
+        android:name="service.sitter.ui.parent.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="service.sitter.ui.manageRequests.ManageRequestsFragment"
+        android:name="service.sitter.ui.parent.manageRequests.ManageRequestsFragment"
         android:label="@string/title_manage"
         tools:layout="@layout/fragment_manage_requests" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="service.sitter.ui.connections.ConnectionsFragment"
+        android:name="service.sitter.ui.parent.connections.ConnectionsFragment"
         android:label="@string/title_connections"
         tools:layout="@layout/fragment_connections" />
 </navigation>
