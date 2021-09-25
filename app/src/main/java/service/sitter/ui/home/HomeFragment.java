@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.libraries.places.api.model.Place;
-import com.google.gson.Gson;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,6 +35,7 @@ import service.sitter.ui.fragments.DateFragment;
 import service.sitter.ui.fragments.LocationFragment;
 import service.sitter.ui.fragments.PaymentFragment;
 import service.sitter.ui.fragments.TimeFragment;
+import service.sitter.utils.SharedPreferencesUtils;
 
 public class HomeFragment extends Fragment {
 
@@ -73,13 +73,17 @@ public class HomeFragment extends Fragment {
 //        }
         // TODO Delete the code below - it will be used once SP will be saved after SetProfile.
         funcShouldBeDeletedOnceSpIsReadyInitMyUser();
+        if (myUser == null) {
+            //TODO handle exit
+            exit(101);
+        }
         // TODO Delete until here
 
         // Set Logic Business Components
         DateFragment dateFragment = new DateFragment();
         TimeFragment startTimeFragment = new TimeFragment("16:00", "Start Time");
         TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
-        PaymentFragment paymentFragment = new PaymentFragment();
+        PaymentFragment paymentFragment = new PaymentFragment(myUser.getDefaultPricePerHour());
         LocationFragment locationFragment = new LocationFragment();
 
 //        homeViewModel =
@@ -156,18 +160,10 @@ public class HomeFragment extends Fragment {
         db.addParent(myParent);
 
         // Step 3: save parent in SP.
-        String userUid = myParent.getUuid();
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
-        Gson gson = new Gson();
-        String serializedMyParent = gson.toJson(myParent);
-        sp.edit().putString(userUid, serializedMyParent).apply();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferencesUtils.saveParentToSP(sp, myParent);
 //         Step 4: Extract from SP.
-        String mySerializedUser = sp.getString(userUid, "");
-        if (mySerializedUser.equals("")) {
-            Log.e(TAG, "error while trying to extract user uid after that the object saved as json.myUserUid is empty");
-            exit(14);
-        }
-        myUser = gson.fromJson(mySerializedUser, Parent.class);
+        myUser = SharedPreferencesUtils.getParentFromSP(sp);
         Log.d(TAG, String.format("myUser initialized: <%s>", myUser.toString()));
     }
 }

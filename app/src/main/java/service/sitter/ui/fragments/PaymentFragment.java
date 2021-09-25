@@ -16,14 +16,14 @@ import service.sitter.R;
 public class PaymentFragment extends Fragment {
 
     private String currentTime;
-    private static final Integer DEFAULT_PAYMENT = 50;
     private MutableLiveData<Integer> paymentLiveData;
     com.google.android.material.slider.Slider paymentSlider;
+    private int defaultPayment;
 
-    public PaymentFragment() {
+    public PaymentFragment(int defaultPayment) {
         super(R.layout.fragment_payment);
-
-        paymentLiveData = new MutableLiveData<>(DEFAULT_PAYMENT);
+        this.defaultPayment = defaultPayment;
+        paymentLiveData = new MutableLiveData<>(defaultPayment);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -32,14 +32,15 @@ public class PaymentFragment extends Fragment {
         Log.d("PaymentFragment onViewCreated", "created");
 
         paymentSlider = (com.google.android.material.slider.Slider) view.findViewById(R.id.paymentSlider);
-        paymentSlider.setValue(DEFAULT_PAYMENT/*TODO Change this to default payment of the parent - after SP is ready*/);
+        paymentSlider.setValue(defaultPayment);
         paymentSlider.setOnClickListener(l -> paymentLiveData.setValue((int) paymentSlider.getValue()));
 
 
         return view;
     }
 
-    public @NonNull LiveData<Integer> getLiveData() {
+    public @NonNull
+    LiveData<Integer> getLiveData() {
         return paymentLiveData;
     }
 
