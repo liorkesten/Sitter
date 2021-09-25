@@ -80,6 +80,11 @@ public class SetProfileParentFragment extends Fragment {
             mutableLiveDataPayment.setValue(payment);
         });
 
+        // Render fragments
+        getChildFragmentManager()
+                .beginTransaction()
+                .add(R.id.payment_fragment_container_view, paymentFragment)
+                .commit();
 
         return root;
     }
