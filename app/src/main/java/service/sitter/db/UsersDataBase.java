@@ -162,4 +162,16 @@ public class UsersDataBase {
         // In case that the user id is not parent and babysitter
         throw new UserNotFoundException(userUID);
     }
+
+    public Babysitter getBabysitterByPhoneNumber(String phonerNumber) {
+//        QuerySnapshot snapshots = firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).whereEqualTo("phonerNumber", phonerNumber).get();
+//        if (snapshots == null) {
+//            throw new UserNotFoundException(userUID);
+//        }
+//        return (Babysitter) snapshot.toObject(Babysitter.class);
+        //TODO Implement this!!!
+        Babysitter b = new Babysitter("Noam", "Kesten", "n@gma", "0547718646", "NY", "URL_TO_IMAGE");
+        b.setUuid("123");
+        return b;
+    }
 }

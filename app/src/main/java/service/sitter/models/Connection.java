@@ -9,11 +9,15 @@ import java.util.UUID;
  */
 public class Connection implements Serializable {
 
-    private final String uuid;
-    private final Instant creationTimestamp;
-    private final String sideAUId;
-    private final String sideBUId;
+    private String uuid;
+    private String creationTimestamp;
+    private String sideAUId;
+    private String sideBUId;
 
+    // Connection is default Ctor. needed for Firestore.
+    public Connection() {
+
+    }
 
     /**
      * Ctor for Connection
@@ -25,7 +29,7 @@ public class Connection implements Serializable {
 
         uuid = UUID.randomUUID().toString();
 
-        this.creationTimestamp = Instant.now();
+        this.creationTimestamp = Instant.now().toString();
         this.sideAUId = userA.getUuid();
         this.sideBUId = userB.getUuid();
     }
@@ -34,7 +38,7 @@ public class Connection implements Serializable {
         return uuid;
     }
 
-    public Instant getCreationTimestamp() {
+    public String getCreationTimestamp() {
         return creationTimestamp;
     }
 
@@ -44,5 +48,21 @@ public class Connection implements Serializable {
 
     public String getSideBUId() {
         return sideBUId;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public void setCreationTimestamp(String creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
+    }
+
+    public void setSideAUId(String sideAUId) {
+        this.sideAUId = sideAUId;
+    }
+
+    public void setSideBUId(String sideBUId) {
+        this.sideBUId = sideBUId;
     }
 }

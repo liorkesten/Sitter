@@ -42,23 +42,7 @@ public class ConnectionAdapter extends RecyclerView.Adapter<service.sitter.recyc
     @Override
     public void onBindViewHolder(@NonNull @NotNull service.sitter.recyclerview.connections.ConnectionViewHolder holder, int position) {
         Connection connection = connections.get(position);
-//        holder.getNameTextView().setText(connection.getName());
-//        String age = Integer.toString(connection.getAge());
-//        holder.getAgeTextView().setText(age);
-        //TODO Delete this images - fetch from DB.
-//        switch (connection.getImage()) {
-//            case "Daria":
-//                holder.getImageView().setImageResource(R.drawable.daria);
-//                break;
-//            case "Gali":
-//                holder.getImageView().setImageResource(R.drawable.gali);
-//                break;
-//            case "Mika":
-//                holder.getImageView().setImageResource(R.drawable.mika);
-//                break;
-//            default:
-//                exit(120);
-//        }
+        holder.getAgeTextView().setText(connection.getSideBUId());
 
         holder.rootView.setOnClickListener(v -> listener.onRequestClick(connection));
     }

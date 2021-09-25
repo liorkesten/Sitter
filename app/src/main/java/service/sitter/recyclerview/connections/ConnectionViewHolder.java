@@ -1,6 +1,5 @@
 package service.sitter.recyclerview.connections;
 
-import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -25,13 +24,7 @@ public class ConnectionViewHolder extends RecyclerView.ViewHolder {
         handleShowView(itemView);
         rootView = itemView;
 //        nameTextView = itemView.findViewById(R.id.conn);
-        ageTextView = itemView.findViewById(R.id.itemChildAge);
-        imageChildButtonView = itemView.findViewById(R.id.item_child_image_button);
-
-        imageChildButtonView.setOnClickListener(v -> {
-            isSelected = !isSelected;
-            imageChildButtonView.setBackgroundColor(isSelected ? Color.GREEN : Color.TRANSPARENT);
-        });
+        ageTextView = itemView.findViewById(R.id.item_connection_age);
     }
 
 

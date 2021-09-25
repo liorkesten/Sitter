@@ -1,6 +1,7 @@
 package service.sitter.ui.manageRequests;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,15 +25,17 @@ import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
 import service.sitter.recyclerview.requests.RequestAdapter;
+import service.sitter.utils.SharedPreferencesUtils;
 
 public class ManageRequestsFragment extends Fragment {
     private static final String TAG = ManageRequestsFragment.class.getSimpleName();
-
+    private SharedPreferences sp;
     private ManageRequestsViewModel dashboardViewModel;
     private FragmentManageRequestsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         dashboardViewModel =
                 new ViewModelProvider(this).get(ManageRequestsViewModel.class);
 
@@ -85,7 +89,7 @@ public class ManageRequestsFragment extends Fragment {
 
         //TODO Change this parent from constant to parent from SP.
         //        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String parentId = "111";
+        String parentId = SharedPreferencesUtils.getParentFromSP(sp).getUuid();
         switch (requestStatus) {
             case Pending:
                 return db.getLiveDataPendingRequestsOfParent(parentId);

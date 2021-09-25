@@ -1,6 +1,5 @@
 package service.sitter.db;
 
-import android.content.Context;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
@@ -63,4 +62,8 @@ public interface IDataBase {
     Parent getParent(String userUID) throws UserNotFoundException;
 
     public Babysitter getBabysitter(String userUID) throws UserNotFoundException;
+
+    public Babysitter getBabysitterByPhoneNumber(String phonerNumber) throws UserNotFoundException;
+
+    LiveData<List<Connection>> getLiveDataConnectionsOfParent(String parentId);
 }

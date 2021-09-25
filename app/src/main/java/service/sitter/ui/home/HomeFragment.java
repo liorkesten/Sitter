@@ -27,6 +27,7 @@ import service.sitter.R;
 import service.sitter.databinding.FragmentHomeBinding;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
+import service.sitter.models.Babysitter;
 import service.sitter.models.Child;
 import service.sitter.models.Parent;
 import service.sitter.models.Request;
@@ -149,8 +150,11 @@ public class HomeFragment extends Fragment {
 
 
     private void funcShouldBeDeletedOnceSpIsReadyInitMyUser() {
-        // First step - create new user with default values;
         IDataBase db = DataBase.getInstance();
+        Babysitter b = new Babysitter("Noam", "Kesten", "n@gma", "0547718646", "NY", "URL_TO_IMAGE");
+        b.setUuid("123");
+        db.addBabysitter(b);
+        // First step - create new user with default values;
         List<Child> children = new ArrayList<>();
         children.add(new Child("Daria", "10/10/2020", "Daria"));
         children.add(new Child("Gali", "10/10/2018", "Gali"));

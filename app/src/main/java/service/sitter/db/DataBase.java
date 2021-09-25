@@ -1,28 +1,20 @@
 package service.sitter.db;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
 
-import service.sitter.login.fragments.SetProfileParentFragment;
 import service.sitter.models.Babysitter;
 import service.sitter.models.Connection;
 import service.sitter.models.Parent;
@@ -158,6 +150,11 @@ public class DataBase implements IDataBase {
         return usersDb.getBabysitter(userUID);
     }
 
+    @Override
+    public Babysitter getBabysitterByPhoneNumber(String phonerNumber) throws UserNotFoundException {
+        return usersDb.getBabysitterByPhoneNumber(phonerNumber);
+    }
+
 
     // UploadImage method
     public void uploadImage(Uri filePath) {
@@ -180,6 +177,10 @@ public class DataBase implements IDataBase {
                                 Log.d(TAG, "Uploaded " + (int) progress + "%");
                             });
         }
+    }
+
+    public LiveData<List<Connection>> getLiveDataConnectionsOfParent(String parentId) {
+        return collectionsDb.getLiveDataConnectionsOfParent(parentId);
     }
 
 
