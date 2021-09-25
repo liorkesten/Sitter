@@ -1,37 +1,134 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".login.SetProfile">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        tools:background="#000099">
 
 
-    <ImageView
-        android:id="@+id/profile"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="180dp"
-        app:layout_constraintLeft_toLeftOf="parent">
+        <ImageButton
+            android:id="@+id/profile_picture_image_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_marginTop="60dp"
+            android:contentDescription="Add Profile Picture"
+            app:srcCompat="@drawable/com_facebook_button_icon" />
 
-    </ImageView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            android:gravity="center"
+            android:text="Hello UserName"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/info"
-        android:layout_width="122dp"
-        android:layout_height="67dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/title_phone_number_input_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="@string/title_phone_number" />
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/profile"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_arrow_left" />
 
-</RelativeLayout>
+        <EditText
+            android:id="@+id/editTextId"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:digits="0123456789+"
+            android:hint="+97254777777"
+            android:inputType="phone" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/location_fragment_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:background="#990000" />
+
+        <TextView
+            android:id="@+id/title_radio_group_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/set_profile_title_babysitter_or_parent" />
+
+        <RadioGroup
+            android:id="@+id/parent_or_babysitter_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <RadioButton
+                android:id="@+id/parent_radio_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:checked="true"
+                android:gravity="center"
+                android:text="@string/parent"
+                android:textColor="@drawable/radio_flat_text_selector" />
+
+            <RadioButton
+                android:id="@+id/babysitter_radio_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:gravity="center"
+                android:text="@string/babysitter"
+                android:textColor="@drawable/radio_flat_text_selector" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:background="#009900"
+        android:orientation="horizontal"
+        tools:background="#009900">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/bottomFrameFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <Button
+        android:id="@+id/add_user_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/primary"
+        android:text="Add User"
+        android:textColor="@color/secondary" />
+
+
+</LinearLayout>

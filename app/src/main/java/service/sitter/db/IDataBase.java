@@ -7,7 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import service.sitter.models.Babysitter;
 import service.sitter.models.Connection;
+import service.sitter.models.Parent;
 import service.sitter.models.Recommendation;
 import service.sitter.models.Request;
 import service.sitter.models.User;
@@ -41,4 +43,12 @@ public interface IDataBase {
     LiveData<List<Request>> getLiveDataDeletedRequestsOfParent(String parentId);
 
     LiveData<List<Request>> getLiveDataArchivedRequestsOfParent(String parentId);
+
+    public boolean addParent(@NonNull @NotNull Parent parent);
+
+    public boolean deleteParent(@NonNull @NotNull Parent parent);
+
+    public boolean addBabysitter(@NonNull @NotNull Babysitter babysitter);
+
+    public boolean deleteBabysitter(@NonNull @NotNull Babysitter babysitter);
 }

@@ -11,11 +11,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import service.sitter.models.Babysitter;
+import service.sitter.models.Parent;
 import service.sitter.models.User;
 
 public class UsersDataBase {
     private static final String TAG = UsersDataBase.class.getSimpleName();
     private static final String COLLECTION_FIRESTORE_NAME = "users";
+    private static final String COLLECTION_FIRESTORE_PARENT_NAME = "parents";
+    private static final String COLLECTION_FIRESTORE_BABYSITTER_NAME = "babysitters";
 
     private final FirebaseFirestore firestore;
     private final Map<String, User> users = new HashMap<>();
@@ -41,7 +45,6 @@ public class UsersDataBase {
             return false;
         }
 
-        users.put(user.getUuid(), user);
         firestore.collection(COLLECTION_FIRESTORE_NAME).document(userUuid).set(user);
 
         Log.d(TAG, String.format("User was added successfully: <%s>", userUuid));
@@ -59,6 +62,59 @@ public class UsersDataBase {
         firestore.collection(COLLECTION_FIRESTORE_NAME).document(userUuid).delete();
 
         Log.d(TAG, String.format("User was deleted successfully: <%s>", userUuid));
+        return true;
+    }
+
+    /**
+     * Add parent to data base
+     *
+     * @param parent - new parent
+     * @return false in case that the user is already exists in the db.
+     */
+    public boolean addParent(@NonNull Parent parent) {
+        String parentUuid = parent.getUuid();
+        firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(parentUuid).set(parent);
+        Log.d(TAG, String.format("Parent was added successfully: <%s>", parentUuid));
+        return true;
+    }
+
+    /**
+     * Delete parent to data base
+     *
+     * @param parent - new parent
+     * @return false in case that the user is already exists in the db.
+     */
+    public boolean deleteParent(@NonNull Parent parent) {
+        String parentUuid = parent.getUuid();
+        firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(parentUuid).delete();
+        Log.d(TAG, String.format("Parent was deleted successfully: <%s>", parentUuid));
+        return true;
+    }
+
+    /**
+     * Add parent to data base
+     *
+     * @param babysitter - new babysitter
+     * @return false in case that the user is already exists in the db.
+     */
+    public boolean addBabysitter(@NonNull Babysitter babysitter) {
+        String babysitterUuid = babysitter.getUuid();
+        firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).document(babysitterUuid).set(babysitter);
+        Log.d(TAG, String.format("Babysitter was added successfully: <%s>", babysitterUuid));
+        return true;
+    }
+
+
+    /**
+     * Delete parent to data base
+     *
+     * @param babysitter - new parent
+     * @return false in case that the user is already exists in the db.
+     */
+    public boolean deleteBabysitter(@NonNull Babysitter babysitter) {
+        String babysitterUuid = babysitter.getUuid();
+        firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).document(babysitterUuid).delete();
+        Log.d(TAG, String.format("Babysitter was deleted successfully: <%s>", babysitterUuid));
         return true;
     }
 

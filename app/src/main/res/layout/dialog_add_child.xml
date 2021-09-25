@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/ll2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title_child_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add child name" />
+
+        <EditText
+            android:id="@+id/edit_text_child_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Harry Potter"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/title_child_birthday_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add birthday" />
+
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="DD/MM/YYYY"
+            android:inputType="date" />
+
+        <TextView
+            android:id="@+id/title_picture_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add a picture of your child" />
+
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/button_load_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Load Picture"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+</FrameLayout>

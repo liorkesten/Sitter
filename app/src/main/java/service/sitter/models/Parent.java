@@ -5,7 +5,8 @@ import java.util.List;
 
 public class Parent extends User {
     // Array of the children.
-    private final List<Child> children;
+    private List<Child> children;
+    private List<Connection> connections;
     // The default price per hour that the parent would pay for babysitter.
     private int defaultPricePerHour;
 
@@ -14,11 +15,25 @@ public class Parent extends User {
         super(firstName, lastName, emailAddress, phoneNumber, UserCategory.Parent, location, image);
 
         this.children = new ArrayList<>(children);
+        this.connections = new ArrayList<>();
         this.defaultPricePerHour = defaultPricePerHour;
+    }
+
+
+    public List<Connection> getConnections() {
+        return connections;
+    }
+
+    public void setConnections(List<Connection> connections) {
+        this.connections = connections;
     }
 
     public List<Child> getChildren() {
         return children;
+    }
+
+    public void setChildren(List<Child> children) {
+        this.children = children;
     }
 
     public int getDefaultPricePerHour() {

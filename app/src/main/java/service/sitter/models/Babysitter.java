@@ -13,6 +13,7 @@ public class Babysitter extends User {
         super(firstName, lastName, emailAddress, phoneNumber, UserCategory.Babysitter, location, image);
     }
 
+
     public Ranking getRank() {
         return rank;
     }
