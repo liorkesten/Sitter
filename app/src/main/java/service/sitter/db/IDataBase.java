@@ -1,5 +1,8 @@
 package service.sitter.db;
 
+import android.content.Context;
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
@@ -35,6 +38,8 @@ public interface IDataBase {
     boolean addUser(@NonNull @NotNull User user);
 
     boolean deleteUser(String userUuid);
+
+    void uploadImage(Uri filePath);
 
 
     LiveData<List<Request>> getLiveDataPendingRequestsOfParent(String parentId);

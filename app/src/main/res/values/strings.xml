@@ -56,4 +56,6 @@
     <string name="my_connections">My connections</string>
     <string name="recommendations_title">recommended for you</string>
     <string name="add_new_connection">Add new Connection</string>
+    <string name="load_picture_button_text">Load Picture</string>
+    <string name="hint_phone_number">+97254777777</string>
 </resources>

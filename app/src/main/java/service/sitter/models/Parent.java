@@ -15,6 +15,14 @@ public class Parent extends User implements Serializable {
         super();
     }
 
+    @Override
+    public String toString() {
+        return "Parent{" +
+                "children=" + children +
+                ", defaultPricePerHour=" + defaultPricePerHour +
+                '}';
+    }
+
     public Parent(String firstName, String lastName, String emailAddress, String phoneNumber,
                   String location, String image, List<Child> children, int defaultPricePerHour) {
         super(firstName, lastName, emailAddress, phoneNumber, UserCategory.Parent, location, image);

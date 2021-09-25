@@ -152,9 +152,9 @@ public class HomeFragment extends Fragment {
         // First step - create new user with default values;
         IDataBase db = DataBase.getInstance();
         List<Child> children = new ArrayList<>();
-        children.add(new Child("Daria", 1, "Daria"));
-        children.add(new Child("Gali", 3, "Gali"));
-        children.add(new Child("Mika", 5, "Mika"));
+        children.add(new Child("Daria", "10/10/2020", "Daria"));
+        children.add(new Child("Gali", "10/10/2018", "Gali"));
+        children.add(new Child("Mika", "10/10/2015", "Mika"));
         Parent myParent = new Parent("Lior", "Kesten", "kestenlior@gmail.com", "+972547718647", "NY", "<URL_TO_IMAGE>", children, 60);
         // Step 2: add the user to the db.
         db.addParent(myParent);

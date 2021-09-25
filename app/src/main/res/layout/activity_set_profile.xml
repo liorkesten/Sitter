@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layout_marginBottom="8dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -17,19 +18,21 @@
 
         <ImageButton
             android:id="@+id/profile_picture_image_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginTop="60dp"
+            android:scaleType="fitXY"
             android:contentDescription="Add Profile Picture"
-            app:srcCompat="@drawable/com_facebook_button_icon" />
+            app:srcCompat="@drawable/profile_picture_icon" />
 
         <TextView
+            android:id="@+id/user_name_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="60dp"
             android:gravity="center"
-            android:text="Hello UserName"
+            android:text="Welcome User Name"
             android:textSize="20sp" />
 
         <TextView
@@ -41,12 +44,12 @@
 
 
         <EditText
-            android:id="@+id/editTextId"
+            android:id="@+id/phone_number_edit_text"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:digits="0123456789+"
-            android:hint="+97254777777"
+            android:hint="@string/hint_phone_number"
             android:inputType="phone" />
 
         <androidx.fragment.app.FragmentContainerView
@@ -111,7 +114,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:background="#009900"
         android:orientation="horizontal"
         tools:background="#009900">
 
