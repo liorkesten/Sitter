@@ -1,32 +1,69 @@
 package service.sitter.db;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
+import service.sitter.models.Babysitter;
 import service.sitter.models.Connection;
+import service.sitter.models.Parent;
 import service.sitter.models.Recommendation;
 import service.sitter.models.Request;
 import service.sitter.models.User;
+import service.sitter.models.UserCategory;
 
 /**
  * IDataBase is the interface for application database - needed for mocking and testing.
  */
 public interface IDataBase {
 
-    public boolean addRequest(@NonNull @NotNull Request request);
+    boolean addRequest(@NonNull @NotNull Request request);
 
-    public boolean deleteRequest(String requestUuid);
+    boolean deleteRequest(String requestUuid);
 
-    public boolean addRecommendation(@NonNull @NotNull Recommendation recommendation);
+    boolean addRecommendation(@NonNull @NotNull Recommendation recommendation);
 
-    public boolean deleteRecommendation(String recommendationUuid);
+    boolean deleteRecommendation(String recommendationUuid);
 
-    public boolean addConnection(@NonNull @NotNull Connection connection);
+    boolean addConnection(@NonNull @NotNull Connection connection);
 
-    public boolean deleteConnection(String connectionUuid);
+    boolean deleteConnection(String connectionUuid);
 
-    public boolean addUser(@NonNull @NotNull User user);
+    boolean addUser(@NonNull @NotNull User user);
 
-    public boolean deleteUser(String userUuid);
+    boolean deleteUser(String userUuid);
+
+    void uploadImage(Uri filePath);
+
+
+    LiveData<List<Request>> getLiveDataPendingRequestsOfParent(String parentId);
+
+    LiveData<List<Request>> getLiveDataApprovedRequestsOfParent(String parentId);
+
+    LiveData<List<Request>> getLiveDataDeletedRequestsOfParent(String parentId);
+
+    LiveData<List<Request>> getLiveDataArchivedRequestsOfParent(String parentId);
+
+    boolean addParent(@NonNull @NotNull Parent parent);
+
+    boolean deleteParent(@NonNull @NotNull Parent parent);
+
+    boolean addBabysitter(@NonNull @NotNull Babysitter babysitter);
+
+    boolean deleteBabysitter(@NonNull @NotNull Babysitter babysitter);
+
+    UserCategory getUserCategory(String userUID) throws UserNotFoundException;
+
+    Parent getParent(String userUID) throws UserNotFoundException;
+
+    public Babysitter getBabysitter(String userUID) throws UserNotFoundException;
+
+    public Babysitter getBabysitterByPhoneNumber(String phonerNumber) throws UserNotFoundException;
+
+    LiveData<List<Connection>> getLiveDataConnectionsOfParent(String parentId);
 }

@@ -3,10 +3,13 @@ package service.sitter.db;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +18,7 @@ import service.sitter.models.Connection;
 
 public class ConnectionsDataBase {
     private static final String TAG = ConnectionsDataBase.class.getSimpleName();
-    private static final String Connection_FIRESTORE_NAME = "connections";
+    private static final String COLLECTION_FIRESTORE_NAME = "connections";
 
     private final FirebaseFirestore firestore;
     private final Map<String, Connection> Connections = new HashMap<>();
@@ -42,7 +45,7 @@ public class ConnectionsDataBase {
         }
 
         Connections.put(connectionUuid, connection);
-        firestore.collection(Connection_FIRESTORE_NAME).document(connectionUuid).set(connection);
+        firestore.collection(COLLECTION_FIRESTORE_NAME).document(connectionUuid).set(connection);
 
         Log.d(TAG, String.format("Connection was added successfully: <%s>", connectionUuid));
         return true;
@@ -62,10 +65,31 @@ public class ConnectionsDataBase {
         }
 
         Connections.remove(connectionUuid);
-        firestore.collection(Connection_FIRESTORE_NAME).document(connectionUuid).delete();
+        firestore.collection(COLLECTION_FIRESTORE_NAME).document(connectionUuid).delete();
 
         Log.d(TAG, String.format("Connection was deleted successfully: <%s>", connectionUuid));
         return true;
+    }
+
+    public LiveData<List<Connection>> getLiveDataConnectionsOfParent(String parentId) {
+        MutableLiveData<List<Connection>> liveDateConnections = new MutableLiveData<>();
+        firestore
+                .collection(COLLECTION_FIRESTORE_NAME)
+                .whereEqualTo("sideAUId", parentId)
+                .addSnapshotListener((value, err) -> {
+                    if (err != null) {
+                        Log.e(TAG, String.format("Failed to extract requests of parent <%s>due to: %s", parentId, err));
+                    } else if (value == null) {
+                        Log.e(TAG, String.format("Failed to extract requests of parent <%s> due to: value is null", parentId));
+                    } else {
+                        List<Connection> connections = new ArrayList<>();
+                        List<DocumentSnapshot> documentSnapshots = value.getDocuments();
+                        documentSnapshots.forEach(doc -> connections.add(doc.toObject(Connection.class)));
+                        liveDateConnections.setValue(connections);
+                        Log.d(TAG, "All connections extracted successfully");
+                    }
+                });
+        return liveDateConnections;
     }
 
 }

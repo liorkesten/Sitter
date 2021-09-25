@@ -1,15 +1,11 @@
 package service.sitter.ui.fragments;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,20 +19,19 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
-
 import java.util.Arrays;
 
 import service.sitter.R;
 
 public class LocationFragment extends Fragment {
-    private MutableLiveData<String> locationLiveData;
+    private MutableLiveData<Place> locationLiveData;
     private String location = "no-location";
     private AutocompleteSupportFragment autocompleteSupportFragment;
 
     public LocationFragment() {
         super(R.layout.fragment_location);
 
-        locationLiveData = new MutableLiveData<>();
+        locationLiveData = new MutableLiveData<>(/*TODO Default location?*/);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -57,8 +52,8 @@ public class LocationFragment extends Fragment {
         autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-                location = place.getName();
-                locationLiveData.setValue(location);
+//                placeName = place.getName();
+                locationLiveData.setValue(place);
             }
 
             @Override
@@ -71,7 +66,7 @@ public class LocationFragment extends Fragment {
         return view;
     }
 
-    public LiveData<String> getLiveData() {
+    public LiveData<Place> getLiveData() {
         return locationLiveData;
     }
 }

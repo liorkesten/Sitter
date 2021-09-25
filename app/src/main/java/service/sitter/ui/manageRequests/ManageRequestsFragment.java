@@ -1,48 +1,50 @@
 package service.sitter.ui.manageRequests;
 
-import android.location.Location;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import service.sitter.R;
 import service.sitter.databinding.FragmentManageRequestsBinding;
-import service.sitter.models.Child;
+import service.sitter.db.DataBase;
+import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
-import service.sitter.recyclerview.children.ChildAdapter;
+import service.sitter.models.RequestStatus;
 import service.sitter.recyclerview.requests.RequestAdapter;
+import service.sitter.utils.SharedPreferencesUtils;
 
 public class ManageRequestsFragment extends Fragment {
-
+    private static final String TAG = ManageRequestsFragment.class.getSimpleName();
+    private SharedPreferences sp;
     private ManageRequestsViewModel dashboardViewModel;
     private FragmentManageRequestsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         dashboardViewModel =
                 new ViewModelProvider(this).get(ManageRequestsViewModel.class);
 
         binding = FragmentManageRequestsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        setRecyclerView(root, R.id.recycler_view_upcoming_requests);
-        setRecyclerView(root, R.id.recycler_view_approved_requests);
-        setRecyclerView(root, R.id.recycler_view_history_requests);
+        setRecyclerView(root, R.id.recycler_view_upcoming_requests, RequestStatus.Pending);
+        setRecyclerView(root, R.id.recycler_view_approved_requests, RequestStatus.Approved);
+        setRecyclerView(root, R.id.recycler_view_history_requests, RequestStatus.Archived);
 
 
 //        final TextView textView = binding.textDashboard;
@@ -55,16 +57,24 @@ public class ManageRequestsFragment extends Fragment {
         return root;
     }
 
-    private void setRecyclerView(View root, int recyclerViewId) {
+    private void setRecyclerView(View root, int recyclerViewId, RequestStatus requestStatus) {
         RecyclerView recyclerViewUpcoming = root.findViewById(recyclerViewId);
-        RequestAdapter upcomingRequestsAdapter = new RequestAdapter(request -> { /*TODO Implement this listener*/});
-        recyclerViewUpcoming.setAdapter(upcomingRequestsAdapter);
-        List<Request> requests = new ArrayList<>();
-        List<Child> children = new ArrayList<>();
-        requests.add(new Request("111", new Date("10/10/10"), LocalTime.parse("10:00"), LocalTime.parse("11:00"), new Location("noam"), children, 100, "New request"));
-        requests.add(new Request("222", new Date("11/11/10"), LocalTime.parse("10:00"), LocalTime.parse("11:00"), new Location("noam"), children, 100, "New request"));
+        RequestAdapter requestAdapter = new RequestAdapter(request -> { /*TODO Implement this listener*/});
 
-        upcomingRequestsAdapter.setRequests(requests);
+        LiveData<List<Request>> requestsLiveData = getLiveDataOfRequests(requestStatus);
+        if (requestsLiveData == null) {
+            //TODO
+        }
+        requestsLiveData.observeForever(requests -> {
+            if (requests == null) {
+                Log.e(TAG, "Requests is nil");
+            } else {
+                Log.d(TAG, "Set new requests for request adapter -  " + requests);
+                requestAdapter.setRequests(requests);
+            }
+        });
+        recyclerViewUpcoming.setAdapter(requestAdapter);
+
         recyclerViewUpcoming.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
     }
 
@@ -72,5 +82,27 @@ public class ManageRequestsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private LiveData<List<Request>> getLiveDataOfRequests(RequestStatus requestStatus) {
+        IDataBase db = DataBase.getInstance();
+
+        //TODO Change this parent from constant to parent from SP.
+        //        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String parentId = SharedPreferencesUtils.getParentFromSP(sp).getUuid();
+        switch (requestStatus) {
+            case Pending:
+                return db.getLiveDataPendingRequestsOfParent(parentId);
+            case Approved:
+                return db.getLiveDataApprovedRequestsOfParent(parentId);
+            case Deleted:
+                return db.getLiveDataDeletedRequestsOfParent(parentId);
+            case Archived:
+                return db.getLiveDataArchivedRequestsOfParent(parentId);
+            default:
+                return null;
+
+        }
+
     }
 }

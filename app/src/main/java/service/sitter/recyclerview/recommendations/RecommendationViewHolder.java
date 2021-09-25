@@ -1,10 +1,8 @@
-package service.sitter.recyclerview.children;
+package service.sitter.recyclerview.recommendations;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,14 +12,14 @@ import org.jetbrains.annotations.NotNull;
 
 import service.sitter.R;
 
-public class ChildViewHolder extends RecyclerView.ViewHolder {
+public class RecommendationViewHolder extends RecyclerView.ViewHolder {
     public final View rootView;
     private TextView nameTextView;
     private TextView ageTextView;
     private ImageButton imageChildButtonView;
     private boolean isSelected;
 
-    public ChildViewHolder(@NonNull @NotNull View itemView) {
+    public RecommendationViewHolder(@NonNull @NotNull View itemView) {
         super(itemView);
         // rootView is used for click on the whole print (not specific button)
         handleShowView(itemView);

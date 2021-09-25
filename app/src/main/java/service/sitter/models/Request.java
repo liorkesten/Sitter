@@ -1,31 +1,50 @@
 package service.sitter.models;
 
-import android.location.Location;
+import com.google.android.libraries.places.api.model.Place;
 
-import java.time.Instant;
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public class Request {
-    private final String uuid;
+public class Request implements Serializable {
+
+    private String uuid;
     // publisher is the parent that published the request
-    private final String publisherId;
+    private String publisherId;
     // receiver is the babysitter that approved the request
     private String receiverId;
     // date without time
-    private Date date;
-    private int startTime;
-    private int endTime;
+    private String date;
+    private String startTime;
+    private String endTime;
     // TODO Location
-    private Location location;
+    private Place location;
     private List<Child> children;
     private int pricePerHour;
     private String description;
     private RequestStatus status;
+
+    // Request is default Ctor. needed for Firestore.
+    public Request() {
+
+    }
+
+    public Request(String publisherId, LocalDate date, String startTime, String endTime,
+                   Place location, List<Child> children, int pricePerHour, String description) {
+        this.uuid = UUID.randomUUID().toString();
+        this.publisherId = publisherId;
+        this.date = (date != null) ? date.toString() : "";
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.location = location;
+        this.children = children;
+        this.pricePerHour = pricePerHour;
+        this.description = description;
+
+        status = RequestStatus.Pending;
+    }
+
 
     @Override
     public String toString() {
@@ -44,20 +63,6 @@ public class Request {
                 '}';
     }
 
-    public Request(String publisherId, Date date, LocalTime startTime, LocalTime endTime,
-                   Location location, List<Child> children, int pricePerHour, String description) {
-        this.uuid = UUID.randomUUID().toString();
-        this.publisherId = publisherId;
-        this.date = date;
-        this.startTime = startTime.toSecondOfDay();
-        this.endTime = endTime.toSecondOfDay();
-        this.location = location;
-        this.children = children;
-        this.pricePerHour = pricePerHour;
-        this.description = description;
-
-        status = RequestStatus.Pending;
-    }
 
     public String getUuid() {
         return uuid;
@@ -71,21 +76,16 @@ public class Request {
         return receiverId;
     }
 
-//    public LocalDate getDate() {
-//        return date.toInstant()
-//                .atZone(ZoneId.systemDefault())
-//                .toLocalDate();
-//    }
 
-    public LocalTime getStartTime() {
-        return LocalTime.ofSecondOfDay(startTime);
+    public String getStartTime() {
+        return startTime;
     }
 
-    public LocalTime getEndTime() {
-        return LocalTime.ofSecondOfDay(endTime);
+    public String getEndTime() {
+        return endTime;
     }
 
-    public Location getLocation() {
+    public Place getLocation() {
         return location;
     }
 
@@ -107,5 +107,49 @@ public class Request {
 
     public void setReceiverId(String receiverId) {
         this.receiverId = receiverId;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public void setPublisherId(String publisherId) {
+        this.publisherId = publisherId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setLocation(Place location) {
+        this.location = location;
+    }
+
+    public void setChildren(List<Child> children) {
+        this.children = children;
+    }
+
+    public void setPricePerHour(int pricePerHour) {
+        this.pricePerHour = pricePerHour;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStatus(RequestStatus status) {
+        this.status = status;
     }
 }

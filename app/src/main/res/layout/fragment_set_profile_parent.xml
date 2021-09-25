@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="8dp"
+    android:orientation="vertical">
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Children:" />-->
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_children"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp" />
+
+<!--    <ImageButton-->
+<!--      git  android:id="@+id/imageButton1"-->
+<!--        android:layout_width="70dp"-->
+<!--        android:layout_height="70dp"-->
+<!--        android:layout_gravity="center_horizontal|center_vertical"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:scaleType="fitXY"-->
+<!--        android:background="@drawable/round_button"-->
+<!--        android:src="@drawable/child_icon" />-->
+    <Button
+        android:id="@+id/add_child_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity=""
+        android:layout_marginRight="8dp"
+        android:backgroundTint="@color/primary"
+        android:text="ADD CHILD"
+        android:textColor="@color/secondary" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/payment_fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        tools:background="#999999" />
+
+
+</LinearLayout>

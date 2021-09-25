@@ -1,20 +1,27 @@
 package service.sitter.db;
 
+import android.net.Uri;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import service.sitter.models.Babysitter;
 import service.sitter.models.Connection;
+import service.sitter.models.Parent;
 import service.sitter.models.Recommendation;
 import service.sitter.models.Request;
 import service.sitter.models.User;
+import service.sitter.models.UserCategory;
 
 public class DataBase implements IDataBase {
     private static DataBase instance;
@@ -24,14 +31,20 @@ public class DataBase implements IDataBase {
     private final RequestsDataBase requestsDb;
     private final ConnectionsDataBase collectionsDb;
     private FirebaseFirestore fireStore;
+    FirebaseStorage storage;
+    private StorageReference storageReference;
+    private static final String TAG = DataBase.class.getSimpleName();
+
 
     private DataBase() {
         fireStore = FirebaseFirestore.getInstance();
-
         usersDb = new UsersDataBase(fireStore);
         reccomendationsDb = new RecommendationsDataBase(fireStore);
         requestsDb = new RequestsDataBase(fireStore);
         collectionsDb = new ConnectionsDataBase(fireStore);
+        // get the Firebase  storage reference
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         //TODO Add snapshotevent listener.
     }
@@ -42,7 +55,7 @@ public class DataBase implements IDataBase {
      *
      * @return IDataBase
      */
-    public static IDataBase getInstance() {
+    public static DataBase getInstance() {
         if (instance == null) {
             instance = new DataBase();
         }
@@ -81,12 +94,102 @@ public class DataBase implements IDataBase {
         return usersDb.deleteUser(userUuid);
     }
 
+    @Override
+    public LiveData<List<Request>> getLiveDataPendingRequestsOfParent(String parentId) {
+        return requestsDb.getLiveDataPendingRequestsOfParent(parentId);
+    }
 
-    /**
-     //     * Adds new request to the DB.
-     //     *
-     //     * @param newRequest is the request that should be added to the DB/
-     //     */
+    @Override
+    public LiveData<List<Request>> getLiveDataApprovedRequestsOfParent(String parentId) {
+        return requestsDb.getLiveDataApprovedRequestsOfParent(parentId);
+    }
+
+    @Override
+    public LiveData<List<Request>> getLiveDataDeletedRequestsOfParent(String parentId) {
+        return requestsDb.getLiveDataDeletedRequestsOfParent(parentId);
+
+    }
+
+    @Override
+    public LiveData<List<Request>> getLiveDataArchivedRequestsOfParent(String parentId) {
+        return requestsDb.getLiveDataArchivedRequestsOfParent(parentId);
+    }
+
+    @Override
+    public boolean addParent(@NonNull Parent parent) {
+        return usersDb.addParent(parent);
+    }
+
+    @Override
+    public boolean deleteParent(@NonNull Parent parent) {
+        return usersDb.deleteParent(parent);
+    }
+
+    @Override
+    public boolean addBabysitter(@NonNull Babysitter babysitter) {
+        return usersDb.addBabysitter(babysitter);
+    }
+
+    @Override
+    public boolean deleteBabysitter(@NonNull Babysitter babysitter) {
+        return usersDb.deleteBabysitter(babysitter);
+    }
+
+    @Override
+    public UserCategory getUserCategory(String userUID) throws UserNotFoundException {
+        return usersDb.getUserCategory(userUID);
+    }
+
+    @Override
+    public Parent getParent(String userUID) throws UserNotFoundException {
+        return usersDb.getParent(userUID);
+    }
+
+    @Override
+    public Babysitter getBabysitter(String userUID) throws UserNotFoundException {
+        return usersDb.getBabysitter(userUID);
+    }
+
+    @Override
+    public Babysitter getBabysitterByPhoneNumber(String phonerNumber) throws UserNotFoundException {
+        return usersDb.getBabysitterByPhoneNumber(phonerNumber);
+    }
+
+
+    // UploadImage method
+    public void uploadImage(Uri filePath) {
+        if (filePath != null) {
+            Log.d(TAG, "uploading image");
+
+            // Defining the child of storageReference
+            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+
+            // adding listeners on upload or failure of image
+            ref.putFile(filePath)
+                    .addOnSuccessListener(taskSnapshot -> Log.d(TAG, "success uploading image"))
+                    .addOnFailureListener(e -> Log.e(TAG, e.getMessage()))
+                    .addOnProgressListener(
+                            taskSnapshot -> {
+                                double progress
+                                        = (100.0
+                                        * taskSnapshot.getBytesTransferred()
+                                        / taskSnapshot.getTotalByteCount());
+                                Log.d(TAG, "Uploaded " + (int) progress + "%");
+                            });
+        }
+    }
+
+    public LiveData<List<Connection>> getLiveDataConnectionsOfParent(String parentId) {
+        return collectionsDb.getLiveDataConnectionsOfParent(parentId);
+    }
+
+
+/**
+ * //     * Adds new request to the DB.
+ * //     *
+ * //     * @param newRequest is the request that should be added to the DB/
+ * //
+ */
 //    public void addRequest(Request newRequest) {
 //        requestsDb.put(newRequest.getUUID(), newRequest);
 //        //FIXME Check if the values extraction below is working.

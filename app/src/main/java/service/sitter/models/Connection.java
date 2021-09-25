@@ -1,41 +1,44 @@
 package service.sitter.models;
 
-import com.google.type.DateTime;
-
+import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalTime;
-import java.util.Date;
 import java.util.UUID;
 
 /**
  *
  */
-public class Connection {
+public class Connection implements Serializable {
 
-    private final String uuid;
-    private final Instant creationTimestamp;
-    private final String sideAUId;
-    private final String sideBUId;
+    private String uuid;
+    private String creationTimestamp;
+    private String sideAUId;
+    private String sideBUId;
+
+    // Connection is default Ctor. needed for Firestore.
+    public Connection() {
+
+    }
 
     /**
-     * Ctor for connection
+     * Ctor for Connection
      *
-     * @param sideAUId
-     * @param sideBUId
+     * @param userA
+     * @param userB
      */
-    public Connection(String sideAUId, String sideBUId) {
+    public Connection(User userA, User userB) {
+
         uuid = UUID.randomUUID().toString();
 
-        this.creationTimestamp = Instant.now();
-        this.sideAUId = sideAUId;
-        this.sideBUId = sideBUId;
+        this.creationTimestamp = Instant.now().toString();
+        this.sideAUId = userA.getUuid();
+        this.sideBUId = userB.getUuid();
     }
 
     public String getUuid() {
         return uuid;
     }
 
-    public Instant getCreationTimestamp() {
+    public String getCreationTimestamp() {
         return creationTimestamp;
     }
 
@@ -45,5 +48,21 @@ public class Connection {
 
     public String getSideBUId() {
         return sideBUId;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public void setCreationTimestamp(String creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
+    }
+
+    public void setSideAUId(String sideAUId) {
+        this.sideAUId = sideAUId;
+    }
+
+    public void setSideBUId(String sideBUId) {
+        this.sideBUId = sideBUId;
     }
 }

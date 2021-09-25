@@ -3,15 +3,19 @@ package service.sitter.db;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import service.sitter.models.Request;
+import service.sitter.models.RequestStatus;
 
 public class RequestsDataBase {
     private static final String TAG = RequestsDataBase.class.getSimpleName();
@@ -68,4 +72,41 @@ public class RequestsDataBase {
         return true;
     }
 
+    public LiveData<List<Request>> getLiveDataPendingRequestsOfParent(String parentId) {
+        return getLiveDataRequestsOfParent(parentId, RequestStatus.Pending);
+    }
+
+    public LiveData<List<Request>> getLiveDataApprovedRequestsOfParent(String parentId) {
+        return getLiveDataRequestsOfParent(parentId, RequestStatus.Approved);
+    }
+
+    public LiveData<List<Request>> getLiveDataArchivedRequestsOfParent(String parentId) {
+        return getLiveDataRequestsOfParent(parentId, RequestStatus.Archived);
+    }
+
+    public LiveData<List<Request>> getLiveDataDeletedRequestsOfParent(String parentId) {
+        return getLiveDataRequestsOfParent(parentId, RequestStatus.Deleted);
+    }
+
+    private LiveData<List<Request>> getLiveDataRequestsOfParent(String parentId, RequestStatus status) {
+        MutableLiveData<List<Request>> liveDataRequests = new MutableLiveData<>();
+        firestore
+                .collection(COLLECTION_FIRESTORE_NAME)
+                .whereEqualTo("publisherId", parentId)
+                .whereEqualTo("status", status.toString())
+                .addSnapshotListener((value, err) -> {
+                    if (err != null) {
+                        Log.e(TAG, String.format("Failed to extract requests of parent <%s>, with status <%s> due to: %s", parentId, status, err));
+                    } else if (value == null) {
+                        Log.e(TAG, String.format("Failed to extract requests of parent <%s>, with status <%s> due to: value is null", parentId, status));
+                    } else {
+                        List<Request> requests = new ArrayList<>();
+                        List<DocumentSnapshot> documentSnapshots = value.getDocuments();
+                        documentSnapshots.forEach(doc -> requests.add(doc.toObject(Request.class)));
+                        liveDataRequests.setValue(requests);
+                        Log.d(TAG, "All requests extracted successfully");
+                    }
+                });
+        return liveDataRequests;
+    }
 }
