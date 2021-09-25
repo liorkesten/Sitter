@@ -53,4 +53,5 @@
     <string name="set_profile_title_babysitter_or_parent">Who Are You?</string>
     <string name="title_phone_number">Enter your phone number</string>
     <string name="babysitter_mobility_switch">Has Car</string>
+    <string name="load_picture_button_text">Load Picture</string>
 </resources>
