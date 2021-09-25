@@ -9,18 +9,34 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Parent"
-        android:textSize="40dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="Children:" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_children"
+    <LinearLayout
+        android:id="@+id/linear2"
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/add_child_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:backgroundTint="@color/primary"
+            android:text="ADD CHILD"
+            android:textColor="@color/secondary" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_children"
+            android:layout_width="match_parent"
+            android:layout_marginRight="8dp"
+            android:layout_height="100dp" />
+
+
+    </LinearLayout>
 
 
 </LinearLayout>

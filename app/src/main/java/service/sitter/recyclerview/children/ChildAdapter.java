@@ -3,6 +3,7 @@ package service.sitter.recyclerview.children;
 import static java.lang.System.exit;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
         Child child = children.get(position);
         holder.getNameTextView().setText(child.getName());
         String age = Integer.toString(child.getAge());
+        Log.d("Noam", age);
         holder.getAgeTextView().setText(age);
         //TODO Delete this images - fetch from DB.
         switch (child.getImage()) {

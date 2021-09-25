@@ -1,14 +1,28 @@
 package service.sitter.db;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.UUID;
 
+import service.sitter.login.fragments.SetProfileParentFragment;
 import service.sitter.models.Babysitter;
 import service.sitter.models.Connection;
 import service.sitter.models.Parent;
@@ -24,14 +38,20 @@ public class DataBase implements IDataBase {
     private final RequestsDataBase requestsDb;
     private final ConnectionsDataBase collectionsDb;
     private FirebaseFirestore fireStore;
+    FirebaseStorage storage;
+    private StorageReference storageReference;
+    private static final String TAG = DataBase.class.getSimpleName();
+
 
     private DataBase() {
         fireStore = FirebaseFirestore.getInstance();
-
         usersDb = new UsersDataBase(fireStore);
         reccomendationsDb = new RecommendationsDataBase(fireStore);
         requestsDb = new RequestsDataBase(fireStore);
         collectionsDb = new ConnectionsDataBase(fireStore);
+        // get the Firebase  storage reference
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         //TODO Add snapshotevent listener.
     }
@@ -123,11 +143,36 @@ public class DataBase implements IDataBase {
     }
 
 
-    /**
-     //     * Adds new request to the DB.
-     //     *
-     //     * @param newRequest is the request that should be added to the DB/
-     //     */
+    // UploadImage method
+    public void uploadImage(Uri filePath) {
+        if (filePath != null) {
+            Log.d(TAG, "uploading image");
+
+            // Defining the child of storageReference
+            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+
+            // adding listeners on upload or failure of image
+            ref.putFile(filePath)
+                    .addOnSuccessListener(taskSnapshot -> Log.d(TAG, "success uploading image"))
+                    .addOnFailureListener(e -> Log.e(TAG, e.getMessage()))
+                    .addOnProgressListener(
+                            taskSnapshot -> {
+                                double progress
+                                        = (100.0
+                                        * taskSnapshot.getBytesTransferred()
+                                        / taskSnapshot.getTotalByteCount());
+                                Log.d(TAG, "Uploaded " + (int) progress + "%");
+                            });
+        }
+    }
+
+
+/**
+ * //     * Adds new request to the DB.
+ * //     *
+ * //     * @param newRequest is the request that should be added to the DB/
+ * //
+ */
 //    public void addRequest(Request newRequest) {
 //        requestsDb.put(newRequest.getUUID(), newRequest);
 //        //FIXME Check if the values extraction below is working.

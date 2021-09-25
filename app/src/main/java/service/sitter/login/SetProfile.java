@@ -17,6 +17,8 @@ import com.facebook.CallbackManager;
 import com.google.android.libraries.places.api.model.Place;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import service.sitter.R;
@@ -25,6 +27,7 @@ import service.sitter.db.IDataBase;
 import service.sitter.db.RequestsDataBase;
 import service.sitter.login.fragments.SetProfileBabysitterFragment;
 import service.sitter.login.fragments.SetProfileParentFragment;
+import service.sitter.models.Child;
 import service.sitter.models.Request;
 import service.sitter.ui.fragments.LocationFragment;
 
@@ -34,7 +37,10 @@ public class SetProfile extends AppCompatActivity {
     private Place location;
     private String phoneNumber = "";
     boolean isParent = true;
+    private List<Child> children;
     private static final String TAG = SetProfile.class.getSimpleName();
+    private SetProfileParentFragment setProfileParentFragment;
+    private SetProfileBabysitterFragment setProfileBabysitterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +54,16 @@ public class SetProfile extends AppCompatActivity {
         RadioGroup radioGroup = findViewById(R.id.parent_or_babysitter_radio_group);
         Button addUserButton = findViewById(R.id.add_user_button);
 
+        // set Logic Components
+        children = new ArrayList<>();
+        setProfileParentFragment = new SetProfileParentFragment();
+        setProfileBabysitterFragment = new SetProfileBabysitterFragment();
+
         // radio group listener
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             isParent = checkedId == R.id.parent_radio_button;
             Log.d("SetProfile", "onCheckedChanged, isParent:  " + isParent);
-            Fragment fragment = isParent ? new SetProfileParentFragment() : new SetProfileBabysitterFragment();
+            Fragment fragment = isParent ? setProfileParentFragment : setProfileBabysitterFragment;
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.bottomFrameFragment, fragment)
@@ -62,6 +73,7 @@ public class SetProfile extends AppCompatActivity {
 
         // Get Profile Data
         locationFragment.getLiveData().observe(this, location -> this.location = location);
+
 
         // Adding Request
         addUserButton.setOnClickListener(l -> {
@@ -77,12 +89,14 @@ public class SetProfile extends AppCompatActivity {
                 .commit();
     }
 
-    private void addUser(){
+    private void addUser() {
         boolean wasSaved = false;
-        if (isParent){
+        if (isParent) {
             Log.d(TAG, "creating new Parent");
-        }
-        else{
+            setProfileParentFragment.getLiveData().
+                    observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
+            Log.d(TAG, children.toString());
+        } else {
             Log.d(TAG, "creating new Babysitter");
         }
         Log.d(TAG, "user was added successfully: " + wasSaved);

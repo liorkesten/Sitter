@@ -30,12 +30,9 @@ public class ChildViewHolder extends RecyclerView.ViewHolder {
         ageTextView = itemView.findViewById(R.id.itemChildAge);
         imageChildButtonView = itemView.findViewById(R.id.item_child_image_button);
 
-        imageChildButtonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isSelected = !isSelected;
-                imageChildButtonView.setBackgroundColor(isSelected ? Color.GREEN : Color.TRANSPARENT);
-            }
+        imageChildButtonView.setOnClickListener(v -> {
+            isSelected = !isSelected;
+            imageChildButtonView.setBackgroundColor(isSelected ? Color.GREEN : Color.TRANSPARENT);
         });
     }
 

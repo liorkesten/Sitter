@@ -67,9 +67,9 @@ public class HomeFragment extends Fragment {
 
         List<Child> children = new ArrayList<>();
         // TODO Extract children from parent.
-        children.add(new Child("Daria", 1, "Daria"));
-        children.add(new Child("Gali", 3, "Gali"));
-        children.add(new Child("Mika", 5, "Mika"));
+        children.add(new Child("Daria", "10/10/2021", "Daria"));
+        children.add(new Child("Gali", "10/10/2010", "Gali"));
+        children.add(new Child("Mika", "10/10/2000", "Mika"));
         childAdapter.setChildren(children);
 
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
