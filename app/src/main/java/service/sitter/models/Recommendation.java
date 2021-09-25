@@ -1,8 +1,9 @@
 package service.sitter.models;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Recommendation {
+public class Recommendation implements Serializable {
 
     private final String uuid;
 

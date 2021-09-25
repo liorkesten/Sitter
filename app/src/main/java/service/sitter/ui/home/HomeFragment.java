@@ -1,6 +1,10 @@
 package service.sitter.ui.home;
 
+import static java.lang.System.exit;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +13,12 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.libraries.places.api.model.Place;
+import com.google.gson.Gson;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,6 +29,7 @@ import service.sitter.databinding.FragmentHomeBinding;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
 import service.sitter.models.Child;
+import service.sitter.models.Parent;
 import service.sitter.models.Request;
 import service.sitter.recyclerview.children.ChildAdapter;
 import service.sitter.ui.fragments.DateFragment;
@@ -40,12 +47,35 @@ public class HomeFragment extends Fragment {
     private String endTime = "";
     private int payment = 1;
     private Place location;
-    private List<Child> children = new ArrayList<>();
+    private Parent myUser;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        // Set Logic Business Components
+
         IDataBase db = DataBase.getInstance();
+        //Extract user from SP.
+        // TODO Don't delete the comments below - it will be used once SP will be saved after SetProfile.
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
+//        String userUID = sp.getString("userUID", "");
+//        String userType = sp.getString("userType", "");
+//        if (userUID.equals("") || userType.equals("")) {
+//            //TODO ERROR!!!!
+//            Log.e(TAG, String.format("Error to extract userUID or userType from sp.\nuserUID: <%s>\nuserType:<%s", userUID, userType));
+//            exit(11);
+//        }
+//        // Verify that the user type is equal to the type in the SP.
+//        try {
+//            myUser = db.getParent(userUID);
+//        } catch (UserNotFoundException e) {
+//            //TODO ERROR!!!!
+//            Log.e(TAG, String.format("Error to extract userUID from DB\nuserUID: <%s>", userUID));
+//            exit(12);
+//        }
+        // TODO Delete the code below - it will be used once SP will be saved after SetProfile.
+        funcShouldBeDeletedOnceSpIsReadyInitMyUser();
+        // TODO Delete until here
+
+        // Set Logic Business Components
         DateFragment dateFragment = new DateFragment();
         TimeFragment startTimeFragment = new TimeFragment("16:00", "Start Time");
         TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
@@ -64,13 +94,7 @@ public class HomeFragment extends Fragment {
 
         ChildAdapter childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
         childrenRecyclerView.setAdapter(childAdapter);
-
-        List<Child> children = new ArrayList<>();
-        // TODO Extract children from parent.
-        children.add(new Child("Daria", "10/10/2021", "Daria"));
-        children.add(new Child("Gali", "10/10/2010", "Gali"));
-        children.add(new Child("Mika", "10/10/2000", "Mika"));
-        childAdapter.setChildren(children);
+        childAdapter.setChildren(myUser.getChildren());
 
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
@@ -90,8 +114,11 @@ public class HomeFragment extends Fragment {
 
         // Adding Request
         publishRequestButton.setOnClickListener(l -> {
-            //TODO Change the publisherId to id from SP.
-            Request request = new Request("111", this.date, startTime, endTime, location, null, payment, descriptionEditText.getText().toString());
+            String description = descriptionEditText.getText().toString();
+            Request request = new Request(
+                    myUser.getUuid(), this.date, startTime, endTime, location,
+                    null, payment, description
+            );
             db.addRequest(request);
         });
 
@@ -109,10 +136,39 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+
+    private void funcShouldBeDeletedOnceSpIsReadyInitMyUser() {
+        // First step - create new user with default values;
+        IDataBase db = DataBase.getInstance();
+        List<Child> children = new ArrayList<>();
+        children.add(new Child("Daria", 1, "Daria"));
+        children.add(new Child("Gali", 3, "Gali"));
+        children.add(new Child("Mika", 5, "Mika"));
+        Parent myParent = new Parent("Lior", "Kesten", "kestenlior@gmail.com", "+972547718647", "NY", "<URL_TO_IMAGE>", children, 60);
+        // Step 2: add the user to the db.
+        db.addParent(myParent);
+
+        // Step 3: save parent in SP.
+        String userUid = myParent.getUuid();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
+        Gson gson = new Gson();
+        String serializedMyParent = gson.toJson(myParent);
+        sp.edit().putString(userUid, serializedMyParent).apply();
+//         Step 4: Extract from SP.
+        String mySerializedUser = sp.getString(userUid, "");
+        if (mySerializedUser.equals("")) {
+            Log.e(TAG, "error while trying to extract user uid after that the object saved as json.myUserUid is empty");
+            exit(14);
+        }
+        myUser = gson.fromJson(mySerializedUser, Parent.class);
+        Log.d(TAG, String.format("myUser initialized: <%s>", myUser.toString()));
     }
 }
 

@@ -16,6 +16,7 @@ import service.sitter.models.Parent;
 import service.sitter.models.Recommendation;
 import service.sitter.models.Request;
 import service.sitter.models.User;
+import service.sitter.models.UserCategory;
 
 /**
  * IDataBase is the interface for application database - needed for mocking and testing.
@@ -49,11 +50,17 @@ public interface IDataBase {
 
     LiveData<List<Request>> getLiveDataArchivedRequestsOfParent(String parentId);
 
-    public boolean addParent(@NonNull @NotNull Parent parent);
+    boolean addParent(@NonNull @NotNull Parent parent);
 
-    public boolean deleteParent(@NonNull @NotNull Parent parent);
+    boolean deleteParent(@NonNull @NotNull Parent parent);
 
-    public boolean addBabysitter(@NonNull @NotNull Babysitter babysitter);
+    boolean addBabysitter(@NonNull @NotNull Babysitter babysitter);
 
-    public boolean deleteBabysitter(@NonNull @NotNull Babysitter babysitter);
+    boolean deleteBabysitter(@NonNull @NotNull Babysitter babysitter);
+
+    UserCategory getUserCategory(String userUID) throws UserNotFoundException;
+
+    Parent getParent(String userUID) throws UserNotFoundException;
+
+    public Babysitter getBabysitter(String userUID) throws UserNotFoundException;
 }

@@ -5,15 +5,20 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import service.sitter.models.Babysitter;
 import service.sitter.models.Parent;
 import service.sitter.models.User;
+import service.sitter.models.UserCategory;
 
 public class UsersDataBase {
     private static final String TAG = UsersDataBase.class.getSimpleName();
@@ -118,4 +123,43 @@ public class UsersDataBase {
         return true;
     }
 
+
+    public Parent getParent(String userUID) throws UserNotFoundException {
+        DocumentSnapshot snapshot = null;
+        Task<DocumentSnapshot> documentSnapshotTask = firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(userUID).get();
+        try {
+            snapshot = Tasks.await(documentSnapshotTask);
+        } catch (ExecutionException | InterruptedException e) {
+            Log.e(TAG, e.getMessage());
+            return null;
+        }
+        if (snapshot == null) {
+            throw new UserNotFoundException(userUID);
+        }
+        return snapshot.toObject(Parent.class);
+    }
+
+    public Babysitter getBabysitter(String userUID) throws UserNotFoundException {
+        DocumentSnapshot snapshot = firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).document(userUID).get().getResult();
+        if (snapshot == null) {
+            throw new UserNotFoundException(userUID);
+        }
+        return (Babysitter) snapshot.toObject(Babysitter.class);
+    }
+
+    public UserCategory getUserCategory(String userUID) throws UserNotFoundException {
+        try {
+            // Always Babysitter type is returned.
+            return getBabysitter(userUID).getCategory();
+        } catch (UserNotFoundException ignored) {
+        }
+        try {
+            // Always Parent type is returned.
+            return getParent(userUID).getCategory();
+        } catch (UserNotFoundException ignored) {
+        }
+
+        // In case that the user id is not parent and babysitter
+        throw new UserNotFoundException(userUID);
+    }
 }

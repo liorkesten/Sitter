@@ -3,10 +3,18 @@ package service.sitter.models;
 import java.util.Date;
 
 public class Child {
+import java.io.Serializable;
 
-    private final String name;
-    private final String birthday;
-    private final String image; //TODO Change image to image object
+public class Child implements Serializable {
+
+    private  String name;
+    private String birthday;
+    private String image; //TODO Change image to image object
+
+    // Child is default Ctor. needed for Firestore.
+    public Child() {
+
+    }
 
     public Child(String name, String birthday, String image) {
         this.name = name;
@@ -41,5 +49,23 @@ public class Child {
 
     public String getImage() {
         return image;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getBirthday(){
+        return birthday;
+    }
+}
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

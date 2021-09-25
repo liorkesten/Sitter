@@ -1,12 +1,13 @@
 package service.sitter.models;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
 /**
  *
  */
-public class Connection {
+public class Connection implements Serializable {
 
     private final String uuid;
     private final Instant creationTimestamp;
