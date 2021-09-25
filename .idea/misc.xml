@@ -3,9 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/activity_babysitter.xml" value="0.15677083333333333" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/activity_babysitter.xml" value="0.1" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/activity_login.xml" value="0.15677083333333333" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/activity_set_profile.xml" value="0.1" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/fragment_manage_requests.xml" value="0.1125" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_babysitter_request.xml" value="0.22333333333333336" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_babysitter_request_approved.xml" value="0.15677083333333333" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_babysitter_request_archived.xml" value="0.1" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_babysitter_request_incoming.xml" value="0.15677083333333333" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_request.xml" value="0.1125" />
         <entry key="app/src/main/res/drawable/img.xml" value="0.2703125" />
         <entry key="app/src/main/res/drawable/radio_flat_regular.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/radio_flat_selected.xml" value="0.27395833333333336" />

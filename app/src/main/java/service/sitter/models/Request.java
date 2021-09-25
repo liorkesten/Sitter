@@ -152,4 +152,8 @@ public class Request implements Serializable {
     public void setStatus(RequestStatus status) {
         this.status = status;
     }
+
+    public String getTime() {
+        return startTime + "-" + endTime;
+    }
 }

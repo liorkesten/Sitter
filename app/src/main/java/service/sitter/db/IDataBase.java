@@ -5,6 +5,10 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -59,11 +63,23 @@ public interface IDataBase {
 
     UserCategory getUserCategory(String userUID) throws UserNotFoundException;
 
-    Parent getParent(String userUID) throws UserNotFoundException;
+    void getParent(String userUID, OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener);
 
     public Babysitter getBabysitter(String userUID) throws UserNotFoundException;
 
     public Babysitter getBabysitterByPhoneNumber(String phonerNumber) throws UserNotFoundException;
 
     LiveData<List<Connection>> getLiveDataConnectionsOfParent(String parentId);
+
+    void acceptRequestByBabysitter(Request r, Babysitter babysitter);
+
+    LiveData<List<Request>> getLiveDataPendingRequestsOfBabysitter(String uuid);
+
+    LiveData<List<Request>> getLiveDataApprovedRequestsOfBabysitter(String uuid);
+
+    LiveData<List<Request>> getLiveDataArchivedRequestsOfBabysitter(String uuid);
+
+    LiveData<List<Request>> getLiveDataDeletedRequestsOfBabysitter(String uuid);
+
+    void cancelRequest(Request r, Babysitter babysitter);
 }

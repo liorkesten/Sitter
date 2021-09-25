@@ -1,13 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/container"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="?attr/actionBarSize">
+    android:orientation="vertical">
+
 
     <TextView
+        android:id="@+id/babysitter_incoming_requests_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Babysitter Activity" />
+        android:text="@string/incoming_requests_title"
+        tools:background="#009900" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/babysitter_recycler_view_incoming_requests"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <TextView
+        android:id="@+id/babysitter_approved_requests_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/approved_requests_title"
+        tools:background="#009900" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/babysitter_recycler_view_approved_requests"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <TextView
+        android:id="@+id/babysitter_history_requests_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/history_requests_title"
+        tools:background="#009900" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/babysitter_recycler_view_history_requests"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+
 </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

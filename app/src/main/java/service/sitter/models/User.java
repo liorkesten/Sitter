@@ -116,4 +116,8 @@ public abstract class User implements Serializable {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public String getFullName() {
+        return getFirstName() + " " + getLastName();
+    }
 }
