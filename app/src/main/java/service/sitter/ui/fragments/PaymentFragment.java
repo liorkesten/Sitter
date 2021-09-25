@@ -18,7 +18,15 @@ public class PaymentFragment extends Fragment {
     private String currentTime;
     private MutableLiveData<Integer> paymentLiveData;
     com.google.android.material.slider.Slider paymentSlider;
+    private static final int DEFAULT_PAYMENT = 50;
     private int defaultPayment;
+
+
+    public PaymentFragment() {
+        super(R.layout.fragment_payment);
+        this.defaultPayment = DEFAULT_PAYMENT;
+        paymentLiveData = new MutableLiveData<>(DEFAULT_PAYMENT);
+    }
 
     public PaymentFragment(int defaultPayment) {
         super(R.layout.fragment_payment);
