@@ -1,6 +1,8 @@
 package service.sitter.models;
 
-public class Ranking {
+import java.io.Serializable;
+
+public class Ranking implements Serializable {
     private int count;
     private int total;
 

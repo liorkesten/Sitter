@@ -2,11 +2,12 @@ package service.sitter.models;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class User {
+public abstract class User implements Serializable {
     private static final String TAG = User.class.getSimpleName();
 
 
@@ -25,6 +26,10 @@ public abstract class User {
     private List<Connection> connections;
 
 
+    // User is default Ctor. needed for Firestore.
+    public User() {
+    }
+
     public User(String firstName, String lastName, String emailAddress, String phoneNumber, UserCategory category, String location, String image) {
         uuid = UUID.randomUUID().toString();
         this.firstName = firstName;
@@ -37,6 +42,7 @@ public abstract class User {
 
         this.connections = new ArrayList<>();
     }
+
 
     public String getUuid() {
         return uuid;

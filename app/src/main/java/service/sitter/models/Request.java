@@ -2,11 +2,12 @@ package service.sitter.models;
 
 import com.google.android.libraries.places.api.model.Place;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-public class Request {
+public class Request implements Serializable {
 
     private String uuid;
     // publisher is the parent that published the request

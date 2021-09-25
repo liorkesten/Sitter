@@ -1,32 +1,29 @@
 package service.sitter.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Parent extends User {
+public class Parent extends User implements Serializable {
     // Array of the children.
     private List<Child> children;
-    private List<Connection> connections;
     // The default price per hour that the parent would pay for babysitter.
     private int defaultPricePerHour;
+
+    // Parent is default Ctor. needed for Firestore.
+    public Parent() {
+        super();
+    }
 
     public Parent(String firstName, String lastName, String emailAddress, String phoneNumber,
                   String location, String image, List<Child> children, int defaultPricePerHour) {
         super(firstName, lastName, emailAddress, phoneNumber, UserCategory.Parent, location, image);
 
         this.children = new ArrayList<>(children);
-        this.connections = new ArrayList<>();
         this.defaultPricePerHour = defaultPricePerHour;
     }
 
 
-    public List<Connection> getConnections() {
-        return connections;
-    }
-
-    public void setConnections(List<Connection> connections) {
-        this.connections = connections;
-    }
 
     public List<Child> getChildren() {
         return children;

@@ -1,13 +1,19 @@
 package service.sitter.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Babysitter extends User {
+public class Babysitter extends User implements Serializable {
     private Ranking rank;
     private boolean hasCar;
     private int age;
     private List<String> hobbies;
     private String notes;
+
+    // Babysitter is default Ctor. needed for Firestore.
+    public Babysitter() {
+
+    }
 
     public Babysitter(String firstName, String lastName, String emailAddress, String phoneNumber, String location, String image) {
         super(firstName, lastName, emailAddress, phoneNumber, UserCategory.Babysitter, location, image);

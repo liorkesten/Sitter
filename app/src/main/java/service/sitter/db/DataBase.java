@@ -15,6 +15,7 @@ import service.sitter.models.Parent;
 import service.sitter.models.Recommendation;
 import service.sitter.models.Request;
 import service.sitter.models.User;
+import service.sitter.models.UserCategory;
 
 public class DataBase implements IDataBase {
     private static DataBase instance;
@@ -42,7 +43,7 @@ public class DataBase implements IDataBase {
      *
      * @return IDataBase
      */
-    public static IDataBase getInstance() {
+    public static DataBase getInstance() {
         if (instance == null) {
             instance = new DataBase();
         }
@@ -120,6 +121,21 @@ public class DataBase implements IDataBase {
     @Override
     public boolean deleteBabysitter(@NonNull Babysitter babysitter) {
         return usersDb.deleteBabysitter(babysitter);
+    }
+
+    @Override
+    public UserCategory getUserCategory(String userUID) throws UserNotFoundException {
+        return usersDb.getUserCategory(userUID);
+    }
+
+    @Override
+    public Parent getParent(String userUID) throws UserNotFoundException {
+        return usersDb.getParent(userUID);
+    }
+
+    @Override
+    public Babysitter getBabysitter(String userUID) throws UserNotFoundException {
+        return usersDb.getBabysitter(userUID);
     }
 
 
