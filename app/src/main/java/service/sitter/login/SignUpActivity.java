@@ -108,6 +108,25 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
         registerButton.setOnClickListener(v -> {
+            if (firstName.isEmpty() || lastName.isEmpty()){
+                fullName.setError("You must enter a username to register.");
+            }
+            if (mail.isEmpty()){
+                email.setError("You must enter a mail address to register.");
+            }
+            if (mail.isEmpty()){
+                email.setError("You must enter a mail address to register.");
+            }
+            if(pass.isEmpty()){
+                password.setError("You must enter a password to register.");
+            }
+            if(rePass.isEmpty()){
+                retypePassword.setError("You must re-enter the password to register.");
+            }
+            if(!rePass.equals(pass)){
+                retypePassword.setError("Passwords must match.");
+            }
+
             Intent intentSetProfile = new Intent(SignUpActivity.this, SetProfile.class);
             startActivity(intentSetProfile);
             finish();
