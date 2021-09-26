@@ -47,7 +47,7 @@ public class BabysitterActivity extends AppCompatActivity {
         db = DataBase.getInstance();
 
         // Create objects for tests
-        Babysitter temp_babysitter = new Babysitter("Lior", "Kesten", "kes@gmail.com", "00022221", "LA", "");
+        Babysitter temp_babysitter = new Babysitter("Lior", "Kesten", "kes@gmail.com", "00022221", "LA","imageUrl", false);
         Parent parent = new Parent("Lior", "Kesten", "kes@gmail.com", "00022221", "LA", "", new ArrayList<>(), 100);
         parent.setUuid("e030e301-463c-47c5-ac97-8f207ff79977");
         db.addConnection(new Connection(parent, temp_babysitter));
