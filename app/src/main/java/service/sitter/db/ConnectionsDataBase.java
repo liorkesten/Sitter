@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import service.sitter.models.Connection;
+import service.sitter.models.User;
 
 public class ConnectionsDataBase {
     private static final String TAG = ConnectionsDataBase.class.getSimpleName();
@@ -117,11 +118,29 @@ public class ConnectionsDataBase {
     }
 
     public void getConnectionsOfBabysitter(String babysitterUUID, IApplyOnConnections applier, OnFailureListener onFailureListener) {
-        DocumentSnapshot snapshot = null;
         Task<QuerySnapshot> querySnapshotTask = firestore.collection(COLLECTION_FIRESTORE_NAME).whereEqualTo("sideBUId", babysitterUUID).get();
         querySnapshotTask.addOnSuccessListener(connections -> {
             applier.apply(connections.toObjects(Connection.class));
         });
         querySnapshotTask.addOnFailureListener(onFailureListener);
+    }
+
+    public void getConnection(User userA, User userB, IGetConnection applier) {
+        firestore.collection(COLLECTION_FIRESTORE_NAME)
+                .whereEqualTo("sideAUId", userA.getUuid())
+                .whereEqualTo("sideBUId", userB.getUuid())
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot == null) {
+                        Log.e(TAG, "Unexpected behavior - snapshot is null");
+                    } else if (snapshot.size() == 0) {
+                        applier.connectionIsNotExist(userA, userB);
+                    } else if (snapshot.size() == 1) {
+                        Connection connection = snapshot.toObjects(Connection.class).get(0);
+                        applier.connectionFound(connection);
+                    } else {
+                        Log.e(TAG, "Unexpected behavior - there is more then 1 connection between 2 users:" + snapshot.toObjects(Connection.class));
+                    }
+                });
     }
 }

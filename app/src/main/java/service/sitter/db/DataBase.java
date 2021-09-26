@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -25,6 +23,7 @@ import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
 import service.sitter.models.User;
 import service.sitter.models.UserCategory;
+import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
 
 public class DataBase implements IDataBase {
     private static DataBase instance;
@@ -144,8 +143,15 @@ public class DataBase implements IDataBase {
     }
 
     @Override
-    public void getParent(String userUID, OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener) {
-        usersDb.getParent(userUID, onSuccessListener, onFailureListener);
+    public void getParent(String userUID, IGetParent applierOnSuccess, OnFailureListener onFailureListener) {
+
+        usersDb.getParent(userUID, applierOnSuccess, onFailureListener);
+    }
+
+
+    @Override
+    public void getBabysitter(String userUID, IOnGettingBabysitterFromDb applierOnSuccess, OnFailureListener onFailureListener) {
+        usersDb.getBabysitter(userUID, applierOnSuccess, onFailureListener);
     }
 
     @Override
@@ -154,8 +160,8 @@ public class DataBase implements IDataBase {
     }
 
     @Override
-    public Babysitter getBabysitterByPhoneNumber(String phonerNumber) throws UserNotFoundException {
-        return usersDb.getBabysitterByPhoneNumber(phonerNumber);
+    public void getBabysitterByPhoneNumber(String phoneNumber, IOnGettingBabysitterFromDb listener) {
+        usersDb.getBabysitterByPhoneNumber(phoneNumber, listener);
     }
 
 
@@ -206,7 +212,14 @@ public class DataBase implements IDataBase {
             if (parentsUUID.isEmpty()) {
                 return;
             }
-            requestsDb.getRequestsByParentsId(parentsUUID, mutableLiveDataRequests::setValue, status);
+            // In case that the status is diffrenet from Pending (i.e. approvied or archived) Filter requests by the reciverID
+            requestsDb.getRequestsByParentsId(parentsUUID, requests -> {
+                List<Request> filteredRequests = (status != RequestStatus.Pending) ?
+                        requests.stream().filter(r -> r.getReceiverId().equals(babysitterUUID)).collect(Collectors.toList()) :
+                        requests;
+                // Update live data
+                mutableLiveDataRequests.setValue(filteredRequests);
+            }, status);
         };
         // Listen to changes on connections.
         connectionsDb
@@ -217,4 +230,23 @@ public class DataBase implements IDataBase {
         connectionsDb.getConnectionsOfBabysitter(babysitterUUID, applier::apply, null /*TODO*/);
         return mutableLiveDataRequests;
     }
+
+    @Override
+    public void addConnection(User userA, User userB) {
+        connectionsDb.getConnection(userA, userB, new IGetConnection() {
+
+            @Override
+            public void connectionFound(Connection connection) {
+                Log.d(TAG, String.format("Didn't add new connection - connection between <%s> and <%s> is already exists.", userA, userB));
+            }
+
+            @Override
+            public void connectionIsNotExist(User userA, User userB) {
+                Log.d(TAG, String.format("Connection is not exist, creating new connection between <%s> and <%s>.", userA, userB));
+                Connection connection = new Connection(userA, userB);
+                connectionsDb.addConnection(connection);
+            }
+        });
+    }
+
 }

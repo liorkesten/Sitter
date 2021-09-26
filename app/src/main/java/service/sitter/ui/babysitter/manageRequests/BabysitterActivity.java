@@ -43,7 +43,7 @@ public class BabysitterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_babysitter);
         // Load db:
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
         db = DataBase.getInstance();
 
         // Create objects for tests

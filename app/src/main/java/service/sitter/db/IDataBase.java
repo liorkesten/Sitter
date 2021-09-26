@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,6 +16,7 @@ import service.sitter.models.Recommendation;
 import service.sitter.models.Request;
 import service.sitter.models.User;
 import service.sitter.models.UserCategory;
+import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
 
 /**
  * IDataBase is the interface for application database - needed for mocking and testing.
@@ -58,11 +57,11 @@ public interface IDataBase {
 
     UserCategory getUserCategory(String userUID) throws UserNotFoundException;
 
-    void getParent(String userUID, OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener);
+    void getParent(String userUID, IGetParent applierOnSuccess, OnFailureListener onFailureListener);
 
     public Babysitter getBabysitter(String userUID) throws UserNotFoundException;
 
-    public Babysitter getBabysitterByPhoneNumber(String phonerNumber) throws UserNotFoundException;
+    public void getBabysitterByPhoneNumber(String phonerNumber, IOnGettingBabysitterFromDb listener);
 
     LiveData<List<Connection>> getLiveDataConnectionsOfParent(String parentId);
 
@@ -79,4 +78,8 @@ public interface IDataBase {
 
 
     void cancelRequest(Request r, Babysitter babysitter);
+
+    void addConnection(User userA, User userB);
+
+    void getBabysitter(String userUID, IOnGettingBabysitterFromDb applierOnSuccess, OnFailureListener onFailureListener);
 }

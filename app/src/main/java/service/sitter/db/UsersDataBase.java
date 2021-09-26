@@ -7,11 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +23,7 @@ import service.sitter.models.Child;
 import service.sitter.models.Parent;
 import service.sitter.models.User;
 import service.sitter.models.UserCategory;
+import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
 
 public class UsersDataBase {
     private static final String TAG = UsersDataBase.class.getSimpleName();
@@ -144,10 +145,9 @@ public class UsersDataBase {
     }
 
 
-    public void getParent(String userUID, OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener) {
-        DocumentSnapshot snapshot = null;
-        Task<DocumentSnapshot> documentSnapshotTask = firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(userUID).get();
-        documentSnapshotTask.addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
+    public void getParent(String userUID, IGetParent applierOnSuccess, OnFailureListener onFailureListener) {
+        Task<DocumentSnapshot> documentSnapshotTask = firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(userUID).get().addOnFailureListener(onFailureListener);
+        documentSnapshotTask.addOnSuccessListener(snapshot -> applierOnSuccess.parentFound(snapshot.toObject(Parent.class)));
     }
 
     public Babysitter getBabysitter(String userUID) throws UserNotFoundException {
@@ -172,16 +172,21 @@ public class UsersDataBase {
         throw new UserNotFoundException(userUID);
     }
 
-    public Babysitter getBabysitterByPhoneNumber(String phonerNumber) {
-//        QuerySnapshot snapshots = firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).whereEqualTo("phonerNumber", phonerNumber).get();
-//        if (snapshots == null) {
-//            throw new UserNotFoundException(userUID);
-//        }
-//        return (Babysitter) snapshot.toObject(Babysitter.class);
-        //TODO Implement this!!!
-        Babysitter b = new Babysitter("Noam", "Kesten", "n@gma", "0547718646", "NY", "URL_TO_IMAGE", false);
-        b.setUuid("123");
-        return b;
+    public void getBabysitterByPhoneNumber(String phoneNumber, IOnGettingBabysitterFromDb listener) {
+        Task<QuerySnapshot> querySnapshotTask = firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).whereEqualTo("phoneNumber", phoneNumber).get();
+        querySnapshotTask.addOnSuccessListener(docs -> {
+            if (docs.size() == 0) {
+                Log.e(TAG, String.format("Babysitter is not found with phone number: <%s>", phoneNumber));
+                return;
+            }
+            if (docs.size() > 1) {
+                Log.e(TAG, String.format("There is more then one babysitter with phone number: <%s>", phoneNumber));
+                return;
+            }
+            Babysitter babysitter = docs.toObjects(Babysitter.class).get(0);
+            listener.babysitterFound(babysitter);
+
+        });
     }
 
     public void getParents(List<String> parentsUUID, IApplyOnParents applier) {
@@ -189,5 +194,15 @@ public class UsersDataBase {
             List<Parent> parents = docs.toObjects(Parent.class);
             applier.apply(parents);
         });
+    }
+
+    public void getBabysitter(String userUID, IOnGettingBabysitterFromDb applierOnSuccess, OnFailureListener onFailureListener) {
+        Task<DocumentSnapshot> documentSnapshotTask = firestore
+                .collection(COLLECTION_FIRESTORE_BABYSITTER_NAME)
+                .document(userUID)
+                .get()
+                .addOnFailureListener(onFailureListener);
+
+        documentSnapshotTask.addOnSuccessListener(snapshot -> applierOnSuccess.babysitterFound(snapshot.toObject(Babysitter.class)));
     }
 }
