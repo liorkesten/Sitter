@@ -20,15 +20,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import service.sitter.R;
+import service.sitter.db.DataBase;
 import service.sitter.db.DataBaseUtils;
 import service.sitter.models.Child;
 
 public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
+
+    private static final String TAG = ChildAdapter.class.getSimpleName();
+
+
     private final List<Child> children = new ArrayList<>();
     private final IChildAdapterListener listener;
+    private final boolean shouldFetchImages;
 
-    public ChildAdapter(@NonNull IChildAdapterListener listener) {
+    public ChildAdapter(@NonNull IChildAdapterListener listener, boolean shouldFetchImages) {
         this.listener = listener;
+        this.shouldFetchImages = shouldFetchImages;
     }
 
     /**
@@ -56,14 +63,15 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
         Child child = children.get(position);
         holder.getNameTextView().setText(child.getName());
         String age = Integer.toString(child.getAge());
-        Log.d("Noam", age);
         holder.getAgeTextView().setText(age);
-        //TODO Delete this images - fetch from DB
 
-        DataBaseUtils.loadImage(child.getImage(), (uri) -> {
-            Picasso.get().load(uri).into(holder.getImageView());
-        });
-//        holder.getImageView().setImageURI(Uri.parse(child.getImage()));
+        if (shouldFetchImages) {
+            DataBaseUtils.loadImage(child.getImage(), (uri) -> {
+                Picasso.get().load(uri).into(holder.getImageView());
+            });
+        } else {
+            holder.getImageView().setImageURI(Uri.parse(child.getImage()));
+        }
 
 
 //        switch (child.getImage()) {
@@ -80,12 +88,12 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
 //                exit(120);
 //        }
 
-            holder.rootView.setOnClickListener(v -> listener.onRequestClick(child));
-        }
-
-        @Override
-        public int getItemCount () {
-            return children.size();
-        }
+        holder.rootView.setOnClickListener(v -> listener.onRequestClick(child));
     }
+
+    @Override
+    public int getItemCount() {
+        return children.size();
+    }
+}
 

@@ -84,7 +84,7 @@ public class HomeFragment extends Fragment {
         TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
         PaymentFragment paymentFragment = new PaymentFragment(myUser.getDefaultPricePerHour());
         LocationFragment locationFragment = new LocationFragment();
-        ChildAdapter childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
+        ChildAdapter childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/}, true);
         childrenRecyclerView.setAdapter(childAdapter);
         childAdapter.setChildren(myUser.getChildren());
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
@@ -174,7 +174,7 @@ public class HomeFragment extends Fragment {
         IDataBase db = DataBase.getInstance();
         Babysitter b = new Babysitter("Noam", "Kesten", "n@gma", "0547718646", "NY", "URL_TO_IMAGE", false);
         b.setUuid("123");
-        db.addBabysitter(b);
+        db.addBabysitter(b, null);
         // First step - create new user with default values;
         List<Child> children = new ArrayList<>();
 //        children.add(new Child("Daria", "10/10/2020", ));
@@ -182,7 +182,7 @@ public class HomeFragment extends Fragment {
 //        children.add(new Child("Mika", "10/10/2015", "Mika"));
         Parent myParent = new Parent("Lior", "Kesten", "kestenlior@gmail.com", "+972547718647", "NY", "<URL_TO_IMAGE>", children, 60);
         // Step 2: add the user to the db.
-        db.addParent(myParent);
+        db.addParent(myParent, null);
 
         // Step 3: save parent in SP.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());

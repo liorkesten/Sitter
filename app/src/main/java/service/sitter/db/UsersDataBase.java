@@ -9,12 +9,14 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import service.sitter.models.Babysitter;
 import service.sitter.models.Child;
@@ -78,15 +80,20 @@ public class UsersDataBase {
      * @param parent - new parent
      * @return false in case that the user is already exists in the db.
      */
-    public boolean addParent(@NonNull Parent parent) {
+    public boolean addParent(@NonNull Parent parent, IOnSuccessOperatingUser listener) {
         String parentUuid = parent.getUuid();
-        DataBaseUtils.uploadImage(Uri.parse(parent.getImage()), parent::setImage);
+        String parentImageID = UUID.randomUUID().toString();
+        DataBaseUtils.uploadImage(Uri.parse(parent.getImage()), parentImageID,null);
+        parent.setImage(parentImageID);
         // uploading all children to db
         for (Child child : parent.getChildren()) {
-            DataBaseUtils.uploadImage(Uri.parse(child.getImage()), child::setImage);
+            String imageID = UUID.randomUUID().toString();
+            DataBaseUtils.uploadImage(Uri.parse(child.getImage()), imageID, null);
+            child.setImage(imageID);
             Log.d(TAG, String.format("Child was added successfully: <%s>", child.getName()));
         }
-        firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(parentUuid).set(parent);
+        firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(parentUuid).set(parent)
+                .addOnSuccessListener(unused -> listener.onSuccess());
         Log.d(TAG, String.format("Parent was added successfully: <%s>", parentUuid));
         return true;
     }
@@ -97,7 +104,7 @@ public class UsersDataBase {
      * @param parent - new parent
      * @return false in case that the user is already exists in the db.
      */
-    public boolean deleteParent(@NonNull Parent parent) {
+    public boolean deleteParent(@NonNull Parent parent, IOnSuccessOperatingUser listener) {
         String parentUuid = parent.getUuid();
         firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(parentUuid).delete();
         Log.d(TAG, String.format("Parent was deleted successfully: <%s>", parentUuid));
@@ -110,12 +117,15 @@ public class UsersDataBase {
      * @param babysitter - new babysitter
      * @return false in case that the user is already exists in the db.
      */
-    public boolean addBabysitter(@NonNull Babysitter babysitter) {
+    public boolean addBabysitter(@NonNull Babysitter babysitter, IOnSuccessOperatingUser listener) {
         String babysitterUuid = babysitter.getUuid();
-        firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).document(babysitterUuid).set(babysitter);
-        Log.d(TAG, String.format("Babysitter was added successfully: <%s>", babysitterUuid));
-        DataBaseUtils.uploadImage(Uri.parse(babysitter.getImage()), babysitter::setImage);
+        String imageID = UUID.randomUUID().toString();
+        DataBaseUtils.uploadImage(Uri.parse(babysitter.getImage()),imageID,null);
+        babysitter.setImage(imageID);
 
+        firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).document(babysitterUuid).set(babysitter)
+                .addOnSuccessListener(unused -> listener.onSuccess());
+        Log.d(TAG, String.format("Babysitter was added successfully: <%s>", babysitterUuid));
         return true;
     }
 
@@ -126,7 +136,7 @@ public class UsersDataBase {
      * @param babysitter - new parent
      * @return false in case that the user is already exists in the db.
      */
-    public boolean deleteBabysitter(@NonNull Babysitter babysitter) {
+    public boolean deleteBabysitter(@NonNull Babysitter babysitter, IOnSuccessOperatingUser listener) {
         String babysitterUuid = babysitter.getUuid();
         firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).document(babysitterUuid).delete();
         Log.d(TAG, String.format("Babysitter was deleted successfully: <%s>", babysitterUuid));

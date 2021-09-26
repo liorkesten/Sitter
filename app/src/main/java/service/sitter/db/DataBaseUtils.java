@@ -31,14 +31,13 @@ public class DataBaseUtils {
     }
 
     // UploadImage method
-    public static void uploadImage(Uri filePath, IOnSuccessUploadingImage listener) {
+    public static void uploadImage(Uri filePath,String imageID, IOnSuccessUploadingImage listener) {
         if (filePath != null) {
             Log.d(TAG, "uploading image");
 
             // Defining the child of storageReference
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageReference = storage.getReference();
-            String imageID = UUID.randomUUID().toString();
             StorageReference ref = storageReference.child("images/" + imageID);
 
             // adding listeners on upload or failure of image
@@ -60,59 +59,18 @@ public class DataBaseUtils {
         }
     }
 
-    public static Uri upload(Uri imageUri) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference ref = storageRef.child(imageUri.toString());
-        UploadTask uploadTask = ref.putFile(imageUri);
-
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-
-                // Continue with the task to get the download URL
-                return ref.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                } else {
-                    // Handle failures
-                    // ...
-                }
-            }
-        });
-        return null;
-    }
 
     public static void loadImage(String imageName, IOnSuccessLoadingImage onSuccessLoadingImage) {
         StorageReference mImageStorage = FirebaseStorage.getInstance().getReference();
         StorageReference ref = mImageStorage.child("images").child(imageName);
-//        try {
-//            sleep(10000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        ref.getDownloadUrl().addOnSuccessListener(uri -> {
-            onSuccessLoadingImage.onSuccess(uri);
-            String imageUrl = uri.toString();
-            Log.d(TAG, "successful downloaded image: " + imageUrl);
-        });
+        ref.getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    onSuccessLoadingImage.onSuccess(uri);
+                    String imageUrl = uri.toString();
+                    Log.d(TAG, "successful downloaded image: " + imageUrl);
+                })
+                .addOnFailureListener(e -> Log.e(TAG, e.getMessage()));
 
-//        ref.getDownloadUrl().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                Uri downUri = task.getResult();
-//                onSuccessLoadingImage.onSuccess(downUri);
-//                String imageUrl = downUri.toString();
-//                Log.d(TAG, "successful downloaded image: " + imageUrl);
-//            } else {
-//                Log.d(TAG, "Error while downloading image: ");
-//            }
-//        });
     }
 
 }
