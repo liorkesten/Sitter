@@ -43,7 +43,7 @@ public class DataBaseUtils {
             // adding listeners on upload or failure of image
             ref.putFile(filePath)
                     .addOnSuccessListener(taskSnapshot -> {
-                        listener.onSuccess(imageID);
+//                        listener.onSuccess(imageID);
                         Log.d(TAG, String.format("Child image was added successfully: <%s>", imageID));
 
                     })
