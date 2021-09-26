@@ -54,7 +54,7 @@ public class ConnectionsFragment extends Fragment {
 
         // Set Logic Business Components
         db = DataBase.getInstance();
-        sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
         myUser = SharedPreferencesUtils.getParentFromSP(sp);
 
         binding = FragmentConnectionsBinding.inflate(inflater, container, false);

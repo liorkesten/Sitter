@@ -1,10 +1,5 @@
 package service.sitter.login;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,13 +16,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
+
 import com.google.android.libraries.places.api.model.Place;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import service.sitter.MainActivity;
 import service.sitter.R;
 import service.sitter.db.DataBase;
@@ -124,8 +123,8 @@ public class SetProfile extends AppCompatActivity {
                 .commit();
     }
 
-    private void fillDetails(){
-        if (!firstName.isEmpty() && !lastName.isEmpty()){
+    private void fillDetails() {
+        if (!firstName.isEmpty() && !lastName.isEmpty()) {
             Resources res = getResources();
             usernameTextView.setText(res.getString(R.string.welcome_message, firstName));
         }
@@ -141,7 +140,7 @@ public class SetProfile extends AppCompatActivity {
             this.payment = setProfileParentFragment.getPayment();
             Parent parent = new Parent(firstName, lastName, email, phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), children, payment);
             wasSaved = db.addParent(parent);
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
             SharedPreferencesUtils.saveParentToSP(sp, parent);
 
         } else {
@@ -150,7 +149,7 @@ public class SetProfile extends AppCompatActivity {
             Babysitter babysitter = new Babysitter(firstName, lastName, email, phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), hasMobility);
             wasSaved = db.addBabysitter(babysitter);
 
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
             SharedPreferencesUtils.saveBabysitterToSP(sp, babysitter);
 
 
