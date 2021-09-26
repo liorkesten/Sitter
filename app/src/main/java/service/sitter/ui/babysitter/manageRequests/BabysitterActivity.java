@@ -12,15 +12,12 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
 import service.sitter.models.Babysitter;
-import service.sitter.models.Connection;
-import service.sitter.models.Parent;
 import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
 import service.sitter.models.UserCategory;
@@ -47,14 +44,7 @@ public class BabysitterActivity extends AppCompatActivity {
         sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
         db = DataBase.getInstance();
 
-        // Create objects for tests
-        Babysitter temp_babysitter = new Babysitter("Lior", "Kesten", "kes@gmail.com", "00022221", "LA","imageUrl", false);
-        Parent parent = new Parent("Lior", "Kesten", "kes@gmail.com", "00022221", "LA", "", new ArrayList<>(), 100);
-        parent.setUuid("e030e301-463c-47c5-ac97-8f207ff79977");
-        db.addConnection(new Connection(parent, temp_babysitter));
-
         // Extract babysitter from SP.
-        SharedPreferencesUtils.saveBabysitterToSP(sp, temp_babysitter);
         babysitter = SharedPreferencesUtils.getBabysitterFromSP(sp);
 
         // Set recycler views
