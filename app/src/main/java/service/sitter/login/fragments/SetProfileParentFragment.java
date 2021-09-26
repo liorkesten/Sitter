@@ -65,7 +65,7 @@ public class SetProfileParentFragment extends Fragment {
         View root = binding.getRoot();
         PaymentFragment paymentFragment = new PaymentFragment();
         RecyclerView recyclerView = root.findViewById(R.id.recycler_view_children);
-        childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
+        childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/}, false);
         recyclerView.setAdapter(childAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
@@ -123,7 +123,6 @@ public class SetProfileParentFragment extends Fragment {
         });
         // cancel
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
-
         builder.show();
 
 

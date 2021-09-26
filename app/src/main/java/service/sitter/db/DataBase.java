@@ -1,6 +1,5 @@
 package service.sitter.db;
 
-import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -16,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import service.sitter.models.Babysitter;
@@ -122,23 +120,23 @@ public class DataBase implements IDataBase {
     }
 
     @Override
-    public boolean addParent(@NonNull Parent parent) {
-        return usersDb.addParent(parent);
+    public boolean addParent(@NonNull Parent parent, IOnSuccessOperatingUser listener) {
+        return usersDb.addParent(parent, listener);
     }
 
     @Override
-    public boolean deleteParent(@NonNull Parent parent) {
-        return usersDb.deleteParent(parent);
+    public boolean deleteParent(@NonNull Parent parent, IOnSuccessOperatingUser listener) {
+        return usersDb.deleteParent(parent, listener);
     }
 
     @Override
-    public boolean addBabysitter(@NonNull Babysitter babysitter) {
-        return usersDb.addBabysitter(babysitter);
+    public boolean addBabysitter(@NonNull Babysitter babysitter, IOnSuccessOperatingUser listener) {
+        return usersDb.addBabysitter(babysitter, listener);
     }
 
     @Override
-    public boolean deleteBabysitter(@NonNull Babysitter babysitter) {
-        return usersDb.deleteBabysitter(babysitter);
+    public boolean deleteBabysitter(@NonNull Babysitter babysitter, IOnSuccessOperatingUser listener) {
+        return usersDb.deleteBabysitter(babysitter, listener);
     }
 
     @Override

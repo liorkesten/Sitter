@@ -1,6 +1,7 @@
 package service.sitter.recyclerview.children;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,21 +10,31 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import service.sitter.R;
+import service.sitter.db.DataBase;
+import service.sitter.db.DataBaseUtils;
 import service.sitter.models.Child;
 import service.sitter.utils.ImagesUtils;
 
 public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
+
+    private static final String TAG = ChildAdapter.class.getSimpleName();
+
+
     private final List<Child> children = new ArrayList<>();
     private final IChildAdapterListener listener;
+    private final boolean shouldFetchImages;
 
-    public ChildAdapter(@NonNull IChildAdapterListener listener) {
+    public ChildAdapter(@NonNull IChildAdapterListener listener, boolean shouldFetchImages) {
         this.listener = listener;
+        this.shouldFetchImages = shouldFetchImages;
     }
 
     /**
@@ -51,10 +62,14 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
         Child child = children.get(position);
         holder.getNameTextView().setText(child.getName());
         String age = Integer.toString(child.getAge());
-        Log.d("Noam", age);
         holder.getAgeTextView().setText(age);
         //TODO Delete this images - fetch from DB
-        ImagesUtils.updateImageView(child.getImage(), holder.getImageView());
+        if (shouldFetchImages) {
+            ImagesUtils.updateImageView(child.getImage(), holder.getImageView());
+
+        }else{
+            holder.getImageView().setImageURI(Uri.parse(child.getImage()));
+        }
 
         holder.rootView.setOnClickListener(v -> listener.onRequestClick(child));
     }

@@ -47,13 +47,13 @@ public interface IDataBase {
 
     LiveData<List<Request>> getLiveDataArchivedRequestsOfParent(String parentId);
 
-    boolean addParent(@NonNull @NotNull Parent parent);
+    boolean addParent(@NonNull @NotNull Parent parent, IOnSuccessOperatingUser listener);
 
-    boolean deleteParent(@NonNull @NotNull Parent parent);
+    boolean deleteParent(@NonNull @NotNull Parent parent, IOnSuccessOperatingUser listener);
 
-    boolean addBabysitter(@NonNull @NotNull Babysitter babysitter);
+    boolean addBabysitter(@NonNull @NotNull Babysitter babysitter, IOnSuccessOperatingUser listener);
 
-    boolean deleteBabysitter(@NonNull @NotNull Babysitter babysitter);
+    boolean deleteBabysitter(@NonNull @NotNull Babysitter babysitter, IOnSuccessOperatingUser listener);
 
     UserCategory getUserCategory(String userUID) throws UserNotFoundException;
 
