@@ -15,6 +15,7 @@ import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
+import service.sitter.utils.ImagesUtils;
 
 public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequestViewHolder> {
     // Database:
@@ -56,8 +57,8 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
         db.getParent(request.getPublisherId(), parent -> {
             // Assign fields from parent object.
             holder.getNameValueTextView().setText(parent.getFullName());
-            // TODO Uncomment below line once Noam finish to update parent,GetImage returns Uri instead of String.
-//            holder.getProfileImageView().setImageURI(parent.getImage());
+            ImagesUtils.updateImageView(parent.getImage(), holder.getProfileImageView());
+
         }, null);
 
         // Set listeners:

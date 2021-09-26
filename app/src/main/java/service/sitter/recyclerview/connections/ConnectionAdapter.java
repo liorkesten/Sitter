@@ -16,6 +16,7 @@ import java.util.List;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.models.Connection;
+import service.sitter.utils.ImagesUtils;
 
 public class ConnectionAdapter extends RecyclerView.Adapter<service.sitter.recyclerview.connections.ConnectionViewHolder> {
     private final List<Connection> connections = new ArrayList<>();
@@ -45,6 +46,7 @@ public class ConnectionAdapter extends RecyclerView.Adapter<service.sitter.recyc
         Connection connection = connections.get(position);
         DataBase.getInstance().getBabysitter(connection.getSideBUId(), b -> {
             holder.getNameTextView().setText(b.getFullName());
+            ImagesUtils.updateImageView(b.getImage(), holder.getImageView());
         }, null);
 
         holder.rootView.setOnClickListener(v -> listener.onConnectionClick(connection));

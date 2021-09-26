@@ -24,6 +24,7 @@ public class ConnectionViewHolder extends RecyclerView.ViewHolder {
         handleShowView(itemView);
         rootView = itemView;
         nameTextView = itemView.findViewById(R.id.item_connection_name);
+        imageChildButtonView = itemView.findViewById(R.id.item_connection_image_button);
     }
 
 

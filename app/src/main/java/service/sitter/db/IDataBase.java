@@ -1,7 +1,5 @@
 package service.sitter.db;
 
-import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
@@ -76,7 +74,6 @@ public interface IDataBase {
     LiveData<List<Request>> getLiveDataArchivedRequestsOfBabysitter(String uuid);
 
     LiveData<List<Request>> getLiveDataDeletedRequestsOfBabysitter(String uuid);
-
 
 
     void cancelRequest(Request r, Babysitter babysitter);
