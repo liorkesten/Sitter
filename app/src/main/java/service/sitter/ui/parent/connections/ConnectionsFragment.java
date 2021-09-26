@@ -25,9 +25,8 @@ import service.sitter.R;
 import service.sitter.databinding.FragmentConnectionsBinding;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
-import service.sitter.db.UserNotFoundException;
-import service.sitter.models.Babysitter;
 import service.sitter.models.Connection;
+import service.sitter.models.Parent;
 import service.sitter.models.Recommendation;
 import service.sitter.recyclerview.connections.ConnectionAdapter;
 import service.sitter.recyclerview.recommendations.RecommendationAdapter;
@@ -38,7 +37,8 @@ public class ConnectionsFragment extends Fragment {
 
     private IDataBase db;
     private SharedPreferences sp;
-    private ConnectionsViewModel connectionsViewModel;
+    private Parent myUser;
+
     private FragmentConnectionsBinding binding;
     private List<Connection> connections = new ArrayList<>();
     private List<Recommendation> recommendations = new ArrayList<>();
@@ -52,18 +52,18 @@ public class ConnectionsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         // Set Logic Business Components
         db = DataBase.getInstance();
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        myUser = SharedPreferencesUtils.getParentFromSP(sp);
 
         binding = FragmentConnectionsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        // Load UI Components:
+        // Connections:
         editTextAddConnection = (EditText) root.findViewById(R.id.edit_text_add_connection);
         add_connection_button = (ImageButton) root.findViewById(R.id.add_connection_button);
-
-        // Connections:
         myConnectionsRecyclerView = root.findViewById(R.id.recycler_view_my_connections);
         ConnectionAdapter connectionAdapter = new ConnectionAdapter(connection -> { /*TODO Implement this listener*/});
         myConnectionsRecyclerView.setAdapter(connectionAdapter);
@@ -120,23 +120,16 @@ public class ConnectionsFragment extends Fragment {
         add_connection_button.setOnClickListener(v -> {
             Log.e(TAG, "add_connection_button was clicked");
             // Check if phone number is user in db.
-            String phoneNumber = editTextAddConnection.toString();
-            try {
-                Babysitter babysitter = db.getBabysitterByPhoneNumber(phoneNumber);
-                db.addConnection(new Connection(SharedPreferencesUtils.getParentFromSP(sp), babysitter));
-            } catch (UserNotFoundException e) {
-                e.printStackTrace();
-            }
+            String phoneNumber = editTextAddConnection.getText().toString();
+            db.getBabysitterByPhoneNumber(phoneNumber, b -> db.addConnection(myUser, b));
         });
     }
 
 
     private void setConnectionRecyclerView(View root) {
-        String parentId = SharedPreferencesUtils.getParentFromSP(sp).getUuid();
-
         RecyclerView recyclerViewConnection = root.findViewById(R.id.recycler_view_my_connections);
         ConnectionAdapter connectionAdapter = new ConnectionAdapter(connection -> { /*TODO Implement this listener*/});
-        LiveData<List<Connection>> connectionsLiveData = db.getLiveDataConnectionsOfParent(parentId);
+        LiveData<List<Connection>> connectionsLiveData = db.getLiveDataConnectionsOfParent(myUser.getUuid());
         if (connectionsLiveData == null) {
             //TODO
         }
@@ -153,3 +146,4 @@ public class ConnectionsFragment extends Fragment {
         recyclerViewConnection.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
     }
 }
+

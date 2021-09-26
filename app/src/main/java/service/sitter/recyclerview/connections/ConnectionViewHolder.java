@@ -23,8 +23,7 @@ public class ConnectionViewHolder extends RecyclerView.ViewHolder {
         // rootView is used for click on the whole print (not specific button)
         handleShowView(itemView);
         rootView = itemView;
-//        nameTextView = itemView.findViewById(R.id.conn);
-        ageTextView = itemView.findViewById(R.id.item_connection_age);
+        nameTextView = itemView.findViewById(R.id.item_connection_name);
     }
 
 

@@ -13,7 +13,6 @@ import java.util.List;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
-import service.sitter.models.Parent;
 import service.sitter.models.Request;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
 
@@ -54,9 +53,7 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
         holder.getTimeValueTextView().setText(request.getTime());
 
         // Fields that are extracted by the parent object (so db is needed).
-        db.getParent(request.getPublisherId(), doc -> {
-            // Convert doc to parent.
-            Parent parent = doc.toObject(Parent.class);
+        db.getParent(request.getPublisherId(), parent -> {
             // Assign fields from parent object.
             holder.getNameValueTextView().setText(parent.getFullName());
             // TODO Uncomment below line once Noam finish to update parent,GetImage returns Uri instead of String.

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import service.sitter.R;
+import service.sitter.db.DataBase;
 import service.sitter.models.Connection;
 
 public class ConnectionAdapter extends RecyclerView.Adapter<service.sitter.recyclerview.connections.ConnectionViewHolder> {
@@ -42,9 +43,11 @@ public class ConnectionAdapter extends RecyclerView.Adapter<service.sitter.recyc
     @Override
     public void onBindViewHolder(@NonNull @NotNull service.sitter.recyclerview.connections.ConnectionViewHolder holder, int position) {
         Connection connection = connections.get(position);
-        holder.getAgeTextView().setText(connection.getSideBUId());
+        DataBase.getInstance().getBabysitter(connection.getSideBUId(), b -> {
+            holder.getNameTextView().setText(b.getFullName());
+        }, null);
 
-        holder.rootView.setOnClickListener(v -> listener.onRequestClick(connection));
+        holder.rootView.setOnClickListener(v -> listener.onConnectionClick(connection));
     }
 
     @Override

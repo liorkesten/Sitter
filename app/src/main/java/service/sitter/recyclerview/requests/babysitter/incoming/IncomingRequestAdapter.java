@@ -13,7 +13,6 @@ import java.util.List;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
-import service.sitter.models.Parent;
 import service.sitter.models.Request;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
 
@@ -54,9 +53,7 @@ public class IncomingRequestAdapter extends RecyclerView.Adapter<IncomingRequest
         holder.getTimeValueTextView().setText(request.getTime());
 
         // Fields that are extracted by the parent object (so db is needed).
-        db.getParent(request.getPublisherId(), doc -> {
-            // Convert doc to parent.
-            Parent parent = doc.toObject(Parent.class);
+        db.getParent(request.getPublisherId(), parent -> {
             // Assign fields from parent object.
             holder.getNameValueTextView().setText(parent.getFullName());
             // TODO Uncomment below line once Noam finish to update parent,GetImage returns Uri instead of String.
@@ -66,7 +63,12 @@ public class IncomingRequestAdapter extends RecyclerView.Adapter<IncomingRequest
         // Set listeners:
         // Adapter passes the rootView that was clicked. The activity should initialize the adapter with specific listener
         holder.getRootView().setOnClickListener(v -> listener.onButtonClicked(request));
-        holder.getAcceptButton().setOnClickListener(v -> acceptButtonListener.onButtonClicked(request));
+        // In case that the acceptButtonListener is null, the button should be gone.
+        if (acceptButtonListener == null) {
+            holder.getAcceptButton().setVisibility(View.GONE);
+        } else {
+            holder.getAcceptButton().setOnClickListener(v -> acceptButtonListener.onButtonClicked(request));
+        }
         holder.getDenyButton().setOnClickListener(v -> denyButtonListener.onButtonClicked(request));
     }
 

@@ -1,7 +1,5 @@
 package service.sitter.ui.parent.home;
 
-import static java.lang.System.exit;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,47 +46,28 @@ public class HomeFragment extends Fragment {
     private String endTime = "";
     private int payment = 1;
     private Place location;
-    private Parent myUser;
+
+    private IDataBase db;
+    private SharedPreferences sp;
+    private Parent parent;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        IDataBase db = DataBase.getInstance();
-        //Extract user from SP.
-        // TODO Don't delete the comments below - it will be used once SP will be saved after SetProfile.
-//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
-//        String userUID = sp.getString("userUID", "");
-//        String userType = sp.getString("userType", "");
-//        if (userUID.equals("") || userType.equals("")) {
-//            //TODO ERROR!!!!
-//            Log.e(TAG, String.format("Error to extract userUID or userType from sp.\nuserUID: <%s>\nuserType:<%s", userUID, userType));
-//            exit(11);
-//        }
-//        // Verify that the user type is equal to the type in the SP.
-//        try {
-//            myUser = db.getParent(userUID);
-//        } catch (UserNotFoundException e) {
-//            //TODO ERROR!!!!
-//            Log.e(TAG, String.format("Error to extract userUID from DB\nuserUID: <%s>", userUID));
-//            exit(12);
-//        }
-        // TODO Delete the code below - it will be used once SP will be saved after SetProfile.
-        funcShouldBeDeletedOnceSpIsReadyInitMyUser();
-        if (myUser == null) {
-            //TODO handle exit
-            exit(101);
-        }
-        // TODO Delete until here
+
+        // Load databases objects;
+        db = DataBase.getInstance();
+        sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        parent = SharedPreferencesUtils.getParentFromSP(sp);
 
         // Set Logic Business Components
         DateFragment dateFragment = new DateFragment();
         TimeFragment startTimeFragment = new TimeFragment("16:00", "Start Time");
         TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
-        PaymentFragment paymentFragment = new PaymentFragment(myUser.getDefaultPricePerHour());
+        PaymentFragment paymentFragment = new PaymentFragment(parent.getDefaultPricePerHour());
         LocationFragment locationFragment = new LocationFragment();
 
-//        homeViewModel =
-//                new ViewModelProvider(this).get(HomeViewModel.class);
 
         // Set UI Components
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -99,7 +78,7 @@ public class HomeFragment extends Fragment {
 
         ChildAdapter childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
         childrenRecyclerView.setAdapter(childAdapter);
-        childAdapter.setChildren(myUser.getChildren());
+        childAdapter.setChildren(parent.getChildren());
 
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
@@ -121,7 +100,7 @@ public class HomeFragment extends Fragment {
         publishRequestButton.setOnClickListener(l -> {
             String description = descriptionEditText.getText().toString();
             Request request = new Request(
-                    myUser.getUuid(), this.date, startTime, endTime, location,
+                    parent.getUuid(), this.date, startTime, endTime, location,
                     null, payment, description
             );
             db.addRequest(request);
@@ -167,8 +146,8 @@ public class HomeFragment extends Fragment {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferencesUtils.saveParentToSP(sp, myParent);
 //         Step 4: Extract from SP.
-        myUser = SharedPreferencesUtils.getParentFromSP(sp);
-        Log.d(TAG, String.format("myUser initialized: <%s>", myUser.toString()));
+        parent = SharedPreferencesUtils.getParentFromSP(sp);
+        Log.d(TAG, String.format("myUser initialized: <%s>", parent.toString()));
     }
 }
 

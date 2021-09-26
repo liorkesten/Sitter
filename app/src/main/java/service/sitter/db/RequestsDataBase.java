@@ -61,12 +61,11 @@ public class RequestsDataBase {
      * @return false if the request doe's not exist in the DB.
      */
     public boolean deleteRequest(String requestUuid) {
-        if (!Requests.containsKey(requestUuid)) {
-            Log.e(TAG, String.format("request that should be deleted is not exist : <%s>", requestUuid));
-            return false;
-        }
-
-        Requests.remove(requestUuid);
+//        if (!Requests.containsKey(requestUuid)) {
+//            Log.e(TAG, String.format("request that should be deleted is not exist : <%s>", requestUuid));
+//            return false;
+//        }
+//        Requests.remove(requestUuid);
         firestore.collection(COLLECTION_FIRESTORE_NAME).document(requestUuid).delete();
 
         Log.d(TAG, String.format("request was deleted successfully: <%s>", requestUuid));
