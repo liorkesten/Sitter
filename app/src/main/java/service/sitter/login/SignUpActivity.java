@@ -27,6 +27,8 @@ public class SignUpActivity extends AppCompatActivity {
         registerButton.setOnClickListener(v -> {
             String name = fullName.getText().toString();
             String[] nameArr = name.split("\\s+");
+            if (nameArr.length != 2)
+                fullName.setError("You must enter first and last name to register.");
             firstName = nameArr[0];
             lastName = nameArr[1];
             if (firstName.isEmpty() || lastName.isEmpty()){
