@@ -25,6 +25,8 @@ import service.sitter.db.IDataBase;
 import service.sitter.models.Parent;
 import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
+import service.sitter.models.UserCategory;
+import service.sitter.providers.CalendarProvider;
 import service.sitter.recyclerview.requests.babysitter.approved.ApprovedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.archived.ArchivedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.incoming.IncomingRequestAdapter;
@@ -99,7 +101,7 @@ public class ManageRequestsFragment extends Fragment {
 
     @NonNull
     private IncomingRequestAdapter getIncomingRequestAdapter() {
-        IncomingRequestAdapter adapter = new IncomingRequestAdapter(/*TODO*/null, /*TODO*/null,/*TODO*/ r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/);
+        IncomingRequestAdapter adapter = new IncomingRequestAdapter(/*TODO*/null, /*TODO*/null,/*TODO*/ r -> db.deleteRequest(r.getUuid()), /*TODO add popup that asks if the user sure that he wants to delete the request*/UserCategory.Parent);
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataPendingRequestsOfParent(parent.getUuid());
         if (requestsLiveData == null) {
@@ -119,7 +121,7 @@ public class ManageRequestsFragment extends Fragment {
 
     @NonNull
     private ApprovedRequestAdapter getApprovedRequestAdapter() {
-        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null, /*TODO*/ null, r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/);
+        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null, /*TODO*/ r -> CalendarProvider.AddCalendarEvent(getActivity(), r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/,UserCategory.Parent);
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataApprovedRequestsOfParent(parent.getUuid());
         if (requestsLiveData == null) {
@@ -139,7 +141,7 @@ public class ManageRequestsFragment extends Fragment {
 
     @NonNull
     private ArchivedRequestAdapter getArchivedRequestAdapter() {
-        ArchivedRequestAdapter adapter = new ArchivedRequestAdapter(/*TODO*/null);
+        ArchivedRequestAdapter adapter = new ArchivedRequestAdapter(/*TODO*/null, UserCategory.Parent);
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataArchivedRequestsOfParent(parent.getUuid());
         if (requestsLiveData == null) {

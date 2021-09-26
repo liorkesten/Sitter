@@ -14,6 +14,7 @@ import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
+import service.sitter.models.UserCategory;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
 import service.sitter.utils.ImagesUtils;
 
@@ -27,13 +28,17 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
     private final IRequestAdapterListener calenderButtonListener;
     private final IRequestAdapterListener cancelButtonListener;
 
-    public ApprovedRequestAdapter(@NonNull IRequestAdapterListener listener, IRequestAdapterListener calenderButtonListener, IRequestAdapterListener cancelButtonListener) {
+    private final UserCategory userCategory;
+
+    public ApprovedRequestAdapter(@NonNull IRequestAdapterListener listener, IRequestAdapterListener calenderButtonListener, IRequestAdapterListener cancelButtonListener, UserCategory userCategory) {
         // Init db.
         db = DataBase.getInstance();
         // Setup listeners
         this.listener = listener;
         this.calenderButtonListener = calenderButtonListener;
         this.cancelButtonListener = cancelButtonListener;
+
+        this.userCategory = userCategory;
     }
 
     @NonNull
@@ -54,12 +59,22 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
         holder.getTimeValueTextView().setText(request.getTime());
 
         // Fields that are extracted by the parent object (so db is needed).
-        db.getParent(request.getPublisherId(), parent -> {
-            // Assign fields from parent object.
-            holder.getNameValueTextView().setText(parent.getFullName());
-            ImagesUtils.updateImageView(parent.getImage(), holder.getProfileImageView());
+        if (userCategory == UserCategory.Babysitter){
+            db.getParent(request.getPublisherId(), parent -> {
+                // Assign fields from parent object.
+                holder.getNameValueTextView().setText(parent.getFullName());
+                ImagesUtils.updateImageView(parent.getImage(), holder.getProfileImageView());
 
-        }, null);
+            }, null);
+        }else{
+            db.getBabysitter(request.getReceiverId(), babysitter -> {
+                // Assign fields from parent object.
+                holder.getNameValueTextView().setText(babysitter.getFullName());
+                ImagesUtils.updateImageView(babysitter.getImage(), holder.getProfileImageView());
+
+            }, null);
+        }
+
 
         // Set listeners:
         // Adapter passes the rootView that was clicked. The activity should initialize the adapter with specific listener

@@ -84,7 +84,7 @@ public class UsersDataBase {
     public boolean addParent(@NonNull Parent parent, IOnSuccessOperatingUser listener) {
         String parentUuid = parent.getUuid();
         String parentImageID = UUID.randomUUID().toString();
-        DataBaseUtils.uploadImage(Uri.parse(parent.getImage()), parentImageID,null);
+        DataBaseUtils.uploadImage(Uri.parse(parent.getImage()), parentImageID, null);
         parent.setImage(parentImageID);
         // uploading all children to db
         for (Child child : parent.getChildren()) {
@@ -121,7 +121,7 @@ public class UsersDataBase {
     public boolean addBabysitter(@NonNull Babysitter babysitter, IOnSuccessOperatingUser listener) {
         String babysitterUuid = babysitter.getUuid();
         String imageID = UUID.randomUUID().toString();
-        DataBaseUtils.uploadImage(Uri.parse(babysitter.getImage()),imageID,null);
+        DataBaseUtils.uploadImage(Uri.parse(babysitter.getImage()), imageID, null);
         babysitter.setImage(imageID);
 
         firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).document(babysitterUuid).set(babysitter)
@@ -146,6 +146,9 @@ public class UsersDataBase {
 
 
     public void getParent(String userUID, IGetParent applierOnSuccess, OnFailureListener onFailureListener) {
+        if (userUID == null || userUID.equals("")) {
+            return;
+        }
         Task<DocumentSnapshot> documentSnapshotTask = firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(userUID).get().addOnFailureListener(onFailureListener);
         documentSnapshotTask.addOnSuccessListener(snapshot -> applierOnSuccess.parentFound(snapshot.toObject(Parent.class)));
     }
@@ -197,6 +200,9 @@ public class UsersDataBase {
     }
 
     public void getBabysitter(String userUID, IOnGettingBabysitterFromDb applierOnSuccess, OnFailureListener onFailureListener) {
+        if (userUID == null || userUID.equals("")) {
+            return;
+        }
         Task<DocumentSnapshot> documentSnapshotTask = firestore
                 .collection(COLLECTION_FIRESTORE_BABYSITTER_NAME)
                 .document(userUID)

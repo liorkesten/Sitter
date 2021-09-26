@@ -64,11 +64,6 @@ public class ConnectionsFragment extends Fragment {
         // Connections:
         editTextAddConnection = (EditText) root.findViewById(R.id.edit_text_add_connection);
         add_connection_button = (ImageButton) root.findViewById(R.id.add_connection_button);
-        myConnectionsRecyclerView = root.findViewById(R.id.recycler_view_my_connections);
-        ConnectionAdapter connectionAdapter = new ConnectionAdapter(connection -> { /*TODO Implement this listener*/});
-        myConnectionsRecyclerView.setAdapter(connectionAdapter);
-        connectionAdapter.setConnections(connections);
-        myConnectionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
         // Recommendations:
         recommendationsRecyclerView = root.findViewById(R.id.recycler_view_recommendations);

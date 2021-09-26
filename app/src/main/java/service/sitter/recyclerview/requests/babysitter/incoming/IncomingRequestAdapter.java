@@ -14,6 +14,7 @@ import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
+import service.sitter.models.UserCategory;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
 import service.sitter.utils.ImagesUtils;
 
@@ -26,8 +27,10 @@ public class IncomingRequestAdapter extends RecyclerView.Adapter<IncomingRequest
     private final IRequestAdapterListener listener;
     private final IRequestAdapterListener acceptButtonListener;
     private final IRequestAdapterListener denyButtonListener;
+    private final UserCategory userCategory;
 
-    public IncomingRequestAdapter(@NonNull IRequestAdapterListener listener, IRequestAdapterListener acceptButtonListener, IRequestAdapterListener denyButtonListener) {
+    public IncomingRequestAdapter(@NonNull IRequestAdapterListener listener, IRequestAdapterListener acceptButtonListener, IRequestAdapterListener denyButtonListener, UserCategory userCategory) {
+        this.userCategory = userCategory;
         // Init db.
         db = DataBase.getInstance();
         // Setup listeners
@@ -54,11 +57,15 @@ public class IncomingRequestAdapter extends RecyclerView.Adapter<IncomingRequest
         holder.getTimeValueTextView().setText(request.getTime());
 
         // Fields that are extracted by the parent object (so db is needed).
-        db.getParent(request.getPublisherId(), parent -> {
-            // Assign fields from parent object.
-            holder.getNameValueTextView().setText(parent.getFullName());
-            ImagesUtils.updateImageView(parent.getImage(), holder.getProfileImageView());
-        }, null);
+        if (userCategory == UserCategory.Babysitter){
+
+            db.getParent(request.getPublisherId(), parent -> {
+                // Assign fields from parent object.
+                holder.getNameValueTextView().setText(parent.getFullName());
+                ImagesUtils.updateImageView(parent.getImage(), holder.getProfileImageView());
+
+            }, null);
+        }
 
         // Set listeners:
         // Adapter passes the rootView that was clicked. The activity should initialize the adapter with specific listener
