@@ -3,6 +3,8 @@ package service.sitter.db;
 
 import static com.google.common.io.Files.getFileExtension;
 
+import static java.lang.Thread.sleep;
+
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
@@ -29,18 +31,23 @@ public class DataBaseUtils {
     }
 
     // UploadImage method
-    public static void uploadImage(Uri filePath) {
+    public static void uploadImage(Uri filePath, IOnSuccessUploadingImage listener) {
         if (filePath != null) {
             Log.d(TAG, "uploading image");
 
             // Defining the child of storageReference
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageReference = storage.getReference();
-            StorageReference ref = storageReference.child("images/" + filePath.toString());
+            String imageID = UUID.randomUUID().toString();
+            StorageReference ref = storageReference.child("images/" + imageID);
 
             // adding listeners on upload or failure of image
             ref.putFile(filePath)
-                    .addOnSuccessListener(taskSnapshot -> Log.d(TAG, "success uploading image"))
+                    .addOnSuccessListener(taskSnapshot -> {
+                        listener.onSuccess(imageID);
+                        Log.d(TAG, String.format("Child image was added successfully: <%s>", imageID));
+
+                    })
                     .addOnFailureListener(e -> Log.e(TAG, e.getMessage()))
                     .addOnProgressListener(
                             taskSnapshot -> {
@@ -53,7 +60,7 @@ public class DataBaseUtils {
         }
     }
 
-    public static Uri upload (Uri imageUri){
+    public static Uri upload(Uri imageUri) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         final StorageReference ref = storageRef.child(imageUri.toString());
         UploadTask uploadTask = ref.putFile(imageUri);
@@ -82,19 +89,30 @@ public class DataBaseUtils {
         return null;
     }
 
-    public static void loadImage(String imageName,IOnSuccessLoadingImage onSuccessLoadingImage ) {
+    public static void loadImage(String imageName, IOnSuccessLoadingImage onSuccessLoadingImage) {
         StorageReference mImageStorage = FirebaseStorage.getInstance().getReference();
         StorageReference ref = mImageStorage.child("images").child(imageName);
-        ref.getDownloadUrl().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Uri downUri = task.getResult();
-                onSuccessLoadingImage.onSuccess(downUri);
-                String imageUrl = downUri.toString();
-                Log.d(TAG, "successful downloaded image: " + imageUrl);
-            } else {
-                Log.d(TAG, "Error while downloading image: ");
-            }
+//        try {
+//            sleep(10000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        ref.getDownloadUrl().addOnSuccessListener(uri -> {
+            onSuccessLoadingImage.onSuccess(uri);
+            String imageUrl = uri.toString();
+            Log.d(TAG, "successful downloaded image: " + imageUrl);
         });
+
+//        ref.getDownloadUrl().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                Uri downUri = task.getResult();
+//                onSuccessLoadingImage.onSuccess(downUri);
+//                String imageUrl = downUri.toString();
+//                Log.d(TAG, "successful downloaded image: " + imageUrl);
+//            } else {
+//                Log.d(TAG, "Error while downloading image: ");
+//            }
+//        });
     }
 
 }

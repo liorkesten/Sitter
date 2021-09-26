@@ -80,14 +80,14 @@ public class UsersDataBase {
      */
     public boolean addParent(@NonNull Parent parent) {
         String parentUuid = parent.getUuid();
-        firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(parentUuid).set(parent);
-        Log.d(TAG, String.format("Parent was added successfully: <%s>", parentUuid));
-        DataBaseUtils.uploadImage(Uri.parse(parent.getImage()));
+        DataBaseUtils.uploadImage(Uri.parse(parent.getImage()), parent::setImage);
         // uploading all children to db
         for (Child child : parent.getChildren()) {
-            DataBaseUtils.uploadImage(Uri.parse(child.getImage()));
+            DataBaseUtils.uploadImage(Uri.parse(child.getImage()), child::setImage);
             Log.d(TAG, String.format("Child was added successfully: <%s>", child.getName()));
         }
+        firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(parentUuid).set(parent);
+        Log.d(TAG, String.format("Parent was added successfully: <%s>", parentUuid));
         return true;
     }
 
@@ -114,7 +114,7 @@ public class UsersDataBase {
         String babysitterUuid = babysitter.getUuid();
         firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).document(babysitterUuid).set(babysitter);
         Log.d(TAG, String.format("Babysitter was added successfully: <%s>", babysitterUuid));
-        DataBaseUtils.uploadImage(Uri.parse(babysitter.getImage()));
+        DataBaseUtils.uploadImage(Uri.parse(babysitter.getImage()), babysitter::setImage);
 
         return true;
     }

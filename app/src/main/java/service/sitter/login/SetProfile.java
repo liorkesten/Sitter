@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,6 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -127,24 +130,19 @@ public class SetProfile extends AppCompatActivity {
                     observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
             this.payment = setProfileParentFragment.getPayment();
             Parent parent = new Parent(firstName, lastName, "hello@gmail.com", phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), children, payment);
-            db.addParent(parent);
+            wasSaved = db.addParent(parent);
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferencesUtils.saveParentToSP(sp, parent);
-            Parent myUser = SharedPreferencesUtils.getParentFromSP(sp);
-            Log.d(TAG, String.format("myUser initialized: <%s>", myUser));
-
 
         } else {
             Log.d(TAG, "creating new Babysitter");
             boolean hasMobility = setProfileBabysitterFragment.getLiveDataHasMobility().getValue();
             Babysitter babysitter = new Babysitter(firstName, lastName, "hello@gmail.com", phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), hasMobility);
-            db.addBabysitter(babysitter);
+            wasSaved = db.addBabysitter(babysitter);
 
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferencesUtils.saveBabysitterToSP(sp, babysitter);
 
-            Babysitter myUser = SharedPreferencesUtils.getBabysitterFromSP(sp);
-            Log.d(TAG, String.format("myUser initialized: <%s>", myUser));
 
         }
         Log.d(TAG, "user was added successfully: " + wasSaved);
@@ -153,7 +151,7 @@ public class SetProfile extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // hardcoded -1
+        //TODO change it to permissions hardcoded -1
         if (resultCode == -1) {
             if (requestCode == RESULT_CODE_IMAGE) {
                 profilePictureUri = data.getData();
@@ -166,5 +164,14 @@ public class SetProfile extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

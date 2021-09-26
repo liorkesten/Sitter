@@ -18,6 +18,7 @@ import java.util.Objects;
 
 import service.sitter.MainActivity;
 import service.sitter.R;
+import service.sitter.db.DataBase;
 import studios.codelight.smartloginlibrary.LoginType;
 import studios.codelight.smartloginlibrary.SmartLogin;
 import studios.codelight.smartloginlibrary.SmartLoginCallbacks;
@@ -31,10 +32,15 @@ import studios.codelight.smartloginlibrary.util.SmartLoginException;
 
 public class LoginActivity extends AppCompatActivity implements SmartLoginCallbacks {
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
+
     public interface SmartLoginCallbacks {
         void onLoginSuccess(SmartUser user);
+
         void onLoginFailure(SmartLoginException e);
+
         SmartUser doCustomLogin();
+
         SmartUser doCustomSignup();
     }
 
@@ -116,6 +122,7 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
 
         customSigninButton.setOnClickListener(v -> {
             // Perform custom sign in
+            Log.d(TAG, config.toString());
             smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
             smartLogin.login(config);
         });
@@ -132,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
             if (currentUser != null) {
                 if (currentUser instanceof SmartFacebookUser) {
                     smartLogin = SmartLoginFactory.build(LoginType.Facebook);
-                } else if(currentUser instanceof SmartGoogleUser) {
+                } else if (currentUser instanceof SmartGoogleUser) {
                     smartLogin = SmartLoginFactory.build(LoginType.Google);
                 } else {
                     smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
@@ -158,7 +165,7 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
 
     @Override
     public void onLoginSuccess(SmartUser user) {
-        Log.d("Lior","success");
+        Log.d("Lior", "success");
         Toast.makeText(this, user.toString(), Toast.LENGTH_SHORT).show();
         refreshLayout();
         Intent intent = new Intent(this, MainActivity.class);
@@ -167,7 +174,7 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
 
     @Override
     public void onLoginFailure(SmartLoginException e) {
-        Log.d("Noam","Failed to login");
+        Log.d("Noam", "Failed to login");
         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
@@ -175,8 +182,8 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
     public SmartUser doCustomLogin() {
         SmartUser user = new SmartUser();
         user.setEmail(emailEditText.getText().toString());
-        Log.d("Dana","custom Login");
-        Intent intent=new Intent(LoginActivity.this, MainActivity.class);
+        Log.d("Dana", "custom Login");
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
@@ -194,10 +201,9 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
     }
 
     public void removeActionBar() {
-        try
-        {
+        try {
             Objects.requireNonNull(this.getSupportActionBar()).hide();
+        } catch (NullPointerException ignored) {
         }
-        catch (NullPointerException ignored){}
     }
 }

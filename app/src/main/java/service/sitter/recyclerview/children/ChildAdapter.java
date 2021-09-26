@@ -12,12 +12,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import service.sitter.R;
+import service.sitter.db.DataBaseUtils;
 import service.sitter.models.Child;
 
 public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
@@ -56,7 +59,11 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
         Log.d("Noam", age);
         holder.getAgeTextView().setText(age);
         //TODO Delete this images - fetch from DB
-        holder.getImageView().setImageURI(Uri.parse(child.getImage()));
+
+        DataBaseUtils.loadImage(child.getImage(), (uri) -> {
+            Picasso.get().load(uri).into(holder.getImageView());
+        });
+//        holder.getImageView().setImageURI(Uri.parse(child.getImage()));
 
 
 //        switch (child.getImage()) {
@@ -73,12 +80,12 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
 //                exit(120);
 //        }
 
-        holder.rootView.setOnClickListener(v -> listener.onRequestClick(child));
-    }
+            holder.rootView.setOnClickListener(v -> listener.onRequestClick(child));
+        }
 
-    @Override
-    public int getItemCount() {
-        return children.size();
+        @Override
+        public int getItemCount () {
+            return children.size();
+        }
     }
-}
 
