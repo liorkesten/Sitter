@@ -39,7 +39,6 @@ public abstract class User implements Serializable {
         this.category = category;
         this.location = location;
         this.image = image;
-
         this.connections = new ArrayList<>();
     }
 
