@@ -134,14 +134,12 @@ public class SetProfile extends AppCompatActivity {
 
     private void addUser() {
         boolean wasSaved = false;
-        String firstName = usernameTextView.getText().toString().split(" ")[1];
-        String lastName = usernameTextView.getText().toString().split(" ")[2];
         if (isParent) {
             Log.d(TAG, "creating new Parent");
             setProfileParentFragment.getLiveDataChildren().
                     observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
             this.payment = setProfileParentFragment.getPayment();
-            Parent parent = new Parent(firstName, lastName, "hello@gmail.com", phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), children, payment);
+            Parent parent = new Parent(firstName, lastName, email, phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), children, payment);
             wasSaved = db.addParent(parent);
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferencesUtils.saveParentToSP(sp, parent);
@@ -149,7 +147,7 @@ public class SetProfile extends AppCompatActivity {
         } else {
             Log.d(TAG, "creating new Babysitter");
             boolean hasMobility = setProfileBabysitterFragment.getLiveDataHasMobility().getValue();
-            Babysitter babysitter = new Babysitter(firstName, lastName, "hello@gmail.com", phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), hasMobility);
+            Babysitter babysitter = new Babysitter(firstName, lastName, email, phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), hasMobility);
             wasSaved = db.addBabysitter(babysitter);
 
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
