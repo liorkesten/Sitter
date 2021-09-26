@@ -3,40 +3,42 @@ package service.sitter.login;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
-import com.facebook.CallbackManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import com.google.android.libraries.places.api.model.Place;
-
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
+import service.sitter.MainActivity;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
-import service.sitter.db.RequestsDataBase;
 import service.sitter.login.fragments.SetProfileBabysitterFragment;
 import service.sitter.login.fragments.SetProfileParentFragment;
+import service.sitter.models.Babysitter;
 import service.sitter.models.Child;
 import service.sitter.models.Parent;
-import service.sitter.models.Request;
 import service.sitter.ui.fragments.LocationFragment;
+import service.sitter.utils.SharedPreferencesUtils;
 
 public class SetProfile extends AppCompatActivity {
 
@@ -54,6 +56,7 @@ public class SetProfile extends AppCompatActivity {
     private static final String TAG = SetProfile.class.getSimpleName();
     private SetProfileParentFragment setProfileParentFragment;
     private SetProfileBabysitterFragment setProfileBabysitterFragment;
+    String firstName = "", lastName = "", email = "", password = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +64,22 @@ public class SetProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_profile);
 
+
         // set UI components
         imageButtonProfilePicture = findViewById(R.id.profile_picture_image_button);
         phoneNumberEditText = findViewById(R.id.phone_number_edit_text);
         usernameTextView = findViewById(R.id.user_name_text_view);
         LocationFragment locationFragment = new LocationFragment();
-        SetProfileParentFragment setProfileBottomFrameFragment = new SetProfileParentFragment();
         RadioGroup radioGroup = findViewById(R.id.parent_or_babysitter_radio_group);
         Button addUserButton = findViewById(R.id.add_user_button);
+
+        // get info from registration
+        Intent infoFromRegistration = getIntent();
+        firstName = infoFromRegistration.getStringExtra("firstName");
+        lastName = infoFromRegistration.getStringExtra("lastName");
+        email = infoFromRegistration.getStringExtra("email");
+        password = infoFromRegistration.getStringExtra("password");
+        fillDetails();
 
         // set Logic Components
         children = new ArrayList<>();
@@ -97,45 +108,52 @@ public class SetProfile extends AppCompatActivity {
 
         // Get Profile Data
         locationFragment.getLiveData().observe(this, location -> this.location = location);
-
-
-        // Adding Request
+        // Clicking on adding user
         addUserButton.setOnClickListener(l -> {
-            Log.d(TAG, "trying too add");
             addUser();
+            Intent intentMainActivity = new Intent(SetProfile.this, MainActivity.class);
+            startActivity(intentMainActivity);
+
         });
 
         // Rendering Fragments
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.location_fragment_container_view, locationFragment)
-                .add(R.id.bottomFrameFragment, setProfileBottomFrameFragment)
+                .replace(R.id.location_fragment_container_view, locationFragment)
+                .replace(R.id.bottomFrameFragment, setProfileParentFragment)
                 .commit();
+    }
+
+    private void fillDetails(){
+        if (!firstName.isEmpty() && !lastName.isEmpty()){
+            Resources res = getResources();
+            usernameTextView.setText(res.getString(R.string.welcome_message, firstName));
+        }
+
     }
 
     private void addUser() {
         boolean wasSaved = false;
-        String firstName = usernameTextView.getText().toString().split(" ")[1];
-        String lastName = usernameTextView.getText().toString().split(" ")[2];
         if (isParent) {
             Log.d(TAG, "creating new Parent");
             setProfileParentFragment.getLiveDataChildren().
                     observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
-            setProfileParentFragment.getLiveDataPayment().
-                    observe(this, newPayment -> this.payment = newPayment);
-            Parent parent = new Parent(
-                    firstName,
-                    lastName,
-                    "hello@gmail.com",
-                    phoneNumberEditText.getText().toString(),
-                    location.toString(),
-                    imageButtonProfilePicture.toString(),
-                    children,
-                    payment);
-            Log.d(TAG, parent.toString());
+            this.payment = setProfileParentFragment.getPayment();
+            Parent parent = new Parent(firstName, lastName, email, phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), children, payment);
+            wasSaved = db.addParent(parent);
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferencesUtils.saveParentToSP(sp, parent);
 
         } else {
             Log.d(TAG, "creating new Babysitter");
+            boolean hasMobility = setProfileBabysitterFragment.getLiveDataHasMobility().getValue();
+            Babysitter babysitter = new Babysitter(firstName, lastName, email, phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), hasMobility);
+            wasSaved = db.addBabysitter(babysitter);
+
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferencesUtils.saveBabysitterToSP(sp, babysitter);
+
+
         }
         Log.d(TAG, "user was added successfully: " + wasSaved);
     }
@@ -143,7 +161,7 @@ public class SetProfile extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // hardcoded -1
+        //TODO change it to permissions hardcoded -1
         if (resultCode == -1) {
             if (requestCode == RESULT_CODE_IMAGE) {
                 profilePictureUri = data.getData();
@@ -151,12 +169,19 @@ public class SetProfile extends AppCompatActivity {
                 try {
                     bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), profilePictureUri);
                     imageButtonProfilePicture.setImageBitmap(bitmapImage);
-                    db.uploadImage(profilePictureUri);
                 } catch (IOException e) {
                     e.printStackTrace();
-
                 }
             }
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

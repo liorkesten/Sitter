@@ -17,7 +17,7 @@ public class Parent extends User implements Serializable {
 
     @Override
     public String toString() {
-        return "Parent{" +
+        return super.toString() + "\nParent{" +
                 "children=" + children +
                 ", defaultPricePerHour=" + defaultPricePerHour +
                 '}';

@@ -169,28 +169,7 @@ public class DataBase implements IDataBase {
     }
 
 
-    // UploadImage method
-    public void uploadImage(Uri filePath) {
-        if (filePath != null) {
-            Log.d(TAG, "uploading image");
 
-            // Defining the child of storageReference
-            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
-
-            // adding listeners on upload or failure of image
-            ref.putFile(filePath)
-                    .addOnSuccessListener(taskSnapshot -> Log.d(TAG, "success uploading image"))
-                    .addOnFailureListener(e -> Log.e(TAG, e.getMessage()))
-                    .addOnProgressListener(
-                            taskSnapshot -> {
-                                double progress
-                                        = (100.0
-                                        * taskSnapshot.getBytesTransferred()
-                                        / taskSnapshot.getTotalByteCount());
-                                Log.d(TAG, "Uploaded " + (int) progress + "%");
-                            });
-        }
-    }
 
     public LiveData<List<Connection>> getLiveDataConnectionsOfParent(String parentId) {
         return connectionsDb.getLiveDataConnectionsOfParent(parentId);

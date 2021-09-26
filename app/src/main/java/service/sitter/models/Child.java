@@ -1,5 +1,7 @@
 package service.sitter.models;
 
+import android.net.Uri;
+
 import java.util.Date;
 import java.io.Serializable;
 
@@ -7,17 +9,17 @@ public class Child implements Serializable {
 
     private String name;
     private String birthday;
-    private String image; //TODO Change image to image object
+    private String image;
 
     // Child is default Ctor. needed for Firestore.
     public Child() {
 
     }
 
-    public Child(String name, String birthday, String image) {
+    public Child(String name, String birthday, Uri image) {
         this.name = name;
         this.birthday = birthday;
-        this.image = image;
+        this.image = image.toString();
     }
 
     @Override
@@ -25,7 +27,6 @@ public class Child implements Serializable {
         return "Child{" +
                 "name='" + name + '\'' +
                 ", birthday='" + birthday + '\'' +
-                ", image='" + image + '\'' +
                 '}';
     }
 

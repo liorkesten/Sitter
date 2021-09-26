@@ -41,9 +41,6 @@ public interface IDataBase {
 
     boolean deleteUser(String userUuid);
 
-    void uploadImage(Uri filePath);
-
-
     LiveData<List<Request>> getLiveDataPendingRequestsOfParent(String parentId);
 
     LiveData<List<Request>> getLiveDataApprovedRequestsOfParent(String parentId);
@@ -79,6 +76,8 @@ public interface IDataBase {
     LiveData<List<Request>> getLiveDataArchivedRequestsOfBabysitter(String uuid);
 
     LiveData<List<Request>> getLiveDataDeletedRequestsOfBabysitter(String uuid);
+
+
 
     void cancelRequest(Request r, Babysitter babysitter);
 

@@ -1,13 +1,19 @@
 package service.sitter.ui.parent.home;
 
+import static java.lang.System.exit;
+
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,7 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.libraries.places.api.model.Place;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +33,7 @@ import java.util.List;
 import service.sitter.R;
 import service.sitter.databinding.FragmentHomeBinding;
 import service.sitter.db.DataBase;
+import service.sitter.db.DataBaseUtils;
 import service.sitter.db.IDataBase;
 import service.sitter.models.Babysitter;
 import service.sitter.models.Child;
@@ -49,25 +59,9 @@ public class HomeFragment extends Fragment {
 
     private IDataBase db;
     private SharedPreferences sp;
-    private Parent parent;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-
-        // Load databases objects;
-        db = DataBase.getInstance();
-        sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        parent = SharedPreferencesUtils.getParentFromSP(sp);
-
-        // Set Logic Business Components
-        DateFragment dateFragment = new DateFragment();
-        TimeFragment startTimeFragment = new TimeFragment("16:00", "Start Time");
-        TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
-        PaymentFragment paymentFragment = new PaymentFragment(parent.getDefaultPricePerHour());
-        LocationFragment locationFragment = new LocationFragment();
-
 
         // Set UI Components
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -76,31 +70,38 @@ public class HomeFragment extends Fragment {
         EditText descriptionEditText = root.findViewById(R.id.description_edit_text);
         RecyclerView childrenRecyclerView = root.findViewById(R.id.recycler_view_children);
 
+        // Set Logic Components
+        db = DataBase.getInstance();
+        sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
+        myUser = SharedPreferencesUtils.getParentFromSP(sp);
+
+        if (myUser == null) {
+            Log.e(TAG, "Error while loading user from SP");
+            exit(101);
+        }
+
+        // Set Logic Business Components
+        DateFragment dateFragment = new DateFragment();
+        TimeFragment startTimeFragment = new TimeFragment("16:00", "Start Time");
+        TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
+        PaymentFragment paymentFragment = new PaymentFragment(myUser.getDefaultPricePerHour());
+        LocationFragment locationFragment = new LocationFragment();
         ChildAdapter childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
         childrenRecyclerView.setAdapter(childAdapter);
-        childAdapter.setChildren(parent.getChildren());
-
+        childAdapter.setChildren(myUser.getChildren());
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
         // Set default values:
-        date = dateFragment.getLiveData().getValue();
-        startTime = startTimeFragment.getLiveData().getValue();
-        endTime = endTimeFragment.getLiveData().getValue();
-        payment = paymentFragment.getLiveData().getValue();
-        location = locationFragment.getLiveData().getValue();
+        setDefaultValues(dateFragment, startTimeFragment, endTimeFragment, paymentFragment, locationFragment);
 
         // Get Request Data
-        dateFragment.getLiveData().observe(getViewLifecycleOwner(), newDate -> this.date = newDate);
-        startTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newStartTime -> this.startTime = newStartTime);
-        endTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newEndTime -> this.endTime = newEndTime);
-        paymentFragment.getLiveData().observe(getViewLifecycleOwner(), payment -> this.payment = payment);
-        locationFragment.getLiveData().observe(getViewLifecycleOwner(), location -> this.location = location);
+        listenToObservers(dateFragment, startTimeFragment, endTimeFragment, paymentFragment, locationFragment);
 
         // Adding Request
         publishRequestButton.setOnClickListener(l -> {
             String description = descriptionEditText.getText().toString();
             Request request = new Request(
-                    parent.getUuid(), this.date, startTime, endTime, location,
+                    myUser.getUuid(), this.date, startTime, endTime, location,
                     null, payment, description
             );
             db.addRequest(request);
@@ -117,7 +118,50 @@ public class HomeFragment extends Fragment {
                 .commit();
 
 
+//        ImageButton viewById = (ImageButton)root.findViewById(R.id.home_profile_picture_image_button);
+//        DataBaseUtils.loadImage(myUser.getImage(), (uri) -> {
+//            Picasso.get().load(uri).into(viewById);
+//        });
+
+
+        //Extract user from SP.
+        // TODO Don't delete the comments below - it will be used once SP will be saved after SetProfile.
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
+//        String userUID = sp.getString("userUID", "");
+//        String userType = sp.getString("userType", "");
+//        if (userUID.equals("") || userType.equals("")) {
+//            //TODO ERROR!!!!
+//            Log.e(TAG, String.format("Error to extract userUID or userType from sp.\nuserUID: <%s>\nuserType:<%s", userUID, userType));
+//            exit(11);
+//        }
+//        // Verify that the user type is equal to the type in the SP.
+//        try {
+//            myUser = db.getParent(userUID);
+//        } catch (UserNotFoundException e) {
+//            //TODO ERROR!!!!
+//            Log.e(TAG, String.format("Error to extract userUID from DB\nuserUID: <%s>", userUID));
+//            exit(12);
+//        }
+        // TODO Delete the code below - it will be used once SP will be saved after SetProfile.
+//        funcShouldBeDeletedOnceSpIsReadyInitMyUser();
+
         return root;
+    }
+
+    private void listenToObservers(DateFragment dateFragment, TimeFragment startTimeFragment, TimeFragment endTimeFragment, PaymentFragment paymentFragment, LocationFragment locationFragment) {
+        dateFragment.getLiveData().observe(getViewLifecycleOwner(), newDate -> this.date = newDate);
+        startTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newStartTime -> this.startTime = newStartTime);
+        endTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newEndTime -> this.endTime = newEndTime);
+        paymentFragment.getLiveData().observe(getViewLifecycleOwner(), payment -> this.payment = payment);
+        locationFragment.getLiveData().observe(getViewLifecycleOwner(), location -> this.location = location);
+    }
+
+    private void setDefaultValues(DateFragment dateFragment, TimeFragment startTimeFragment, TimeFragment endTimeFragment, PaymentFragment paymentFragment, LocationFragment locationFragment) {
+        date = dateFragment.getLiveData().getValue();
+        startTime = startTimeFragment.getLiveData().getValue();
+        endTime = endTimeFragment.getLiveData().getValue();
+        payment = paymentFragment.getLiveData().getValue();
+        location = locationFragment.getLiveData().getValue();
     }
 
 
@@ -130,14 +174,14 @@ public class HomeFragment extends Fragment {
 
     private void funcShouldBeDeletedOnceSpIsReadyInitMyUser() {
         IDataBase db = DataBase.getInstance();
-        Babysitter b = new Babysitter("Noam", "Kesten", "n@gma", "0547718646", "NY", "URL_TO_IMAGE");
+        Babysitter b = new Babysitter("Noam", "Kesten", "n@gma", "0547718646", "NY", "URL_TO_IMAGE", false);
         b.setUuid("123");
         db.addBabysitter(b);
         // First step - create new user with default values;
         List<Child> children = new ArrayList<>();
-        children.add(new Child("Daria", "10/10/2020", "Daria"));
-        children.add(new Child("Gali", "10/10/2018", "Gali"));
-        children.add(new Child("Mika", "10/10/2015", "Mika"));
+//        children.add(new Child("Daria", "10/10/2020", ));
+//        children.add(new Child("Gali", "10/10/2018", "Gali"));
+//        children.add(new Child("Mika", "10/10/2015", "Mika"));
         Parent myParent = new Parent("Lior", "Kesten", "kestenlior@gmail.com", "+972547718647", "NY", "<URL_TO_IMAGE>", children, 60);
         // Step 2: add the user to the db.
         db.addParent(myParent);
@@ -146,86 +190,7 @@ public class HomeFragment extends Fragment {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferencesUtils.saveParentToSP(sp, myParent);
 //         Step 4: Extract from SP.
-        parent = SharedPreferencesUtils.getParentFromSP(sp);
-        Log.d(TAG, String.format("myUser initialized: <%s>", parent.toString()));
+        myUser = SharedPreferencesUtils.getParentFromSP(sp);
+        Log.d(TAG, String.format("myUser initialized: <%s>", myUser.toString()));
     }
 }
-
-
-//        btnDatePicker=binding.btnDateRequest;
-//        txtDate=binding.editTextDateRequest;
-
-//        btnStartTime=binding.btnStartTimeRequest;
-//        txtStartTime=binding.editTextStartTimeRequest;
-//
-//        btnEndTime=binding.btnEndTimeRequest;
-//        txtEndTime=binding.editTextEndTimeRequest;
-
-//        Places.initialize(getActivity(), "AIzaSyBdqw1rneIi782h8_AylBcvTyYdICZY3GE");
-
-//        PlacesClient placesClient = Places.createClient(getActivity());
-
-//btnDatePicker.setOnClickListener(v -> {
-//            final Calendar cal = Calendar.getInstance();
-//            mYear = cal.get(Calendar.YEAR);
-//            mMonth = cal.get(Calendar.MONTH);
-//            mDay = cal.get(Calendar.DAY_OF_MONTH);
-//
-//
-//            Log.d("HomeFragment", "11111111111111111");
-//            DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-//                    new DatePickerDialog.OnDateSetListener() {
-//                        @Override
-//                        public void onDateSet(DatePicker view, int year,
-//                                              int monthOfYear, int dayOfMonth) {
-//                            txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-//                            Log.d("HomeFrag", txtDate.getText().toString());
-//
-//                        }
-//                    }, mYear, mMonth, mDay);
-//            datePickerDialog.show();
-//                    });
-
-
-//        btnStartTime.setOnClickListener(v -> {
-//            Calendar cal = Calendar.getInstance();
-//            TimePickerDialog tp1 = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-//                @Override
-//                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-//                    cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
-//                    cal.set(Calendar.MINUTE, minute);
-//                    txtStartTime.setText(cal.get(Calendar.HOUR_OF_DAY) + ":" + Calendar.MINUTE);
-//                    Log.d("HomeFrag", txtStartTime.getText().toString());
-//                }
-//            }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
-//            tp1.show();
-//
-//
-//        });
-////        btnDatePicker.setOnClickListener((View.OnClickListener) this);
-////        btnTimePicker.setOnClickListener((View.OnClickListener) this);
-//
-////        final TextView textView = binding.textHome;
-//
-//        btnEndTime.setOnClickListener(v -> {
-//                    Calendar cal = Calendar.getInstance();
-//                    TimePickerDialog tp = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-//                        @Override
-//                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-//                            cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
-//                            cal.set(Calendar.MINUTE, minute);
-//                            txtEndTime.setText(cal.get(Calendar.HOUR_OF_DAY) + ":" + Calendar.MINUTE);
-//                            Log.d("HomeFrag", txtEndTime.getText().toString());
-//                        }
-//                    }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
-//                    tp.show();
-//                });
-
-//        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                txtStartTime.setText(s);
-//            }
-//        });
-//        final DatePicker datePicker = binding.datePickerRequest;
-//        final TimePicker TimePicker = bi

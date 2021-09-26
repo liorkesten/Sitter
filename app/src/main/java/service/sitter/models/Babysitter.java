@@ -15,8 +15,9 @@ public class Babysitter extends User implements Serializable {
 
     }
 
-    public Babysitter(String firstName, String lastName, String emailAddress, String phoneNumber, String location, String image) {
+    public Babysitter(String firstName, String lastName, String emailAddress, String phoneNumber, String location, String image, boolean hasCar) {
         super(firstName, lastName, emailAddress, phoneNumber, UserCategory.Babysitter, location, image);
+        this.hasCar = hasCar;
     }
 
 

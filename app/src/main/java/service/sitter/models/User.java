@@ -39,10 +39,23 @@ public abstract class User implements Serializable {
         this.category = category;
         this.location = location;
         this.image = image;
-
         this.connections = new ArrayList<>();
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "uuid='" + uuid + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", category=" + category +
+                ", location='" + location + '\'' +
+                ", image='" + image + '\'' +
+                ", connections=" + connections +
+                '}';
+    }
 
     public String getUuid() {
         return uuid;

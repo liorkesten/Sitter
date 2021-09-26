@@ -3,6 +3,7 @@ package service.sitter.recyclerview.children;
 import static java.lang.System.exit;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +12,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import service.sitter.R;
+import service.sitter.db.DataBaseUtils;
 import service.sitter.models.Child;
 
 public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
@@ -54,27 +58,34 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
         String age = Integer.toString(child.getAge());
         Log.d("Noam", age);
         holder.getAgeTextView().setText(age);
-        //TODO Delete this images - fetch from DB.
-        switch (child.getImage()) {
-            case "Daria":
-                holder.getImageView().setImageResource(R.drawable.daria);
-                break;
-            case "Gali":
-                holder.getImageView().setImageResource(R.drawable.gali);
-                break;
-            case "Mika":
-                holder.getImageView().setImageResource(R.drawable.mika);
-                break;
-            default:
-                exit(120);
+        //TODO Delete this images - fetch from DB
+
+        DataBaseUtils.loadImage(child.getImage(), (uri) -> {
+            Picasso.get().load(uri).into(holder.getImageView());
+        });
+//        holder.getImageView().setImageURI(Uri.parse(child.getImage()));
+
+
+//        switch (child.getImage()) {
+//            case "Daria":
+//                holder.getImageView().setImageResource(R.drawable.daria);
+//                break;
+//            case "Gali":
+//                holder.getImageView().setImageResource(R.drawable.gali);
+//                break;
+//            case "Mika":
+//                holder.getImageView().setImageResource(R.drawable.mika);
+//                break;
+//            default:
+//                exit(120);
+//        }
+
+            holder.rootView.setOnClickListener(v -> listener.onRequestClick(child));
         }
 
-        holder.rootView.setOnClickListener(v -> listener.onRequestClick(child));
+        @Override
+        public int getItemCount () {
+            return children.size();
+        }
     }
-
-    @Override
-    public int getItemCount() {
-        return children.size();
-    }
-}
 
