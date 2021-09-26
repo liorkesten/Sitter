@@ -21,6 +21,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,24 +36,25 @@ import service.sitter.recyclerview.children.ChildAdapter;
 import service.sitter.ui.fragments.PaymentFragment;
 
 public class SetProfileParentFragment extends Fragment {
-    ImageView imageView;
-    private IDataBase db;
-    private FragmentSetProfileParentBinding binding;
-    MutableLiveData<List<Child>> mutableLiveDataChildren;
-    List<Child> children;
-    private int payment = 1;
-    private MutableLiveData<Integer> mutableLiveDataPayment;
-    Uri lastChildUri;
-    ChildAdapter childAdapter;
+    private static final Uri DEFAULT_URI_CHILD_PICTURE = Uri.parse("android.resource://sitter/drawable/child_icon");
     private static final int RESULT_CODE_IMAGE = 100;
     private static final String TAG = SetProfileParentFragment.class.getSimpleName();
+
+    private ImageView imageView;
+    private IDataBase db;
+    private FragmentSetProfileParentBinding binding;
+    private MutableLiveData<List<Child>> mutableLiveDataChildren;
+    private List<Child> children;
+    private Integer paymentLiveData;
+    private Uri lastChildUri;
+    private ChildAdapter childAdapter;
 
 
     public SetProfileParentFragment() {
         super(R.layout.fragment_set_profile_parent);
         mutableLiveDataChildren = new MutableLiveData<>();
-        mutableLiveDataPayment = new MutableLiveData<>(payment);
         children = new ArrayList<>();
+        lastChildUri = DEFAULT_URI_CHILD_PICTURE;
         db = DataBase.getInstance();
     }
 
@@ -64,21 +67,18 @@ public class SetProfileParentFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.recycler_view_children);
         childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/});
         recyclerView.setAdapter(childAdapter);
-        children.add(new Child("Mika", "10/10/2000", "Mika"));
-        childAdapter.setChildren(children);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
-        Button addChildButton = root.findViewById(R.id.add_child_button);
+        FloatingActionButton addChildButton = root.findViewById(R.id.fab_add_child);
 
         // children adapter
         mutableLiveDataChildren.observeForever(children -> childAdapter.setChildren(children));
+        paymentFragment.getLiveData().observeForever(payment -> this.paymentLiveData = payment);
 
         // child button listener
         addChildButton.setOnClickListener(v -> openDialogAddChild());
-        paymentFragment.getLiveData().observe(getViewLifecycleOwner(), payment -> {
-            this.payment = payment;
-            mutableLiveDataPayment.setValue(payment);
-        });
+        paymentLiveData = paymentFragment.getLiveData().getValue();
+
 
         // Render fragments
         getChildFragmentManager()
@@ -91,6 +91,7 @@ public class SetProfileParentFragment extends Fragment {
 
     private void openDialogAddChild() {
         // Set UI Components
+        lastChildUri = DEFAULT_URI_CHILD_PICTURE;
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Add Child");
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_add_child, (ViewGroup) getView(), false);
@@ -115,7 +116,7 @@ public class SetProfileParentFragment extends Fragment {
             // add child
             Child child = new Child(editTextChildName.getText().toString(),
                     editTextChildBirthday.getText().toString(),
-                    "Daria");
+                    lastChildUri);
             children.add(child);
             mutableLiveDataChildren.setValue(children);
             childAdapter.setChildren(children);
@@ -124,6 +125,8 @@ public class SetProfileParentFragment extends Fragment {
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
 
         builder.show();
+
+
     }
 
 
@@ -131,8 +134,8 @@ public class SetProfileParentFragment extends Fragment {
         return mutableLiveDataChildren;
     }
 
-    public LiveData<Integer> getLiveDataPayment() {
-        return mutableLiveDataPayment;
+    public Integer getPayment() {
+        return paymentLiveData;
     }
 
     @Override
@@ -140,12 +143,12 @@ public class SetProfileParentFragment extends Fragment {
         // hardcoded -1
         if (resultCode == -1) {
             if (requestCode == RESULT_CODE_IMAGE) {
-                lastChildUri = data.getData();
+                lastChildUri = Uri.parse(data.getData().toString());
                 Bitmap bitmapImage = null;
                 try {
                     bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), lastChildUri);
                     imageView.setImageBitmap(bitmapImage);
-                    db.uploadImage(lastChildUri);
+//                    db.uploadImage(lastChildUri);
                 } catch (IOException e) {
                     e.printStackTrace();
 

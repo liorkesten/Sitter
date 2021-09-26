@@ -1,5 +1,6 @@
 package service.sitter.db;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import service.sitter.models.Babysitter;
+import service.sitter.models.Child;
 import service.sitter.models.Parent;
 import service.sitter.models.User;
 import service.sitter.models.UserCategory;
@@ -80,6 +82,12 @@ public class UsersDataBase {
         String parentUuid = parent.getUuid();
         firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(parentUuid).set(parent);
         Log.d(TAG, String.format("Parent was added successfully: <%s>", parentUuid));
+        DataBaseUtils.uploadImage(Uri.parse(parent.getImage()));
+        // uploading all children to db
+        for (Child child : parent.getChildren()) {
+            DataBaseUtils.uploadImage(Uri.parse(child.getImage()));
+            Log.d(TAG, String.format("Child was added successfully: <%s>", child.getName()));
+        }
         return true;
     }
 
@@ -106,6 +114,8 @@ public class UsersDataBase {
         String babysitterUuid = babysitter.getUuid();
         firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).document(babysitterUuid).set(babysitter);
         Log.d(TAG, String.format("Babysitter was added successfully: <%s>", babysitterUuid));
+        DataBaseUtils.uploadImage(Uri.parse(babysitter.getImage()));
+
         return true;
     }
 
@@ -170,7 +180,7 @@ public class UsersDataBase {
 //        }
 //        return (Babysitter) snapshot.toObject(Babysitter.class);
         //TODO Implement this!!!
-        Babysitter b = new Babysitter("Noam", "Kesten", "n@gma", "0547718646", "NY", "URL_TO_IMAGE");
+        Babysitter b = new Babysitter("Noam", "Kesten", "n@gma", "0547718646", "NY", "URL_TO_IMAGE", false);
         b.setUuid("123");
         return b;
     }

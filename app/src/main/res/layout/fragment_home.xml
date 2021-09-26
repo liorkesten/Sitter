@@ -16,6 +16,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <ImageButton
+            android:id="@+id/profile_picture_image_button"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_marginTop="30dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/round_button"
+            android:backgroundTint="@color/white"
+
+            android:contentDescription="Add Profile Picture"
+            />
+
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/date_fragment_container_view"
             android:layout_width="match_parent"

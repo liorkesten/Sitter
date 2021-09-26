@@ -3,8 +3,10 @@ package service.sitter.login;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,16 +29,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import service.sitter.MainActivity;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
 import service.sitter.db.RequestsDataBase;
 import service.sitter.login.fragments.SetProfileBabysitterFragment;
 import service.sitter.login.fragments.SetProfileParentFragment;
+import service.sitter.models.Babysitter;
 import service.sitter.models.Child;
 import service.sitter.models.Parent;
 import service.sitter.models.Request;
 import service.sitter.ui.fragments.LocationFragment;
+import service.sitter.utils.SharedPreferencesUtils;
 
 public class SetProfile extends AppCompatActivity {
 
@@ -66,7 +71,6 @@ public class SetProfile extends AppCompatActivity {
         phoneNumberEditText = findViewById(R.id.phone_number_edit_text);
         usernameTextView = findViewById(R.id.user_name_text_view);
         LocationFragment locationFragment = new LocationFragment();
-        SetProfileParentFragment setProfileBottomFrameFragment = new SetProfileParentFragment();
         RadioGroup radioGroup = findViewById(R.id.parent_or_babysitter_radio_group);
         Button addUserButton = findViewById(R.id.add_user_button);
 
@@ -97,19 +101,19 @@ public class SetProfile extends AppCompatActivity {
 
         // Get Profile Data
         locationFragment.getLiveData().observe(this, location -> this.location = location);
-
-
-        // Adding Request
+        // Clicking on adding user
         addUserButton.setOnClickListener(l -> {
-            Log.d(TAG, "trying too add");
             addUser();
+            Intent intentMainActivity = new Intent(SetProfile.this, MainActivity.class);
+            startActivity(intentMainActivity);
+
         });
 
         // Rendering Fragments
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.location_fragment_container_view, locationFragment)
-                .add(R.id.bottomFrameFragment, setProfileBottomFrameFragment)
+                .replace(R.id.location_fragment_container_view, locationFragment)
+                .replace(R.id.bottomFrameFragment, setProfileParentFragment)
                 .commit();
     }
 
@@ -121,21 +125,27 @@ public class SetProfile extends AppCompatActivity {
             Log.d(TAG, "creating new Parent");
             setProfileParentFragment.getLiveDataChildren().
                     observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
-            setProfileParentFragment.getLiveDataPayment().
-                    observe(this, newPayment -> this.payment = newPayment);
-            Parent parent = new Parent(
-                    firstName,
-                    lastName,
-                    "hello@gmail.com",
-                    phoneNumberEditText.getText().toString(),
-                    location.toString(),
-                    imageButtonProfilePicture.toString(),
-                    children,
-                    payment);
-            Log.d(TAG, parent.toString());
+            this.payment = setProfileParentFragment.getPayment();
+            Parent parent = new Parent(firstName, lastName, "hello@gmail.com", phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), children, payment);
+            db.addParent(parent);
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferencesUtils.saveParentToSP(sp, parent);
+            Parent myUser = SharedPreferencesUtils.getParentFromSP(sp);
+            Log.d(TAG, String.format("myUser initialized: <%s>", myUser));
+
 
         } else {
             Log.d(TAG, "creating new Babysitter");
+            boolean hasMobility = setProfileBabysitterFragment.getLiveDataHasMobility().getValue();
+            Babysitter babysitter = new Babysitter(firstName, lastName, "hello@gmail.com", phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), hasMobility);
+            db.addBabysitter(babysitter);
+
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferencesUtils.saveBabysitterToSP(sp, babysitter);
+
+            Babysitter myUser = SharedPreferencesUtils.getBabysitterFromSP(sp);
+            Log.d(TAG, String.format("myUser initialized: <%s>", myUser));
+
         }
         Log.d(TAG, "user was added successfully: " + wasSaved);
     }
@@ -151,10 +161,8 @@ public class SetProfile extends AppCompatActivity {
                 try {
                     bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), profilePictureUri);
                     imageButtonProfilePicture.setImageBitmap(bitmapImage);
-                    db.uploadImage(profilePictureUri);
                 } catch (IOException e) {
                     e.printStackTrace();
-
                 }
             }
         }

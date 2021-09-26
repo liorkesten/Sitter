@@ -11,9 +11,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.material.slider.Slider;
+
 import service.sitter.R;
+import service.sitter.login.fragments.SetProfileParentFragment;
 
 public class PaymentFragment extends Fragment {
+
+    private static final String TAG = PaymentFragment.class.getSimpleName();
+
 
     private String currentTime;
     private MutableLiveData<Integer> paymentLiveData;
@@ -41,8 +47,10 @@ public class PaymentFragment extends Fragment {
 
         paymentSlider = (com.google.android.material.slider.Slider) view.findViewById(R.id.paymentSlider);
         paymentSlider.setValue(defaultPayment);
-        paymentSlider.setOnClickListener(l -> paymentLiveData.setValue((int) paymentSlider.getValue()));
-
+        paymentSlider.addOnChangeListener((slider, value, fromUser) -> {
+            Log.d(TAG, "payment changed to: " + value);
+            paymentLiveData.setValue((int) value);
+        });
 
         return view;
     }

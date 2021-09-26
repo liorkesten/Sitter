@@ -38,9 +38,6 @@ public interface IDataBase {
 
     boolean deleteUser(String userUuid);
 
-    void uploadImage(Uri filePath);
-
-
     LiveData<List<Request>> getLiveDataPendingRequestsOfParent(String parentId);
 
     LiveData<List<Request>> getLiveDataApprovedRequestsOfParent(String parentId);
