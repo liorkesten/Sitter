@@ -65,6 +65,11 @@ public class SetProfile extends AppCompatActivity {
         Log.d(TAG, "created");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_profile);
+        Intent infoFromRegistration = getIntent();
+        String firstName = infoFromRegistration.getStringExtra("firstName");
+        String lastName = infoFromRegistration.getStringExtra("lastName");
+        String email = infoFromRegistration.getStringExtra("email");
+        String password = infoFromRegistration.getStringExtra("password");
 
         // set UI components
         imageButtonProfilePicture = findViewById(R.id.profile_picture_image_button);
