@@ -8,6 +8,7 @@ import androidx.preference.PreferenceManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,31 +19,24 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
-import com.facebook.CallbackManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import com.google.android.libraries.places.api.model.Place;
-
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
 import service.sitter.MainActivity;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
-import service.sitter.db.RequestsDataBase;
 import service.sitter.login.fragments.SetProfileBabysitterFragment;
 import service.sitter.login.fragments.SetProfileParentFragment;
 import service.sitter.models.Babysitter;
 import service.sitter.models.Child;
 import service.sitter.models.Parent;
-import service.sitter.models.Request;
 import service.sitter.ui.fragments.LocationFragment;
 import service.sitter.utils.SharedPreferencesUtils;
 
@@ -62,12 +56,14 @@ public class SetProfile extends AppCompatActivity {
     private static final String TAG = SetProfile.class.getSimpleName();
     private SetProfileParentFragment setProfileParentFragment;
     private SetProfileBabysitterFragment setProfileBabysitterFragment;
+    String firstName = "", lastName = "", email = "", password = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "created");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_profile);
+
 
         // set UI components
         imageButtonProfilePicture = findViewById(R.id.profile_picture_image_button);
@@ -76,6 +72,14 @@ public class SetProfile extends AppCompatActivity {
         LocationFragment locationFragment = new LocationFragment();
         RadioGroup radioGroup = findViewById(R.id.parent_or_babysitter_radio_group);
         Button addUserButton = findViewById(R.id.add_user_button);
+
+        // get info from registration
+        Intent infoFromRegistration = getIntent();
+        firstName = infoFromRegistration.getStringExtra("firstName");
+        lastName = infoFromRegistration.getStringExtra("lastName");
+        email = infoFromRegistration.getStringExtra("email");
+        password = infoFromRegistration.getStringExtra("password");
+        fillDetails();
 
         // set Logic Components
         children = new ArrayList<>();
@@ -118,6 +122,14 @@ public class SetProfile extends AppCompatActivity {
                 .replace(R.id.location_fragment_container_view, locationFragment)
                 .replace(R.id.bottomFrameFragment, setProfileParentFragment)
                 .commit();
+    }
+
+    private void fillDetails(){
+        if (!firstName.isEmpty() && !lastName.isEmpty()){
+            Resources res = getResources();
+            usernameTextView.setText(res.getString(R.string.welcome_message, firstName));
+        }
+
     }
 
     private void addUser() {

@@ -95,7 +95,8 @@
             android:textColor="@android:color/white"
             android:text="@string/register"/>
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/btn_back"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@+id/btn_register"

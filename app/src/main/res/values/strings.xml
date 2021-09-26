@@ -10,6 +10,7 @@
     <string name="user_exists">User already logged in</string>
     <string name="sign_in_facebook">Sign in with Facebook</string>
     <string name="sign_in_google">Sign in with Google</string>
+    <string name="welcome_message">Welcome, %1$s!</string>
 
     <string name="facebook_app_id">256981896294206</string>
     <string name="fb_login_protocol_scheme">fb256981896294206</string>
