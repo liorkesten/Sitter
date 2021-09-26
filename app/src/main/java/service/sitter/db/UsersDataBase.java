@@ -6,15 +6,15 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import service.sitter.models.Babysitter;
 import service.sitter.models.Child;
@@ -134,19 +134,10 @@ public class UsersDataBase {
     }
 
 
-    public Parent getParent(String userUID) throws UserNotFoundException {
+    public void getParent(String userUID, OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener) {
         DocumentSnapshot snapshot = null;
         Task<DocumentSnapshot> documentSnapshotTask = firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(userUID).get();
-        try {
-            snapshot = Tasks.await(documentSnapshotTask);
-        } catch (ExecutionException | InterruptedException e) {
-            Log.e(TAG, e.getMessage());
-            return null;
-        }
-        if (snapshot == null) {
-            throw new UserNotFoundException(userUID);
-        }
-        return snapshot.toObject(Parent.class);
+        documentSnapshotTask.addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
 
     public Babysitter getBabysitter(String userUID) throws UserNotFoundException {
@@ -163,11 +154,9 @@ public class UsersDataBase {
             return getBabysitter(userUID).getCategory();
         } catch (UserNotFoundException ignored) {
         }
-        try {
-            // Always Parent type is returned.
-            return getParent(userUID).getCategory();
-        } catch (UserNotFoundException ignored) {
-        }
+        // Always Parent type is returned.
+        //TODO Chnage this signature
+        getParent(userUID, null, null);
 
         // In case that the user id is not parent and babysitter
         throw new UserNotFoundException(userUID);
@@ -183,5 +172,12 @@ public class UsersDataBase {
         Babysitter b = new Babysitter("Noam", "Kesten", "n@gma", "0547718646", "NY", "URL_TO_IMAGE", false);
         b.setUuid("123");
         return b;
+    }
+
+    public void getParents(List<String> parentsUUID, IApplyOnParents applier) {
+        firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).whereIn("uuid", parentsUUID).addSnapshotListener((docs, err) -> {
+            List<Parent> parents = docs.toObjects(Parent.class);
+            applier.apply(parents);
+        });
     }
 }

@@ -1,16 +1,16 @@
-package service.sitter.ui.home;
+package service.sitter.ui.babysitter.manageRequests;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+public class ManageRequestsViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public HomeViewModel() {
+    public ManageRequestsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+        mText.setValue("This is manage requests fragment");
     }
 
     public LiveData<String> getText() {

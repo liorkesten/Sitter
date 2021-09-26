@@ -1,4 +1,4 @@
-package service.sitter.ui.manageRequests;
+package service.sitter.ui.parent.manageRequests;
 
 
 import android.content.SharedPreferences;
@@ -24,7 +24,7 @@ import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
-import service.sitter.recyclerview.requests.RequestAdapter;
+import service.sitter.recyclerview.requests.parent.RequestAdapter;
 import service.sitter.utils.SharedPreferencesUtils;
 
 public class ManageRequestsFragment extends Fragment {

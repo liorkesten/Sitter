@@ -1,4 +1,4 @@
-package service.sitter.ui.connections;
+package service.sitter.ui.parent.connections;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

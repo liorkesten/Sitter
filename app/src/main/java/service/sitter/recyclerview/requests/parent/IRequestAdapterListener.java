@@ -1,4 +1,4 @@
-package service.sitter.recyclerview.requests;
+package service.sitter.recyclerview.requests.parent;
 
 import service.sitter.models.Request;
 

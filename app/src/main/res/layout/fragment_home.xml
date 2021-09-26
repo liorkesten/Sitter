@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:fillViewport="true"
     android:paddingBottom="70dp"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.parent.home.HomeFragment">
 
     <LinearLayout
         android:id="@+id/linear"

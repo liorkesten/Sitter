@@ -6,8 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +21,7 @@ import service.sitter.models.Connection;
 
 public class ConnectionsDataBase {
     private static final String TAG = ConnectionsDataBase.class.getSimpleName();
-    private static final String COLLECTION_FIRESTORE_NAME = "connections";
+    public static final String COLLECTION_FIRESTORE_NAME = "connections";
 
     private final FirebaseFirestore firestore;
     private final Map<String, Connection> Connections = new HashMap<>();
@@ -92,4 +95,33 @@ public class ConnectionsDataBase {
         return liveDateConnections;
     }
 
+    public LiveData<List<Connection>> getLiveDataConnectionsOfBabysitter(String babysitterUUID) {
+        MutableLiveData<List<Connection>> liveDateConnections = new MutableLiveData<>();
+        firestore
+                .collection(COLLECTION_FIRESTORE_NAME)
+                .whereEqualTo("sideBUId", babysitterUUID)
+                .addSnapshotListener((value, err) -> {
+                    if (err != null) {
+                        Log.e(TAG, String.format("Failed to extract requests of babysitter <%s>due to: %s", babysitterUUID, err));
+                    } else if (value == null) {
+                        Log.e(TAG, String.format("Failed to extract requests of babysitter <%s> due to: value is null", babysitterUUID));
+                    } else {
+                        List<Connection> connections = new ArrayList<>();
+                        List<DocumentSnapshot> documentSnapshots = value.getDocuments();
+                        documentSnapshots.forEach(doc -> connections.add(doc.toObject(Connection.class)));
+                        liveDateConnections.setValue(connections);
+                        Log.d(TAG, "All connections extracted successfully");
+                    }
+                });
+        return liveDateConnections;
+    }
+
+    public void getConnectionsOfBabysitter(String babysitterUUID, IApplyOnConnections applier, OnFailureListener onFailureListener) {
+        DocumentSnapshot snapshot = null;
+        Task<QuerySnapshot> querySnapshotTask = firestore.collection(COLLECTION_FIRESTORE_NAME).whereEqualTo("sideBUId", babysitterUUID).get();
+        querySnapshotTask.addOnSuccessListener(connections -> {
+            applier.apply(connections.toObjects(Connection.class));
+        });
+        querySnapshotTask.addOnFailureListener(onFailureListener);
+    }
 }
