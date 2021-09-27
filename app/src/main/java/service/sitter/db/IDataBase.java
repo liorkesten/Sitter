@@ -16,6 +16,8 @@ import service.sitter.models.Recommendation;
 import service.sitter.models.Request;
 import service.sitter.models.User;
 import service.sitter.models.UserCategory;
+import service.sitter.recommendations.IGetConnections;
+import service.sitter.recommendations.IGetParents;
 import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
 
 /**
@@ -81,4 +83,14 @@ public interface IDataBase {
     void addConnection(User userA, User userB);
 
     void getBabysitter(String userUID, IOnGettingBabysitterFromDb applierOnSuccess, OnFailureListener onFailureListener);
+
+    LiveData<List<Recommendation>> getLiveDataRecommendationsOfParent(String uuid);
+
+    void addRecommendations(List<Recommendation> recommendations);
+
+    void getConnectionsOfParent(String userID, IGetConnections iGetConnections);
+
+    void getConnectionsOfParents(List<Parent> parents, IGetConnections iGetConnections);
+
+    void getParentsByPhoneNumbers(List<String> phoneNumbers, IGetParents iGetParents);
 }

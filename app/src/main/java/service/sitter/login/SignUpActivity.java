@@ -8,9 +8,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import service.sitter.R;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -77,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity {
                 checkPass = false;
             }
             if (checkName && checkMail && checkPass){
-                Intent intentSetProfile = new Intent(SignUpActivity.this, SetProfile.class);
+                Intent intentSetProfile = new Intent(SignUpActivity.this, SetProfileActivity.class);
                 intentSetProfile.putExtra("firstName", firstName);
                 intentSetProfile.putExtra("lastName", lastName);
                 intentSetProfile.putExtra("email", mail);

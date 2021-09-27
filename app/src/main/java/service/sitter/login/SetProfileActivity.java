@@ -18,7 +18,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
@@ -33,7 +32,6 @@ import service.sitter.MainActivity;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
-import service.sitter.db.IOnSuccessOperatingUser;
 import service.sitter.login.fragments.SetProfileBabysitterFragment;
 import service.sitter.login.fragments.SetProfileParentFragment;
 import service.sitter.models.Babysitter;
@@ -43,7 +41,7 @@ import service.sitter.ui.babysitter.manageRequests.BabysitterActivity;
 import service.sitter.ui.fragments.LocationFragment;
 import service.sitter.utils.SharedPreferencesUtils;
 
-public class SetProfile extends AppCompatActivity {
+public class SetProfileActivity extends AppCompatActivity {
 
     private final IDataBase db = DataBase.getInstance();
     private Place location;
@@ -56,7 +54,7 @@ public class SetProfile extends AppCompatActivity {
     private int payment;
     private List<Child> children;
     private static final int RESULT_CODE_IMAGE = 100;
-    private static final String TAG = SetProfile.class.getSimpleName();
+    private static final String TAG = SetProfileActivity.class.getSimpleName();
     private SetProfileParentFragment setProfileParentFragment;
     private SetProfileBabysitterFragment setProfileBabysitterFragment;
     String firstName = "", lastName = "", email = "", password = "";
@@ -144,7 +142,7 @@ public class SetProfile extends AppCompatActivity {
             db.addParent(parent, () -> {
                 Toast toast = Toast.makeText(this, "message", Toast.LENGTH_LONG);
                 toast.show();
-                Intent intentMainActivity = new Intent(SetProfile.this, MainActivity.class);
+                Intent intentMainActivity = new Intent(SetProfileActivity.this, MainActivity.class);
                 startActivity(intentMainActivity);
             });
         } else {
@@ -157,7 +155,7 @@ public class SetProfile extends AppCompatActivity {
             db.addBabysitter(babysitter, () -> {
                 Toast toast = Toast.makeText(this, "message", Toast.LENGTH_LONG);
                 toast.show();
-                Intent intentMainActivity = new Intent(SetProfile.this, BabysitterActivity.class);
+                Intent intentMainActivity = new Intent(SetProfileActivity.this, BabysitterActivity.class);
                 startActivity(intentMainActivity);
             });
 

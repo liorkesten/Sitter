@@ -16,9 +16,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import service.sitter.models.Connection;
+import service.sitter.models.Parent;
 import service.sitter.models.User;
+import service.sitter.recommendations.IGetConnections;
 
 public class ConnectionsDataBase {
     private static final String TAG = ConnectionsDataBase.class.getSimpleName();
@@ -49,7 +52,10 @@ public class ConnectionsDataBase {
         }
 
         Connections.put(connectionUuid, connection);
-        firestore.collection(COLLECTION_FIRESTORE_NAME).document(connectionUuid).set(connection);
+        firestore
+                .collection(COLLECTION_FIRESTORE_NAME)
+                .document(connectionUuid)
+                .set(connection);
 
         Log.d(TAG, String.format("Connection was added successfully: <%s>", connectionUuid));
         return true;
@@ -90,7 +96,7 @@ public class ConnectionsDataBase {
                         List<DocumentSnapshot> documentSnapshots = value.getDocuments();
                         documentSnapshots.forEach(doc -> connections.add(doc.toObject(Connection.class)));
                         liveDateConnections.setValue(connections);
-                        Log.d(TAG, "All connections extracted successfully");
+                        Log.d(TAG, "[getLiveDataConnectionsOfParent] All connections extracted successfully" + connections);
                     }
                 });
         return liveDateConnections;
@@ -111,7 +117,7 @@ public class ConnectionsDataBase {
                         List<DocumentSnapshot> documentSnapshots = value.getDocuments();
                         documentSnapshots.forEach(doc -> connections.add(doc.toObject(Connection.class)));
                         liveDateConnections.setValue(connections);
-                        Log.d(TAG, "All connections extracted successfully");
+                        Log.d(TAG, "[getLiveDataConnectionsOfBabysitter] All connections extracted successfully" + connections);
                     }
                 });
         return liveDateConnections;
@@ -134,13 +140,48 @@ public class ConnectionsDataBase {
                     if (snapshot == null) {
                         Log.e(TAG, "Unexpected behavior - snapshot is null");
                     } else if (snapshot.size() == 0) {
-                        applier.connectionIsNotExist(userA, userB);
+                        applier.connectionIsNotExist(userA.getUuid(), userB.getUuid());
                     } else if (snapshot.size() == 1) {
                         Connection connection = snapshot.toObjects(Connection.class).get(0);
                         applier.connectionFound(connection);
                     } else {
                         Log.e(TAG, "Unexpected behavior - there is more then 1 connection between 2 users:" + snapshot.toObjects(Connection.class));
                     }
+                });
+    }
+
+    public void getConnectionsOfParent(String userID, IGetConnections iGetConnections) {
+        Log.d(TAG, "[getConnectionsOfParent] Getting connections of parent:" + userID);
+        firestore.collection(COLLECTION_FIRESTORE_NAME)
+                .whereEqualTo("sideAUId", userID)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot == null) {
+                        Log.e(TAG, "Unexpected behavior - snapshot is null");
+                    }
+                    List<Connection> connections = snapshot.toObjects(Connection.class);
+                    Log.d(TAG, "[getConnectionsOfParent] Extracted connections:" + connections);
+                    iGetConnections.apply(connections);
+                });
+    }
+
+    public void getConnectionsOfParents(List<Parent> parents, IGetConnections iGetConnections) {
+        if (parents == null || parents.size() == 0) {
+            Log.e(TAG, "parents is null or empty" + parents);
+            return;
+        }
+        Log.d(TAG, "[getConnectionsOfParents] Getting connections of parents:" + parents);
+        List<String> parentsIDs = parents.stream().map(p -> p.getUuid()).collect(Collectors.toList());
+        firestore.collection(COLLECTION_FIRESTORE_NAME)
+                .whereIn("sideAUId", parentsIDs)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot == null) {
+                        Log.e(TAG, "Unexpected behavior - snapshot is null");
+                    }
+                    List<Connection> connections = snapshot.toObjects(Connection.class);
+                    Log.d(TAG, "[getConnectionsOfParents] Extracted connections:" + connections);
+                    iGetConnections.apply(connections);
                 });
     }
 }
