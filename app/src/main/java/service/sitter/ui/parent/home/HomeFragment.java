@@ -2,6 +2,8 @@ package service.sitter.ui.parent.home;
 
 import static java.lang.System.exit;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,10 +27,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import service.sitter.MainActivity;
 import service.sitter.R;
 import service.sitter.databinding.FragmentHomeBinding;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
+import service.sitter.login.SetProfile;
 import service.sitter.models.Babysitter;
 import service.sitter.models.Child;
 import service.sitter.models.Parent;
@@ -97,7 +103,25 @@ public class HomeFragment extends Fragment {
                     myUser.getUuid(), this.date, startTime, endTime, location,
                     null, payment, description
             );
-            db.addRequest(request);
+//            ProgressBar progressBar;
+            db.addRequest(request, new IOnUploadingRequest() {
+                @Override
+                public void onSuccess() {
+                    Log.d(TAG, "request was added successfully");
+//                    pDialog.cancel();
+
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    Log.e(TAG, e.getMessage());
+                }
+            });
+//            progressBar = new ProgressBar(this.getContext());
+//            progressBar. setMessage("loading..");
+            Toast.makeText(this.getContext(), "loading", Toast.LENGTH_LONG).show();
+
+
         });
 
         // Rendering Fragment

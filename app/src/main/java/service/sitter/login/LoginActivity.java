@@ -1,5 +1,9 @@
 package service.sitter.login;//package service.sitter.login;
 
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,574 +11,272 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.util.Patterns;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.shobhitpuri.custombuttons.GoogleSignInButton;
 
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.Profile;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.common.SignInButton;
-
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import service.sitter.MainActivity;
 import service.sitter.R;
-import service.sitter.db.DataBase;
-import studios.codelight.smartloginlibrary.LoginType;
-import studios.codelight.smartloginlibrary.SmartLogin;
-import studios.codelight.smartloginlibrary.SmartLoginCallbacks;
-import studios.codelight.smartloginlibrary.SmartLoginConfig;
-import studios.codelight.smartloginlibrary.SmartLoginFactory;
-import studios.codelight.smartloginlibrary.UserSessionManager;
-import studios.codelight.smartloginlibrary.users.SmartFacebookUser;
-import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
-import studios.codelight.smartloginlibrary.users.SmartUser;
-import studios.codelight.smartloginlibrary.util.SmartLoginException;
 
-public class LoginActivity extends AppCompatActivity implements SmartLoginCallbacks {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = LoginActivity.class.getSimpleName();
+    private Button btnLogin, btnSignUp;
+    private EditText email, password;
+    private FirebaseAuth firebaseAuth;
+    FirebaseUser user;
+    FirebaseFirestore db;
+    static String LoggedIn_User_Email;
+    private static final int RC_SIGN_IN = 9001;
+    private final String TAG = "tag";
+    /*    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference mUserRef = mRootRef.child("users");*/
+    GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
-    public interface SmartLoginCallbacks {
-        void onLoginSuccess(SmartUser user);
+    HashMap<String, Object> userDetails = new HashMap<>();
+    List<String> list = new ArrayList<>();
 
-        void onLoginFailure(SmartLoginException e);
-
-        SmartUser doCustomLogin();
-
-        SmartUser doCustomSignup();
-    }
-
-    private Button customSigninButton, customSignupButton, logoutButton;
-    private SignInButton googleLoginButton;
-    private EditText emailEditText, passwordEditText;
-    private LoginButton facebookLoginButton;
-    private CallbackManager callbackManager;
-    SmartUser currentUser;
-    //GoogleApiClient mGoogleApiClient;
-    SmartLoginConfig config;
-    SmartLogin smartLogin;
+    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    StorageReference storageReference = firebaseStorage.getReference();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.SplashyTheme);
         super.onCreate(savedInstanceState);
-        removeActionBar();
         setContentView(R.layout.activity_login);
-        bindViews();
-        setListeners();
 
-        config = new SmartLoginConfig(this, this);
-        config.setFacebookPermissions(null);
-        config.setGoogleApiClient(null);
-        facebookLoginButton = findViewById(R.id.facebook_login_button);
 
-    }
+        GoogleSignInButton signInButton = (GoogleSignInButton) findViewById(R.id.sign_in_button);
+        btnSignUp = findViewById(R.id.buttonSignUp);
+        btnLogin = findViewById(R.id.buttonLogin);
+        email = findViewById(R.id.editTextEmail);
+        password = findViewById(R.id.editTextPassword);
+        firebaseAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        currentUser = UserSessionManager.getCurrentUser(this);
-        refreshLayout();
-    }
 
-    private void refreshLayout() {
-        currentUser = UserSessionManager.getCurrentUser(this);
-        if (currentUser != null) {
-            Log.d("Smart Login", "Logged in user: " + currentUser.toString());
-            facebookLoginButton.setVisibility(View.GONE);
-            googleLoginButton.setVisibility(View.GONE);
-            customSigninButton.setVisibility(View.GONE);
-            customSignupButton.setVisibility(View.GONE);
-            emailEditText.setVisibility(View.GONE);
-            passwordEditText.setVisibility(View.GONE);
-            logoutButton.setVisibility(View.VISIBLE);
-        } else {
-            facebookLoginButton.setVisibility(View.VISIBLE);
-            googleLoginButton.setVisibility(View.VISIBLE);
-            customSigninButton.setVisibility(View.VISIBLE);
-            customSignupButton.setVisibility(View.VISIBLE);
-            emailEditText.setVisibility(View.VISIBLE);
-            passwordEditText.setVisibility(View.VISIBLE);
-            logoutButton.setVisibility(View.GONE);
+        if (firebaseAuth.getCurrentUser() != null) {
+            startActivity(new Intent(LoginActivity.this, SetProfile.class));
+            finish();
         }
-    }
+       /* mAuthListener=new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser()!=null){
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (smartLogin != null) {
-            smartLogin.onActivityResult(requestCode, resultCode, data, config);
-        }
-    }
-
-    private void setListeners() {
-        facebookLoginButton.setOnClickListener(v -> {
-            // Perform Facebook login
-            smartLogin = SmartLoginFactory.build(LoginType.Facebook);
-            smartLogin.login(config);
-        });
-
-        googleLoginButton.setOnClickListener(v -> {
-            // Perform Google login
-            smartLogin = SmartLoginFactory.build(LoginType.Google);
-            smartLogin.login(config);
-        });
-
-        customSigninButton.setOnClickListener(v -> {
-            // Perform custom sign in
-            Log.d(TAG, config.toString());
-            smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-            smartLogin.login(config);
-        });
-
-        customSignupButton.setOnClickListener(v -> {
-            // Perform custom sign up
-            //smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
-            //smartLogin.signup(config);
-            Intent intentRegister = new Intent(LoginActivity.this, SignUpActivity.class);
-            startActivity(intentRegister);
-        });
-
-        logoutButton.setOnClickListener(v -> {
-            if (currentUser != null) {
-                if (currentUser instanceof SmartFacebookUser) {
-                    smartLogin = SmartLoginFactory.build(LoginType.Facebook);
-                } else if (currentUser instanceof SmartGoogleUser) {
-                    smartLogin = SmartLoginFactory.build(LoginType.Google);
-                } else {
-                    smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
+                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                    finishAffinity();
                 }
-                boolean result = smartLogin.logout(LoginActivity.this);
-                if (result) {
-                    refreshLayout();
-                    Toast.makeText(LoginActivity.this, "User logged out successfully", Toast.LENGTH_SHORT).show();
-                }
+
+            }
+        };*/
+
+        btnSignUp.setOnClickListener(this);
+        btnLogin.setOnClickListener(this);
+
+        GoogleSignInOptions options = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("")
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(getApplication(), options);
+
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIn();
             }
         });
+
     }
 
-    private void bindViews() {
-        facebookLoginButton = findViewById(R.id.facebook_login_button);
-        googleLoginButton = findViewById(R.id.google_login_button);
-        customSigninButton = findViewById(R.id.custom_signin_button);
-        customSignupButton = findViewById(R.id.custom_signup_button);
-        emailEditText = findViewById(R.id.email_edittext);
-        passwordEditText = findViewById(R.id.password_edittext);
-        logoutButton = findViewById(R.id.logout_button);
-    }
+    private void signIn() {
+        if (firebaseAuth.getCurrentUser() == null) {
 
-    private FacebookCallback<LoginResult> mCallBack= new FacebookCallback<LoginResult>() {
-        @Override
-        public void onSuccess(LoginResult loginResult) {
-            AccessToken accessToken = loginResult.getAccessToken();
-            Profile profile = Profile.getCurrentProfile();
-            Intent signInToMain = new Intent("login.SetProfile");
-            startActivity(signInToMain);
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
         }
-
-        @Override
-        public void onCancel() {
-
-        }
-
-        @Override
-        public void onError(FacebookException error) {
-
-        }
-    };
-
-        @Override
-    public void onLoginSuccess(SmartUser user) {
-        Log.d("Lior", "success");
-        Toast.makeText(this, user.toString(), Toast.LENGTH_SHORT).show();
-        refreshLayout();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
     @Override
-    public void onLoginFailure(SmartLoginException e) {
-        Log.d("Noam", "Failed to login");
-        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "" + resultCode);
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
     }
 
-    @Override
-    public SmartUser doCustomLogin() {
-        SmartUser user = new SmartUser();
-        user.setEmail(emailEditText.getText().toString());
-        Log.d("Dana", "custom Login");
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
-
-        return user;
-    }
-
-    @Override
-    public SmartUser doCustomSignup() {
-        SmartUser user = new SmartUser();
-        Intent intentRegister = new Intent(LoginActivity.this, SignUpActivity.class);
-        startActivity(intentRegister);
-        //user.setEmail(emailEditText.getText().toString());
-        return user;
-    }
-
-    public void removeActionBar() {
+    private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
-            Objects.requireNonNull(this.getSupportActionBar()).hide();
-        } catch (NullPointerException ignored) {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            // Signed in successfully, show authenticated UI.
+            updateUI(account);
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            updateUI(null);
         }
     }
 
 
-    private void updateUI(boolean signedIn) {
-        if (signedIn) {
-            googleLoginButton.setVisibility(View.GONE);
-            Intent signInToMain = new Intent("login.SetProfile");
-            startActivity(signInToMain);
+    public void updateUI(final GoogleSignInAccount googleSignInAccount) {
+
+//        Log.d("token", googleSignInAccount.getIdToken());
+        AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
+
+
+        firebaseAuth.signInWithCredential(authCredential)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task AuthResultTask) {
+                        if (AuthResultTask.isSuccessful()) {
+                            //final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            if (googleSignInAccount != null) {
+                                final String userID = user.getUid();
+                                Log.d("demo", userID.toString());
+                                db.collection("Users").get().addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            list.add(document.getId());
+                                            Log.d("demo", "" + list);
+                                        }
+                                        if (list.contains(userID)) {
+                                            Log.d("demo", "User already exist - " + userID);
+                                            list.clear();
+                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            finishAffinity();
+                                            Toast.makeText(LoginActivity.this, "Logged in successfully.", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Log.d("demo", "User creating - " + userID);
+                                            /*userDetails.put("firstname", googleSignInAccount.getFirstname().trim());
+                                            userDetails.put("lastname", googleSignInAccount.getLastname().trim());
+                                            userDetails.put("email", googleSignInAccount.getEmail());
+                                            userDetails.put("photourl",googleSignInAccount.getPhotoUrl().toString());*/
+//                                                User user = new User(googleSignInAccount.getGivenName().trim(), googleSignInAccount.getFamilyName().trim(), googleSignInAccount.getEmail(), userID, googleSignInAccount.getPhotoUrl().toString());
+//                                                db.collection("Users").document(userID).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                    @Override
+//                                                    public void onSuccess(Void aVoid) {
+//                                                        Log.d("demo", "Details saved successfully");
+//                                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                                                        finishAffinity();
+//                                                        Toast.makeText(LoginActivity.this, "Logged in successfully.", Toast.LENGTH_LONG).show();
+//                                                    }
+//                                                });
+                                            list.clear();
+                                        }
+
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, "Error while saving data", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+
+                            }
+
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Something Went Wrong", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+/*    private void writeNewUser(String userId,String email, String firstname,String lastname,String dob) {
+        User user = new User(firstname,lastname, email,dob);
+        mUserRef.child(userId).setValue(user);
+    }*/
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //firebaseAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.buttonSignUp) {
+            startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
         } else {
-            googleLoginButton.setVisibility(View.VISIBLE);
+            String getemail = email.getText().toString().trim();
+            String getepassword = password.getText().toString().trim();
+
+            if (getemail.isEmpty()) {
+                Toast.makeText(LoginActivity.this, "Type Email", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!Patterns.EMAIL_ADDRESS.matcher(getemail).matches()) {
+                Toast.makeText(LoginActivity.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (getepassword.isEmpty()) {
+                Toast.makeText(LoginActivity.this, "Type Password", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
+            callsignin(getemail, getepassword);
 
         }
     }
+
+    private void callsignin(String email, String password) {
+
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d("TESTING", "sign In Successful:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w("TESTING", "signInWithEmail:failed", task.getException());
+
+                            Toast.makeText(LoginActivity.this, "" + (task.getException().getMessage().equals("There is no user record corresponding to this identifier. The user may have been deleted.") ? task.getException().getMessage().replace("There is no user record corresponding to this identifier. The user may have been deleted.", "User not found. Please register") : task.getException().getMessage().replace("The password is invalid or the user does not have a password.", "Password entered is incorrect.")), Toast.LENGTH_LONG).show();
+                        } else {
+                            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                            i.putExtra("userid", task.getResult().getUser().getUid());
+                            startActivity(i);
+                            finish();
+                        }
+                    }
+                });
+
+    }
+
 }
-
-
-//*************************************************************************************//
-
-//import android.app.ProgressDialog;
-//import android.content.Intent;
-//import android.content.pm.PackageInfo;
-//import android.content.pm.PackageManager;
-//import android.content.pm.Signature;
-//import android.os.Bundle;
-//import android.util.Base64;
-//import android.util.Log;
-//import android.view.View;
-//import android.widget.Button;
-//import android.widget.ImageView;
-//import android.widget.LinearLayout;
-//import android.widget.TextView;
-//
-//import androidx.annotation.NonNull;
-//import androidx.appcompat.app.AppCompatActivity;
-//
-//import com.facebook.CallbackManager;
-//import com.facebook.FacebookCallback;
-//import com.facebook.FacebookException;
-//import com.facebook.FacebookSdk;
-//import com.facebook.login.LoginManager;
-//import com.facebook.login.LoginResult;
-//import com.facebook.login.widget.LoginButton;
-//import com.google.android.gms.auth.api.Auth;
-//import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-//import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-//import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-//import com.google.android.gms.common.ConnectionResult;
-//import com.google.android.gms.common.SignInButton;
-//import com.google.android.gms.common.api.GoogleApiClient;
-//import com.google.android.gms.common.api.OptionalPendingResult;
-//import com.google.android.gms.common.api.ResultCallback;
-//import com.google.android.gms.common.api.Status;
-//
-//import java.security.MessageDigest;
-//import java.security.NoSuchAlgorithmException;
-//
-//import service.sitter.MainActivity;
-//import service.sitter.R;
-//
-//public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
-//
-//    private LoginButton btnFbLogin;
-//    //private TextView status;
-//    public CallbackManager callbackManager;
-//
-//    private static final String TAG = LoginActivity.class.getSimpleName();
-//    private static final int RC_SIGN_IN = 007;
-//
-//    private GoogleApiClient mGoogleApiClient;
-//    private ProgressDialog mProgressDialog;
-//
-//    private SignInButton btnGooSignIn;
-//    private Button btnSignOut, btnRevokeAccess;
-//    private LinearLayout llProfileLayout;
-//    //private ImageView imgProfilePic;
-//    //private TextView txtStatus, txtName, txtEmail;
-//
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        FacebookSdk.sdkInitialize(getApplicationContext());
-//        setContentView(R.layout.activity_login);
-//
-//        //allocation variables to their respective buttons/images/etc
-//        btnFbLogin = (LoginButton) findViewById(R.id.facebook_login_button);
-//        btnGooSignIn = (SignInButton) findViewById(R.id.google_login_button);
-//        btnSignOut = (Button) findViewById(R.id.logout_button);
-////        btnRevokeAccess = (Button) findViewById(R.id.btn_revoke_access);
-////        llProfileLayout = (LinearLayout) findViewById(R.id.llProfile);
-////        imgProfilePic = (ImageView) findViewById(R.id.imgProfilePic);
-////        txtName = (TextView) findViewById(R.id.txtName);
-////        txtEmail = (TextView) findViewById(R.id.txtEmail);
-//
-//        // when button clicked, stay on this activity
-//        btnGooSignIn.setOnClickListener(this);
-//        btnSignOut.setOnClickListener(this);
-//        //btnRevokeAccess.setOnClickListener(this);
-//        initiallizeControls();
-//
-//        //Declaring GoogleSignInOptions to sign in via email
-//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestEmail()
-//                .build();
-//
-//        //Connecting the GoogleSignInOptions to the API client
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .enableAutoManage(this, this)
-//                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-//                .build();
-//
-//        // Customizing Google Sign In button
-//        btnGooSignIn.setSize(SignInButton.SIZE_STANDARD);
-//        btnGooSignIn.setScopes(gso.getScopeArray());
-//
-////        try {
-////            //Creating a hash code for the Google Sign In with exceptions for different scenarios.
-////            PackageInfo info = getPackageManager().getPackageInfo("<CENSORED>", PackageManager.GET_SIGNATURES);
-////            for (Signature signature : info.signatures) {
-////                MessageDigest md;
-////                md = MessageDigest.getInstance("SHA");
-////                md.update(signature.toByteArray());
-////                String something = new String(Base64.encode(md.digest(), 0));
-////                //String something = new String(Base64.encodeBytes(md.digest()));
-////                Log.e("hash key", something);
-////            }
-////        } catch (PackageManager.NameNotFoundException e1) {
-////            Log.e("name not found", e1.toString());
-////        } catch (NoSuchAlgorithmException e) {
-////            Log.e("no such an algorithm", e.toString());
-////        } catch (Exception e) {
-////            Log.e("exception", e.toString());
-////        }
-//
-//    }
-//
-//    //Declaring the callbackManager, what the txtStatus and Facebook login buttons are
-//    private void initiallizeControls() {
-//        callbackManager = CallbackManager.Factory.create();
-//        //txtStatus = (TextView) findViewById(R.id.txt_status);
-//        btnFbLogin = (LoginButton) findViewById(R.id.facebook_login_button);
-//    }
-//
-//    // Specifying logging into Facebook (Google sign in bypassed), ans what happens if successful, user cancels the action, or if it fails.
-//    private void loginWithFb() {
-//        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                //txtStatus.setText("Login Success\n" + loginResult.getAccessToken());
-//                Intent a = new Intent(LoginActivity.this, SetProfile.class);
-//                startActivity(a);
-//
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                //txtStatus.setText("Login Cancelled");
-//
-//            }
-//
-//            @Override
-//            public void onError(FacebookException error) {
-//                //txtStatus.setText("Login Error: " + error.getMessage());
-//
-//            }
-//        });
-//    }
-//
-//    //For Google Sign in, when the Google sign in is completed, this handles its result by sending the result to the handleSignInResult();
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        callbackManager.onActivityResult(requestCode, resultCode, data);
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == RC_SIGN_IN) {
-//            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-//            handleSignInResult(result);
-//        }
-//    }
-//
-//    //Signing in with Google and sending the user to a new intent/page when finished
-//    private void signInWithGoogle() {
-//        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-//        startActivityForResult(signInIntent, RC_SIGN_IN);
-//        Intent gmail = new Intent(LoginActivity.this, SetProfile.class);
-//
-//    }
-//
-//    // To sign out the user from Google
-//    private void signOut() {
-//        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-//                new ResultCallback<Status>() {
-//                    @Override
-//                    public void onResult(Status status) {
-//                        updateUI(false);
-//                    }
-//                });
-//    }
-//
-//    // To allow the user to revoke access to Google Sign in.
-//    private void revokeAccess() {
-//        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
-//                new ResultCallback<Status>() {
-//                    @Override
-//                    public void onResult(Status status) {
-//                        updateUI(false);
-//                    }
-//                });
-//    }
-//
-//    //This sets the user details from Google and inserts them into text or image views. This was just used for testing originally.
-//    private void handleSignInResult(GoogleSignInResult result) {
-//        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-//        if (result.isSuccess()) {
-//            // Signed in successfully, show authenticated UI.
-//            GoogleSignInAccount acct = result.getSignInAccount();
-//
-//            Log.e(TAG, "display name: " + acct.getDisplayName());
-//
-//            String personName = acct.getDisplayName();
-//            String personPhotoUrl = acct.getPhotoUrl().toString();
-//            String email = acct.getEmail();
-//
-//            Log.e(TAG, "Name: " + personName + ", email: " + email
-//                    + ", Image: " + personPhotoUrl);
-//
-//            //txtName.setText(personName);
-//            //txtEmail.setText(email);
-//
-//            //External directory that assists in inserting images into ImageViews.
-//            //Glide.with(getApplicationContext()).load(personPhotoUrl)
-//                    //.into(imgProfilePic);
-//
-//            updateUI(true);
-//        } else {
-//            // Signed out, show unauthenticated UI.
-//            updateUI(false);
-//        }
-//    }
-//
-//    //This resolves the question, "what happens when user clicks Button X, Y or Z?"
-//    @Override
-//    public void onClick(View v) {
-//        int id = v.getId();
-//
-//        switch (id) {
-//            case R.id.google_login_button:
-//                signInWithGoogle();
-//                break;
-//
-//            case R.id.facebook_login_button:
-//                loginWithFb();
-//                break;
-//
-//            case R.id.logout_button:
-//                signOut();
-//                break;
-//            case R.id.custom_signup_button:
-//                Intent intentRegister = new Intent(LoginActivity.this, SignUpActivity.class);
-//                startActivity(intentRegister);
-//                break;
-//
-////            case R.id.btn_revoke_access:
-////                revokeAccess();
-////                break;
-//        }
-//    }
-//
-//    //This is code directly from the Google Tutorial that wasn't coded correctly for this activity.
-//    /*@Override
-//public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//    super.onActivityResult(requestCode, resultCode, data);
-//
-//    // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-//    if (requestCode == RC_SIGN_IN) {
-//        GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-//        handleSignInResult(result);
-//    }
-//}*/
-//
-//    //Google's Sign in that deals with the result of the Google Sign in and updates the buttons to be hidden/visible.
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//
-//        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-//        if (opr.isDone()) {
-//            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-//            // and the GoogleSignInResult will be available instantly.
-//            Log.d(TAG, "Got cached sign-in");
-//            GoogleSignInResult result = opr.get();
-//            handleSignInResult(result);
-//        } else {
-//            // If the user has not previously signed in on this device or the sign-in has expired,
-//            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-//            // single sign-on will occur in this branch.
-//            showProgressDialog();
-//            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-//                @Override
-//                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-//                    hideProgressDialog();
-//                    handleSignInResult(googleSignInResult);
-//                }
-//            });
-//        }
-//    }
-//
-//    // If the connection fails to sign in with Google, it is logged.
-//    @Override
-//    public void onConnectionFailed(ConnectionResult connectionResult) {
-//        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
-//        // be available.
-//        Log.d(TAG, "onConnectionFailed: " + connectionResult);
-//    }
-//
-//    //Shows thw progress of the Google sign in.
-//    private void showProgressDialog() {
-//        if (mProgressDialog == null){
-//            mProgressDialog = new ProgressDialog(this);
-//            mProgressDialog.setMessage("Loading...");
-//            mProgressDialog.setIndeterminate(true);
-//        }
-//
-//        mProgressDialog.show();
-//    }
-//
-//    //When the Google Sign N progress is finished (regardless of result), the progress bar is hidden.
-//    private void hideProgressDialog() {
-//        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-//            mProgressDialog.hide();
-//        }
-//    }
-//
-//    // This changes the visibility of certain buttons, depending on what buttons are needed
-//    private void updateUI(boolean isSignedIn) {
-//        if (isSignedIn) {
-//            btnGooSignIn.setVisibility(View.GONE);
-//            btnSignOut.setVisibility(View.VISIBLE);
-//            btnRevokeAccess.setVisibility(View.VISIBLE);
-//            //llProfileLayout.setVisibility(View.VISIBLE);
-//        }
-//        else {
-//            btnGooSignIn.setVisibility(View.VISIBLE);
-//            btnSignOut.setVisibility(View.GONE);
-//            btnRevokeAccess.setVisibility(View.GONE);
-//            //llProfileLayout.setVisibility(View.GONE);
-//        }
-//    }
-//}

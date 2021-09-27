@@ -26,6 +26,7 @@ import service.sitter.models.RequestStatus;
 import service.sitter.models.User;
 import service.sitter.models.UserCategory;
 import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
+import service.sitter.ui.parent.home.IOnUploadingRequest;
 
 public class DataBase implements IDataBase {
     private static DataBase instance;
@@ -66,8 +67,8 @@ public class DataBase implements IDataBase {
         return instance;
     }
 
-    public boolean addRequest(@NonNull @NotNull Request request) {
-        return requestsDb.addRequest(request);
+    public boolean addRequest(@NonNull @NotNull Request request, IOnUploadingRequest listener) {
+        return requestsDb.addRequest(request, listener);
     }
 
     public boolean deleteRequest(String requestUuid) {

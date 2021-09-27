@@ -17,13 +17,14 @@ import service.sitter.models.Request;
 import service.sitter.models.User;
 import service.sitter.models.UserCategory;
 import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
+import service.sitter.ui.parent.home.IOnUploadingRequest;
 
 /**
  * IDataBase is the interface for application database - needed for mocking and testing.
  */
 public interface IDataBase {
 
-    boolean addRequest(@NonNull @NotNull Request request);
+    boolean addRequest(@NonNull @NotNull Request request, IOnUploadingRequest listener);
 
     boolean deleteRequest(String requestUuid);
 

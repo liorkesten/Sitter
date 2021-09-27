@@ -22,6 +22,7 @@
         <entry key="app/src/main/res/drawable/radio_flat_text_selector.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/round_button.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/layout-v28/fragment_payment.xml" value="0.24583333333333332" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.2015625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_set_profile.xml" value="0.28007889546351084" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.2578125" />
