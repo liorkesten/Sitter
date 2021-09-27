@@ -14,6 +14,7 @@ import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
+import service.sitter.models.UserCategory;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
 import service.sitter.utils.ImagesUtils;
 
@@ -24,8 +25,10 @@ public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequest
     private final List<Request> requests = new ArrayList<>();
     // Listener
     private final IRequestAdapterListener listener;
+    private final UserCategory userCategory;
 
-    public ArchivedRequestAdapter(@NonNull IRequestAdapterListener listener) {
+    public ArchivedRequestAdapter(@NonNull IRequestAdapterListener listener, UserCategory userCategory) {
+        this.userCategory = userCategory;
         // Init db.
         db = DataBase.getInstance();
         // Setup listeners
@@ -50,12 +53,21 @@ public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequest
         holder.getTimeValueTextView().setText(request.getTime());
 
         // Fields that are extracted by the parent object (so db is needed).
-        db.getParent(request.getPublisherId(), parent -> {
-            // Assign fields from parent object.
-            holder.getNameValueTextView().setText(parent.getFullName());
-            ImagesUtils.updateImageView(parent.getImage(), holder.getProfileImageView());
+        if (userCategory == UserCategory.Babysitter){
+            db.getParent(request.getPublisherId(), parent -> {
+                // Assign fields from parent object.
+                holder.getNameValueTextView().setText(parent.getFullName());
+                ImagesUtils.updateImageView(parent.getImage(), holder.getProfileImageView());
 
-        }, null);
+            }, null);
+        }else{
+            db.getBabysitter(request.getReceiverId(), babysitter -> {
+                // Assign fields from parent object.
+                holder.getNameValueTextView().setText(babysitter.getFullName());
+                ImagesUtils.updateImageView(babysitter.getImage(), holder.getProfileImageView());
+
+            }, null);
+        }
 
         // Set listeners:
         // Adapter passes the rootView that was clicked. The activity should initialize the adapter with specific listener

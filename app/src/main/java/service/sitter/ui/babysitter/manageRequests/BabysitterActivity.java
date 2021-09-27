@@ -20,6 +20,7 @@ import service.sitter.db.IDataBase;
 import service.sitter.models.Babysitter;
 import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
+import service.sitter.models.UserCategory;
 import service.sitter.recyclerview.requests.babysitter.approved.ApprovedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.archived.ArchivedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.incoming.IncomingRequestAdapter;
@@ -84,7 +85,7 @@ public class BabysitterActivity extends AppCompatActivity {
 
     @NonNull
     private IncomingRequestAdapter getIncomingRequestAdapter() {
-        IncomingRequestAdapter adapter = new IncomingRequestAdapter(/*TODO*/null, r -> db.acceptRequestByBabysitter(r, babysitter),/*TODO*/ null);
+        IncomingRequestAdapter adapter = new IncomingRequestAdapter(/*TODO*/null, r -> db.acceptRequestByBabysitter(r, babysitter),/*TODO*/ null, UserCategory.Babysitter);
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataPendingRequestsOfBabysitter(babysitter.getUuid());
         if (requestsLiveData == null) {
@@ -104,7 +105,7 @@ public class BabysitterActivity extends AppCompatActivity {
 
     @NonNull
     private ApprovedRequestAdapter getApprovedRequestAdapter() {
-        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null, /*TODO*/ null, r -> db.cancelRequest(r, babysitter));
+        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null, /*TODO*/ null, r -> db.cancelRequest(r, babysitter), UserCategory.Babysitter);
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataApprovedRequestsOfBabysitter(babysitter.getUuid());
         if (requestsLiveData == null) {
@@ -124,7 +125,7 @@ public class BabysitterActivity extends AppCompatActivity {
 
     @NonNull
     private ArchivedRequestAdapter getArchivedRequestAdapter() {
-        ArchivedRequestAdapter adapter = new ArchivedRequestAdapter(/*TODO*/null);
+        ArchivedRequestAdapter adapter = new ArchivedRequestAdapter(/*TODO*/null, UserCategory.Babysitter);
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataArchivedRequestsOfBabysitter(babysitter.getUuid());
         if (requestsLiveData == null) {

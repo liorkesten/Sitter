@@ -146,6 +146,9 @@ public class UsersDataBase {
 
 
     public void getParent(String userUID, IGetParent applierOnSuccess, OnFailureListener onFailureListener) {
+        if (userUID == null || userUID.equals("")) {
+            return;
+        }
         Task<DocumentSnapshot> documentSnapshotTask = firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).document(userUID).get().addOnFailureListener(onFailureListener);
         documentSnapshotTask.addOnSuccessListener(snapshot -> applierOnSuccess.parentFound(snapshot.toObject(Parent.class)));
     }
@@ -199,6 +202,9 @@ public class UsersDataBase {
     }
 
     public void getBabysitter(String userUID, IOnGettingBabysitterFromDb applierOnSuccess, OnFailureListener onFailureListener) {
+        if (userUID == null || userUID.equals("")) {
+            return;
+        }
         Task<DocumentSnapshot> documentSnapshotTask = firestore
                 .collection(COLLECTION_FIRESTORE_BABYSITTER_NAME)
                 .document(userUID)

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 
 import service.sitter.R;
+import service.sitter.providers.CalendarProvider;
 
 public class ApprovedRequestViewHolder extends RecyclerView.ViewHolder {
     // Main Views
@@ -42,6 +43,7 @@ public class ApprovedRequestViewHolder extends RecyclerView.ViewHolder {
         descriptionValueTextView = itemView.findViewById(R.id.item_babysitter_request_approved_desc_value);
         nameValueTextView = itemView.findViewById(R.id.item_babysitter_request_approved_name_value);
         profileImageView = itemView.findViewById(R.id.item_babysitter_request_approved_profile_image);
+
     }
 
     public TextView getDateValueTextView() {
