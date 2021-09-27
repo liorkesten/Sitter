@@ -25,13 +25,13 @@ public class Connection implements Serializable {
      * @param userA
      * @param userB
      */
-    public Connection(User userA, User userB) {
+    public Connection(String userA, String userB) {
 
         uuid = UUID.randomUUID().toString();
 
         this.creationTimestamp = Instant.now().toString();
-        this.sideAUId = userA.getUuid();
-        this.sideBUId = userB.getUuid();
+        this.sideAUId = userA;
+        this.sideBUId = userB;
     }
 
     public String getUuid() {

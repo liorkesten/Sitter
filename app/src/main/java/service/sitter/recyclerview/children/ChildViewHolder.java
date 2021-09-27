@@ -32,7 +32,7 @@ public class ChildViewHolder extends RecyclerView.ViewHolder {
 
         imageChildButtonView.setOnClickListener(v -> {
             isSelected = !isSelected;
-            imageChildButtonView.setBackgroundColor(isSelected ? Color.GREEN : Color.TRANSPARENT);
+            imageChildButtonView.setColorFilter(isSelected ? Color.GREEN : Color.TRANSPARENT);
         });
     }
 

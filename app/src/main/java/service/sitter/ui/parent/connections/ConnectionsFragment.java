@@ -1,5 +1,6 @@
 package service.sitter.ui.parent.connections;
 
+import android.Manifest;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
@@ -20,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import service.sitter.R;
 import service.sitter.databinding.FragmentConnectionsBinding;
@@ -28,12 +33,15 @@ import service.sitter.db.IDataBase;
 import service.sitter.models.Connection;
 import service.sitter.models.Parent;
 import service.sitter.models.Recommendation;
+import service.sitter.recommendations.CallLogsRecommendationProvider;
 import service.sitter.recyclerview.connections.ConnectionAdapter;
 import service.sitter.recyclerview.recommendations.RecommendationAdapter;
 import service.sitter.utils.SharedPreferencesUtils;
 
 public class ConnectionsFragment extends Fragment {
     private static final String TAG = ConnectionsFragment.class.getSimpleName();
+    private ActivityResultLauncher<String[]> activityResultLauncher;
+
 
     private IDataBase db;
     private SharedPreferences sp;
@@ -45,8 +53,6 @@ public class ConnectionsFragment extends Fragment {
 
     EditText editTextAddConnection;
     ImageButton add_connection_button;
-    RecyclerView myConnectionsRecyclerView;
-    RecyclerView recommendationsRecyclerView;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -65,20 +71,43 @@ public class ConnectionsFragment extends Fragment {
         editTextAddConnection = (EditText) root.findViewById(R.id.edit_text_add_connection);
         add_connection_button = (ImageButton) root.findViewById(R.id.add_connection_button);
 
-        // Recommendations:
-        recommendationsRecyclerView = root.findViewById(R.id.recycler_view_recommendations);
-        RecommendationAdapter recommendationAdapter = new RecommendationAdapter(recommendation -> { /*TODO Implement this listener*/});
-        recommendationsRecyclerView.setAdapter(recommendationAdapter);
-        recommendationAdapter.setRecommendations(recommendations);
-        recommendationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-
 
         // Set logic
         setAddConnectionButton();
         setConnectionRecyclerView(root);
+        setRecommendationRecyclerView(root);
+
+        // Call recommendations providers
+        getRecommendationsFromProviders();
 
         return root;
     }
+
+    private void getRecommendationsFromProviders() {
+        getRecommendationFromCallLogsProvider();
+    }
+
+    private void getRecommendationFromCallLogsProvider() {
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+            @Override
+            public void onActivityResult(Map<String, Boolean> result) {
+                Log.e("activityResultLauncher", "" + result.toString());
+                Boolean areAllGranted = true;
+                for (Boolean b : result.values()) {
+                    areAllGranted = areAllGranted && b;
+                }
+
+                if (areAllGranted) {
+                    new CallLogsRecommendationProvider().getRecommendations(getContext(), myUser.getUuid());
+                }
+            }
+        });
+
+        String[] appPerms;
+        appPerms = new String[]{Manifest.permission.READ_CALL_LOG};
+        this.activityResultLauncher.launch(appPerms);
+    }
+
 
     @Override
     public void onDestroyView() {
@@ -139,6 +168,29 @@ public class ConnectionsFragment extends Fragment {
         recyclerViewConnection.setAdapter(connectionAdapter);
 
         recyclerViewConnection.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+    }
+
+    private void setRecommendationRecyclerView(View root) {
+        RecyclerView recyclerView = root.findViewById(R.id.recycler_view_recommendations);
+        RecommendationAdapter adapter = new RecommendationAdapter(recommendation -> {
+            db.deleteRecommendation(recommendation.getUuid());
+            db.addConnection(recommendation.getConnection());
+        });
+        LiveData<List<Recommendation>> recommendationsLiveData = db.getLiveDataRecommendationsOfParent(myUser.getUuid());
+        if (recommendationsLiveData == null) {
+            //TODO
+        }
+        recommendationsLiveData.observeForever(recommendations -> {
+            if (recommendations == null) {
+                Log.e(TAG, "recommendations is nil");
+            } else {
+                Log.d(TAG, "Set new recommendations for recommendation adapter -  " + recommendations);
+                adapter.setRecommendations(recommendations);
+            }
+        });
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
     }
 }
 

@@ -13,7 +13,12 @@
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_babysitter_request_approved.xml" value="0.15677083333333333" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_babysitter_request_archived.xml" value="0.1" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_babysitter_request_incoming.xml" value="0.15677083333333333" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_connection.xml" value="0.1" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_recommendation.xml" value="0.1" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_request.xml" value="0.1125" />
+        <entry key="app/src/main/res/drawable/btn_custom.xml" value="0.1984375" />
+        <entry key="app/src/main/res/drawable/checked_button.xml" value="0.1984375" />
+        <entry key="app/src/main/res/drawable/custom_img_btn.xml" value="0.1984375" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.26197916666666665" />
         <entry key="app/src/main/res/drawable/img.xml" value="0.2703125" />
         <entry key="app/src/main/res/drawable/radio_flat_regular.xml" value="0.27395833333333336" />
@@ -33,14 +38,18 @@
         <entry key="app/src/main/res/layout/fragment_manage_requests.xml" value="0.2140625" />
         <entry key="app/src/main/res/layout/fragment_set_profile_babysitter.xml" value="0.225" />
         <entry key="app/src/main/res/layout/fragment_set_profile_babysitter_bottom_frame.xml" value="0.24166666666666667" />
-        <entry key="app/src/main/res/layout/fragment_set_profile_parent.xml" value="0.10359802246093751" />
+        <entry key="app/src/main/res/layout/fragment_set_profile_parent.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_set_profile_parent_bottom_frame.xml" value="0.1094224924012158" />
         <entry key="app/src/main/res/layout/fragment_set_profile_top_frame.xml" value="0.14947916666666666" />
         <entry key="app/src/main/res/layout/fragment_time_button.xml" value="0.1" />
         <entry key="app/src/main/res/layout/header.xml" value="0.25416666666666665" />
+        <entry key="app/src/main/res/layout/item_babysitter_request_approved.xml" value="0.18229166666666666" />
+        <entry key="app/src/main/res/layout/item_babysitter_request_archived.xml" value="0.18229166666666666" />
         <entry key="app/src/main/res/layout/item_babysitter_request_incoming.xml" value="0.36041666666666666" />
         <entry key="app/src/main/res/layout/item_child.xml" value="0.4036458333333333" />
-        <entry key="app/src/main/res/layout/item_request.xml" value="0.19895833333333332" />
+        <entry key="app/src/main/res/layout/item_connection.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/item_recommendation.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/item_request.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_reuqest.xml" value="0.25416666666666665" />
       </map>
     </option>

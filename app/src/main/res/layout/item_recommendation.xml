@@ -24,7 +24,8 @@
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcer" />
+                android:src="@drawable/ic_launcer"
+                android:background="@drawable/custom_img_btn"/>
 
         </androidx.cardview.widget.CardView>
 

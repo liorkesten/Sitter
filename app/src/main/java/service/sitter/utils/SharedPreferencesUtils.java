@@ -39,6 +39,11 @@ public class SharedPreferencesUtils {
             exit(130);
         }
         Parent parent = _GSON.fromJson(mySerializedUser, Parent.class);
+        if (parent == null) {
+            Log.e(TAG, "error while trying to convert mySerializedUser to json - parent is null. mySerializedUser:" + mySerializedUser);
+            exit(150);
+
+        }
         Log.d(TAG, "Extracted parent: " + parent.toString());
         return parent;
     }
@@ -51,6 +56,10 @@ public class SharedPreferencesUtils {
             exit(130);
         }
         Babysitter babysitter = _GSON.fromJson(mySerializedUser, Babysitter.class);
+        if (babysitter == null) {
+            Log.e(TAG, "error while trying to convert mySerializedUser to json - babysitter is null. mySerializedUser:" + mySerializedUser);
+            exit(150);
+        }
         Log.d(TAG, "Extracted babysitter: " + babysitter.toString());
         return babysitter;
     }
