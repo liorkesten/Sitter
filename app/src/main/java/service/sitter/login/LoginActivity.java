@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
@@ -35,6 +36,13 @@ import studios.codelight.smartloginlibrary.users.SmartGoogleUser;
 import studios.codelight.smartloginlibrary.users.SmartUser;
 import studios.codelight.smartloginlibrary.util.SmartLoginException;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class LoginActivity extends AppCompatActivity implements SmartLoginCallbacks {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -60,6 +68,10 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
     SmartLogin smartLogin;
 
 
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +84,26 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
         config.setFacebookPermissions(null);
         config.setGoogleApiClient(null);
         facebookLoginButton = findViewById(R.id.facebook_login_button);
+
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+//        databaseReference.orderByChild("username").equalTo(userNameEntered).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.exists())
+//                    Toast.makeText(Main3Activity.this, "Username exists", Toast.LENGTH_SHORT).show();
+//
+//                    //check your password in the same way and grant access if it exists too
+//                else{}
+//                // wrong details entered/ user does not exist
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
 
     }
 
@@ -131,6 +163,8 @@ public class LoginActivity extends AppCompatActivity implements SmartLoginCallba
             smartLogin = SmartLoginFactory.build(LoginType.CustomLogin);
             smartLogin.login(config);
         });
+
+
 
         customSignupButton.setOnClickListener(v -> {
             // Perform custom sign up
