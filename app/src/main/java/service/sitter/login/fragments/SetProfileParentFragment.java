@@ -1,6 +1,7 @@
 package service.sitter.login.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -8,11 +9,14 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -34,6 +38,7 @@ import service.sitter.db.IDataBase;
 import service.sitter.models.Child;
 import service.sitter.recyclerview.children.ChildAdapter;
 import service.sitter.ui.fragments.PaymentFragment;
+import service.sitter.utils.DateUtils;
 
 public class SetProfileParentFragment extends Fragment {
     private static final Uri DEFAULT_URI_CHILD_PICTURE = Uri.parse("android.resource://sitter/drawable/child_icon");
@@ -95,8 +100,8 @@ public class SetProfileParentFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Add Child");
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_add_child, (ViewGroup) getView(), false);
-        final EditText editTextChildName = (EditText) viewInflated.findViewById(R.id.edit_text_child_name);
-        final EditText editTextChildBirthday = (EditText) viewInflated.findViewById(R.id.edit_text_child_birthday);
+        EditText editTextChildName = (EditText) viewInflated.findViewById(R.id.edit_text_child_name);
+        EditText editTextChildBirthday = (EditText) viewInflated.findViewById(R.id.edit_text_child_birthday);
         builder.setView(viewInflated);
 
         // image uploading
@@ -112,14 +117,19 @@ public class SetProfileParentFragment extends Fragment {
         // confirm
         builder.setPositiveButton(android.R.string.ok, (dialog, which) ->
         {
-            dialog.dismiss();
-            // add child
-            Child child = new Child(editTextChildName.getText().toString(),
-                    editTextChildBirthday.getText().toString(),
-                    lastChildUri);
-            children.add(child);
-            mutableLiveDataChildren.setValue(children);
-            childAdapter.setChildren(children);
+            if (isValidateChild(editTextChildBirthday)){
+                dialog.dismiss();
+                // add child
+                Child child = new Child(editTextChildName.getText().toString(),
+                        editTextChildBirthday.getText().toString(),
+                        lastChildUri);
+                children.add(child);
+                mutableLiveDataChildren.setValue(children);
+                childAdapter.setChildren(children);
+            }
+            else{
+//                Toast.makeText(this, "Invalid fields of Child", Toast.LENGTH_LONG).show();
+            }
         });
         // cancel
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
@@ -154,6 +164,14 @@ public class SetProfileParentFragment extends Fragment {
                 }
             }
         }
+    }
+
+    private boolean isValidateChild(EditText editTextDate) {
+        if (!DateUtils.isValidDate(editTextDate.getText().toString(), "dd/MM/yyyy")){
+            editTextDate.setError("you must enter date of child in format dd/NN/yyyy");
+            return false;
+        }
+        return true;
     }
 
 }

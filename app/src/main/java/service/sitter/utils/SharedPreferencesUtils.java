@@ -36,13 +36,14 @@ public class SharedPreferencesUtils {
         if (mySerializedUser.equals("")) {
             Log.e(TAG, "error while trying to extract user uid after that the object saved as json.myUserUid is empty");
             // TODO handle with exit.
-            exit(130);
+//            exit(130);
+            return null;
         }
         Parent parent = _GSON.fromJson(mySerializedUser, Parent.class);
         if (parent == null) {
             Log.e(TAG, "error while trying to convert mySerializedUser to json - parent is null. mySerializedUser:" + mySerializedUser);
-            exit(150);
-
+//            exit(150);
+            return null;
         }
         Log.d(TAG, "Extracted parent: " + parent.toString());
         return parent;
@@ -53,12 +54,14 @@ public class SharedPreferencesUtils {
         if (mySerializedUser.equals("")) {
             Log.e(TAG, "error while trying to extract user uid after that the object saved as json.myUserUid is empty");
             // TODO handle with exit.
-            exit(130);
+//            exit(130);
+            return null;
         }
         Babysitter babysitter = _GSON.fromJson(mySerializedUser, Babysitter.class);
         if (babysitter == null) {
             Log.e(TAG, "error while trying to convert mySerializedUser to json - babysitter is null. mySerializedUser:" + mySerializedUser);
-            exit(150);
+//            exit(150);
+            return null;
         }
         Log.d(TAG, "Extracted babysitter: " + babysitter.toString());
         return babysitter;

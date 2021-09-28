@@ -1,5 +1,6 @@
 package service.sitter.login;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -57,12 +58,23 @@ public class SetProfileActivity extends AppCompatActivity {
     private static final String TAG = SetProfileActivity.class.getSimpleName();
     private SetProfileParentFragment setProfileParentFragment;
     private SetProfileBabysitterFragment setProfileBabysitterFragment;
-    String firstName = "", lastName = "", email = "", password = "";
+    private String firstName = "", lastName = "", email = "", password = "";
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "created");
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "created");
+        sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
+
+        if (SharedPreferencesUtils.getParentFromSP(sp) != null) {
+            Intent intentMainActivity = new Intent(SetProfileActivity.this, MainActivity.class);
+            startActivity(intentMainActivity);
+        } else if (SharedPreferencesUtils.getBabysitterFromSP(sp) != null) {
+            Intent intentMainActivity = new Intent(SetProfileActivity.this, BabysitterActivity.class);
+            startActivity(intentMainActivity);
+        }
+
         setContentView(R.layout.activity_set_profile);
 
 
@@ -122,8 +134,11 @@ public class SetProfileActivity extends AppCompatActivity {
                 .commit();
     }
 
+    @SuppressLint("SetTextI18n")
     private void fillDetails() {
-        if (!firstName.isEmpty() && !lastName.isEmpty()) {
+        if (firstName == null || lastName == null) {
+            usernameTextView.setText("Welcome User");
+        } else if (!firstName.isEmpty() && !lastName.isEmpty()) {
             Resources res = getResources();
             usernameTextView.setText(res.getString(R.string.welcome_message, firstName));
         }
@@ -137,7 +152,6 @@ public class SetProfileActivity extends AppCompatActivity {
                     observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
             this.payment = setProfileParentFragment.getPayment();
             Parent parent = new Parent(firstName, lastName, email, phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), children, payment);
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
             SharedPreferencesUtils.saveParentToSP(sp, parent);
             db.addParent(parent, () -> {
                 Toast toast = Toast.makeText(this, "message", Toast.LENGTH_LONG);
@@ -158,7 +172,6 @@ public class SetProfileActivity extends AppCompatActivity {
                 Intent intentMainActivity = new Intent(SetProfileActivity.this, BabysitterActivity.class);
                 startActivity(intentMainActivity);
             });
-
 
 
         }
