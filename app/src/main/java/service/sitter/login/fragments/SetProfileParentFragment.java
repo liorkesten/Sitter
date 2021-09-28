@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -205,8 +206,6 @@ public class SetProfileParentFragment extends Fragment {
 
         editTextChildBirthday.addTextChangedListener(tw);
     }
-
-
 
 
     public LiveData<List<Child>> getLiveDataChildren() {
