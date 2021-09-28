@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
         if (firebaseAuth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, SetProfile.class));
+            startActivity(new Intent(LoginActivity.this, SetProfileActivity.class));
             finish();
         }
        /* mAuthListener=new FirebaseAuth.AuthStateListener() {
@@ -100,18 +100,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         GoogleSignInOptions options = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("")
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(getApplication(), options);
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn();
-            }
-        });
+        signInButton.setOnClickListener(view -> signIn());
 
     }
 

@@ -21,8 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sitter">
 
+
+        <activity
             android:name=".login.SetProfileActivity"
-            android:label="YourAppName" />
+            android:label="@string/app_name" />
 
         <activity
             android:name=".ui.babysitter.manageRequests.BabysitterActivity"
@@ -42,9 +44,9 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+<!--        <meta-data-->
+<!--            android:name="com.facebook.sdk.ApplicationId"-->
+<!--            android:value="@string/facebook_app_id" />-->
 
         <activity
             android:name="com.facebook.FacebookActivity"

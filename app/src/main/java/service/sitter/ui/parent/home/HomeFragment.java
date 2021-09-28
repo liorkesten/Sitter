@@ -32,7 +32,7 @@ import service.sitter.R;
 import service.sitter.databinding.FragmentHomeBinding;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
-import service.sitter.login.SetProfile;
+import service.sitter.login.SetProfileActivity;
 import service.sitter.models.Babysitter;
 import service.sitter.models.Child;
 import service.sitter.models.Parent;
