@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -149,7 +150,8 @@ public class SetProfileActivity extends AppCompatActivity {
                 : null;
 //                : Uri.parse("android.resource://service.sitter/drawable/profile_picture_icon").toString();
         String phoneNumber = phoneNumberEditText.getText().toString();
-        String locationStr = location != null ? location.toString() : "";
+        String locationStr = location != null ? location.getId() : "";
+
 
         if (userType == UserCategory.Parent) {
             addParent(profilePictureUriStr, phoneNumber, locationStr);

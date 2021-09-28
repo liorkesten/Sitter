@@ -84,7 +84,9 @@ public class UsersDataBase {
     public boolean addParent(@NonNull Parent parent, IOnSuccessOperatingUser listener) {
         String parentUuid = parent.getUuid();
         String parentImageID = UUID.randomUUID().toString();
-        DataBaseUtils.uploadImage(Uri.parse(parent.getImage()), parentImageID, u -> parent.setImage(u.toString()));
+        if (parent.getImage() != null) {
+            DataBaseUtils.uploadImage(Uri.parse(parent.getImage()), parentImageID, u -> parent.setImage(u.toString()));
+        }
         parent.setImage(parentImageID);
         // uploading all children to db
         for (Child child : parent.getChildren()) {
