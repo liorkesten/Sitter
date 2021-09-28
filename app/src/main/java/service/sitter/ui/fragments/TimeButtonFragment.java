@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,8 +37,7 @@ public class TimeButtonFragment extends Fragment {
         buttonTime.setText(buttonText);
         buttonTime.setOnClickListener(v -> {
             Calendar cal = Calendar.getInstance();
-            TimePickerDialog tp = new TimePickerDialog(getActivity(), (view1, hourOfDay, minute) -> {
-                // H
+            TimePickerDialog tpd = new TimePickerDialog(getActivity(), TimePickerDialog.THEME_HOLO_LIGHT, (view12, hourOfDay, minute) -> {
                 String hourOfDayAsStr = (hourOfDay < 10) ? "0" + hourOfDay : String.valueOf(hourOfDay);
                 String minuteAsStr = (minute < 10) ? "0" + minute : String.valueOf(minute);
 
@@ -47,9 +47,9 @@ public class TimeButtonFragment extends Fragment {
                     listener.onButtonClicked(buttonText);
                     Log.d("TimeButtonFragment", buttonText);
                 }
-            }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
 
-            tp.show();
+            }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+            tpd.show();
 
         });
     }
