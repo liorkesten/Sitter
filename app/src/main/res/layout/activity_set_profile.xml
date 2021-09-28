@@ -130,7 +130,7 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="8dp"
         android:backgroundTint="@color/primary"
-        android:text="Add User"
+        android:text="Set Profile"
         android:textColor="@color/secondary" />
 
 
