@@ -84,12 +84,12 @@ public class UsersDataBase {
     public boolean addParent(@NonNull Parent parent, IOnSuccessOperatingUser listener) {
         String parentUuid = parent.getUuid();
         String parentImageID = UUID.randomUUID().toString();
-        DataBaseUtils.uploadImage(Uri.parse(parent.getImage()), parentImageID, null);
+        DataBaseUtils.uploadImage(Uri.parse(parent.getImage()), parentImageID, u -> parent.setImage(u.toString()));
         parent.setImage(parentImageID);
         // uploading all children to db
         for (Child child : parent.getChildren()) {
             String imageID = UUID.randomUUID().toString();
-            DataBaseUtils.uploadImage(Uri.parse(child.getImage()), imageID, null);
+            DataBaseUtils.uploadImage(Uri.parse(child.getImage()), imageID, u -> child.setImage(u.toString()));
             child.setImage(imageID);
             Log.d(TAG, String.format("Child was added successfully: <%s>", child.getName()));
         }
@@ -121,7 +121,7 @@ public class UsersDataBase {
     public boolean addBabysitter(@NonNull Babysitter babysitter, IOnSuccessOperatingUser listener) {
         String babysitterUuid = babysitter.getUuid();
         String imageID = UUID.randomUUID().toString();
-        DataBaseUtils.uploadImage(Uri.parse(babysitter.getImage()), imageID, null);
+        DataBaseUtils.uploadImage(Uri.parse(babysitter.getImage()), imageID, u -> babysitter.setImage(u.toString()));
         babysitter.setImage(imageID);
 
         firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).document(babysitterUuid).set(babysitter)

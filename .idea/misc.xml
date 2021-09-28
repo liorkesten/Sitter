@@ -37,7 +37,7 @@
         <entry key="app/src/main/res/drawable/round_button.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/layout-v28/fragment_payment.xml" value="0.24583333333333332" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.2015625" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.19439352623147024" />
         <entry key="app/src/main/res/layout/activity_set_profile.xml" value="0.28007889546351084" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/dialog_add_child.xml" value="0.2578125" />
@@ -46,11 +46,13 @@
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.12360688956433637" />
         <entry key="app/src/main/res/layout/fragment_location.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_manage_requests.xml" value="0.2140625" />
+        <entry key="app/src/main/res/layout/fragment_publish_request.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_set_profile_babysitter.xml" value="0.225" />
         <entry key="app/src/main/res/layout/fragment_set_profile_babysitter_bottom_frame.xml" value="0.24166666666666667" />
         <entry key="app/src/main/res/layout/fragment_set_profile_parent.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_set_profile_parent_bottom_frame.xml" value="0.1094224924012158" />
         <entry key="app/src/main/res/layout/fragment_set_profile_top_frame.xml" value="0.14947916666666666" />
+        <entry key="app/src/main/res/layout/fragment_time.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/layout/fragment_time_button.xml" value="0.1" />
         <entry key="app/src/main/res/layout/header.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/layout/item_babysitter_request_approved.xml" value="0.18229166666666666" />
@@ -64,7 +66,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

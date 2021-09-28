@@ -74,7 +74,7 @@ public class SetProfileParentFragment extends Fragment {
         View root = binding.getRoot();
         PaymentFragment paymentFragment = new PaymentFragment();
         RecyclerView recyclerView = root.findViewById(R.id.recycler_view_children);
-        childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/}, false);
+        childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/}, false, getActivity().getApplication());
         recyclerView.setAdapter(childAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 

@@ -38,8 +38,8 @@ public class TimeButtonFragment extends Fragment {
             Calendar cal = Calendar.getInstance();
             TimePickerDialog tp = new TimePickerDialog(getActivity(), (view1, hourOfDay, minute) -> {
                 // H
-                String hourOfDayAsStr = (hourOfDay == 0)? "00" : String.valueOf(hourOfDay);
-                String minuteAsStr = (minute == 0)? "00" : String.valueOf(minute);
+                String hourOfDayAsStr = (hourOfDay < 10) ? "0" + hourOfDay : String.valueOf(hourOfDay);
+                String minuteAsStr = (minute < 10) ? "0" + minute : String.valueOf(minute);
 
                 buttonText = hourOfDayAsStr + ":" + minuteAsStr;
                 buttonTime.setText(buttonText);

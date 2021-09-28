@@ -59,7 +59,6 @@ public class SetProfileActivity extends AppCompatActivity {
     private SetProfileParentFragment setProfileParentFragment;
     private SetProfileBabysitterFragment setProfileBabysitterFragment;
     private String firstName = "", lastName = "", email = "", password = "";
-    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +67,7 @@ public class SetProfileActivity extends AppCompatActivity {
         sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
 
         if (SharedPreferencesUtils.getParentFromSP(sp) != null) {
-            Intent intentMainActivity = new Intent(SetProfileActivity.this, MainActivity.class);
+            Intent intentMainActivity = new Intent(SetProfileActivity.this, ParentActivity.class);
             startActivity(intentMainActivity);
         } else if (SharedPreferencesUtils.getBabysitterFromSP(sp) != null) {
             Intent intentMainActivity = new Intent(SetProfileActivity.this, BabysitterActivity.class);
@@ -196,7 +195,7 @@ public class SetProfileActivity extends AppCompatActivity {
         //TODO change it to permissions hardcoded -1
         if (resultCode == -1) {
             if (requestCode == RESULT_CODE_IMAGE) {
-                profilePictureUri = data.getData();
+                profilePictureUri = Uri.parse(data.getData().toString());
                 Picasso.get().load(profilePictureUri).into(imageButtonProfilePicture);
             }
         }

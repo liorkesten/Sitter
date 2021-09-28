@@ -3,7 +3,7 @@
     <string name="title_publish_request">Publish Request</string>
     <string name="title_manage">Manage Requests</string>
     <string name="title_connections">Connections</string>
-    <string name="comment_hint">add a comment…</string>
+    <string name="comment_hint">Add a comment… (Optional)</string>
     <string name="payment_title">Set your payment:  </string>
     <string name="publish_request_button">PUBLISH REQUEST</string>
     <string name="action_settings">Settings</string>
@@ -48,11 +48,11 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="date_title">Choose a date</string>
+    <string name="date_title">Date</string>
     <string name="select_location">Select Location</string>
-    <string name="itemRequestDateTitle">Date:</string>
-    <string name="itemRequestTimeTitle">Time:</string>
-    <string name="itemRequestDescriptionTitle">Description:</string>
+    <string name="itemRequestDateTitle">Date: </string>
+    <string name="itemRequestTimeTitle">Time: </string>
+    <string name="itemRequestDescriptionTitle">Description: </string>
     <string name="upcoming_requests_title">Upcoming Requests</string>
     <string name="incoming_requests_title">Incoming Requests</string>
     <string name="approved_requests_title">Approved Requests</string>
@@ -73,5 +73,6 @@
     <string name="no_available_approved_requests">No available approved requests</string>
     <string name="no_available_archived_requests">No available archived requests</string>
     <string name="no_available_incoming_requests">no_available_incoming_requests</string>
+    <string name="empty_description"> ~~~</string>
 
 </resources>

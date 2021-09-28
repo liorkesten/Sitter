@@ -17,7 +17,7 @@ public class DataBaseUtils {
     }
 
     // UploadImage method
-    public static void uploadImage(Uri filePath, String imageID, IOnSuccessUploadingImage listener) {
+    public static void uploadImage(Uri filePath, String imageID, IOnSuccessLoadingImage listener) {
         if (filePath != null) {
             Log.d(TAG, String.format("uploading filepath: <%s> and imageID: <%s>", filePath, imageID));
             ImagesUtils.cachedUris.put(imageID, filePath);
@@ -29,10 +29,12 @@ public class DataBaseUtils {
             // adding listeners on upload or failure of image
             ref.putFile(filePath)
                     .addOnSuccessListener(taskSnapshot -> {
-                        if (listener != null) {
-                            listener.onSuccess(imageID);
-                        }
+//                        loadImage(imageID, listener);
+//                        if (listener != null) {
+//                            listener.onSuccess(imageID);
+//                        }
                         Log.d(TAG, String.format("Child image was added successfully: <%s>", imageID));
+
 
                     })
                     .addOnFailureListener(e -> Log.e(TAG, e.getMessage()))
@@ -54,7 +56,9 @@ public class DataBaseUtils {
         ref.getDownloadUrl()
                 .addOnSuccessListener(uri -> {
                     Log.d(TAG, "successful downloaded image: " + uri);
-                    onSuccessLoadingImage.onSuccess(uri);
+                    if (onSuccessLoadingImage != null){
+                        onSuccessLoadingImage.onSuccess(uri);
+                    }
                     String imageUrl = uri.toString();
                     Log.d(TAG, "successful downloaded image after apply listener: " + imageUrl);
                 })

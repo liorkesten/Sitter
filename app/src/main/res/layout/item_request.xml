@@ -77,7 +77,7 @@
                 android:id="@+id/itemRequestDescriptionValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="bla bla"
+                android:hint="@string/empty_description"
                 android:textSize="16sp" />
 
         </LinearLayout>
