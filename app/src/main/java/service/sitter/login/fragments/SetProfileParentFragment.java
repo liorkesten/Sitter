@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -43,7 +45,7 @@ public class SetProfileParentFragment extends Fragment {
     private static final Uri DEFAULT_URI_CHILD_PICTURE = Uri.parse("android.resource://sitter/drawable/child_icon");
     private static final int RESULT_CODE_IMAGE = 100;
     private static final String TAG = SetProfileParentFragment.class.getSimpleName();
-
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d/MM/yyyy");
     private ImageView imageView;
     private IDataBase db;
     private FragmentSetProfileParentBinding binding;
@@ -54,9 +56,6 @@ public class SetProfileParentFragment extends Fragment {
     private ChildAdapter childAdapter;
     public static final Pattern VALID_DATE =
             Pattern.compile("[0-9]{2}/[0-9]{2}/[0-9]{4}");
-
-
-
 
 
     public SetProfileParentFragment() {
@@ -74,7 +73,7 @@ public class SetProfileParentFragment extends Fragment {
         View root = binding.getRoot();
         PaymentFragment paymentFragment = new PaymentFragment();
         RecyclerView recyclerView = root.findViewById(R.id.recycler_view_children);
-        childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/}, false, getActivity().getApplication());
+        childAdapter = new ChildAdapter(this::areYouSureYouWantToDeleteChildDialog, false, getActivity(), false);
         recyclerView.setAdapter(childAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
@@ -129,20 +128,24 @@ public class SetProfileParentFragment extends Fragment {
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             boolean allGood = true;
-            if (editTextChildName.getText().toString().equals("")){
+            String candidateDate = editTextChildBirthday.getText().toString();
+            if (editTextChildName.getText().toString().equals("")) {
                 editTextChildName.setError("Please enter a name");
                 allGood = false;
             }
             Matcher matcher = VALID_DATE.matcher(editTextChildBirthday.getText().toString());
-            if (editTextChildBirthday.getText().toString().equals("") || !matcher.matches()){
+            if (candidateDate.equals("") || !matcher.matches()) {
                 System.out.println(editTextChildBirthday.getText().toString());
                 editTextChildBirthday.setError("Please enter date of birth");
                 allGood = false;
+            } else if (LocalDate.parse(candidateDate, DATE_FORMAT).isAfter(LocalDate.now())) {
+                editTextChildBirthday.setError("Date of birth must be before today.");
+                allGood = false;
             }
-            if (allGood){
+            if (allGood) {
                 dialog.dismiss();
                 Child child = new Child(editTextChildName.getText().toString(),
-                        editTextChildBirthday.getText().toString(),
+                        candidateDate,
                         lastChildUri);
                 children.add(child);
                 mutableLiveDataChildren.setValue(children);
@@ -173,25 +176,25 @@ public class SetProfileParentFragment extends Fragment {
                     //Fix for pressing delete next to a forward slash
                     if (clean.equals(cleanC)) sel--;
 
-                    if (clean.length() < 8){
+                    if (clean.length() < 8) {
                         clean = clean + ddmmyyyy.substring(clean.length());
-                    }else{
+                    } else {
                         //This part makes sure that when we finish entering numbers
                         //the date is correct, fixing it otherwise
-                        int day  = Integer.parseInt(clean.substring(0,2));
-                        int mon  = Integer.parseInt(clean.substring(2,4));
-                        int year = Integer.parseInt(clean.substring(4,8));
+                        int day = Integer.parseInt(clean.substring(0, 2));
+                        int mon = Integer.parseInt(clean.substring(2, 4));
+                        int year = Integer.parseInt(clean.substring(4, 8));
 
                         mon = mon < 1 ? 1 : mon > 12 ? 12 : mon;
-                        cal.set(Calendar.MONTH, mon-1);
-                        year = (year<1900)?1900:(year>2100)?2100:year;
+                        cal.set(Calendar.MONTH, mon - 1);
+                        year = (year < 1900) ? 1900 : (year > 2100) ? 2100 : year;
                         cal.set(Calendar.YEAR, year);
                         // ^ first set year for the line below to work correctly
                         //with leap years - otherwise, date e.g. 29/02/2012
                         //would be automatically corrected to 28/02/2012
 
-                        day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
-                        clean = String.format("%02d%02d%02d",day, mon, year);
+                        day = (day > cal.getActualMaximum(Calendar.DATE)) ? cal.getActualMaximum(Calendar.DATE) : day;
+                        clean = String.format("%02d%02d%02d", day, mon, year);
                     }
 
                     clean = String.format("%s/%s/%s", clean.substring(0, 2),
@@ -233,5 +236,27 @@ public class SetProfileParentFragment extends Fragment {
             }
         }
     }
+
+    private void areYouSureYouWantToDeleteChildDialog(Child child) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle("Delete child");
+        builder.setMessage("Are you sure you want to delete the child?");
+
+        builder.setPositiveButton("YES", (dialog, which) -> {
+            children.remove(child);
+            mutableLiveDataChildren.setValue(children);
+            dialog.dismiss();
+        });
+
+        builder.setNegativeButton("NO", (dialog, which) -> {
+            // Do nothing
+            dialog.dismiss();
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
 }

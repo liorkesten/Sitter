@@ -30,11 +30,13 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
     private final IChildAdapterListener listener;
     private final boolean shouldFetchImages;
     private final Context context;
+    private final boolean shouldApplyAlpha;
 
-    public ChildAdapter(@NonNull IChildAdapterListener listener, boolean shouldFetchImages, Context context) {
+    public ChildAdapter(@NonNull IChildAdapterListener listener, boolean shouldFetchImages, Context context, boolean shouldApplyAlpha) {
         this.listener = listener;
         this.shouldFetchImages = shouldFetchImages;
         this.context = context;
+        this.shouldApplyAlpha = shouldApplyAlpha;
     }
 
     /**
@@ -43,6 +45,7 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
      * @param children are list of new children that the adapter should load.
      */
     public void setChildren(List<Child> children) {
+        Log.d(TAG, "Get new children array:" + children.toString());
         this.children.clear();
         this.children.addAll(children);
         notifyDataSetChanged();
@@ -70,14 +73,21 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
             Log.d(TAG, "shouldFetchImages is false");
             holder.getImageView().setImageURI(Uri.parse(child.getImage()));
         }
+        // Set image button:
+        ImageButton imageView = holder.getImageView();
+        if (!shouldApplyAlpha) {
+            imageView.setAlpha(1f);
+        }
+
         holder.getImageView().setOnClickListener(v -> {
-            ImageButton imageView = holder.getImageView();
-            if (!imageView.isSelected()) {
-                imageView.setAlpha(0.80f);
-                imageView.setSelected(true);
-            } else {
-                imageView.setAlpha(0.35f);
-                imageView.setSelected(false);
+            if (shouldApplyAlpha) {
+                if (!imageView.isSelected()) {
+                    imageView.setAlpha(0.80f);
+                    imageView.setSelected(true);
+                } else {
+                    imageView.setAlpha(0.35f);
+                    imageView.setSelected(false);
+                }
             }
             listener.onRequestClick(child);
         });

@@ -2,15 +2,12 @@ package service.sitter.ui.parent.publishRequest;
 
 import static java.lang.System.exit;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -77,7 +74,7 @@ public class PublishRequestFragment extends Fragment {
         db = DataBase.getInstance();
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
         myUser = SharedPreferencesUtils.getParentFromSP(sp);
-        if (myUser == null){
+        if (myUser == null) {
             Log.e(TAG, "User doesn't exist");
             exit(101);
         }
@@ -95,7 +92,7 @@ public class PublishRequestFragment extends Fragment {
             } else {
                 children.add(child);
             }
-        }, true, getActivity().getApplication());
+        }, true, getActivity().getApplication(), true);
         childrenRecyclerView.setAdapter(childAdapter);
         childAdapter.setChildren(myUser.getChildren());
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
