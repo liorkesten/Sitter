@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.22291666666666668" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/drawable/img.xml" value="0.14114583333333333" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/activity_babysitter.xml" value="0.1" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/activity_login.xml" value="0.15677083333333333" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/activity_set_profile.xml" value="0.1" />
@@ -13,7 +14,11 @@
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_babysitter_request_approved.xml" value="0.15677083333333333" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_babysitter_request_archived.xml" value="0.1" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_babysitter_request_incoming.xml" value="0.15677083333333333" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_child.xml" value="0.1" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_connection.xml" value="0.1" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_recommendation.xml" value="0.1" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_request.xml" value="0.1125" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.14114583333333333" />
         <entry key="app/src/main/res/drawable/btn_custom.xml" value="0.1984375" />
         <entry key="app/src/main/res/drawable/checked_button.xml" value="0.1984375" />
         <entry key="app/src/main/res/drawable/custom_img_btn.xml" value="0.1984375" />

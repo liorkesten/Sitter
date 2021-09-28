@@ -42,7 +42,7 @@ import service.sitter.ui.fragments.PaymentFragment;
 //import service.sitter.utils.DateUtils;
 
 public class SetProfileParentFragment extends Fragment {
-    private static final Uri DEFAULT_URI_CHILD_PICTURE = Uri.parse("android.resource://sitter/drawable/child_icon");
+    private static final Uri DEFAULT_URI_CHILD_PICTURE = Uri.parse("android.resource://sitter/drawable/profile_picture_icon");
     private static final int RESULT_CODE_IMAGE = 100;
     private static final String TAG = SetProfileParentFragment.class.getSimpleName();
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d/MM/yyyy");

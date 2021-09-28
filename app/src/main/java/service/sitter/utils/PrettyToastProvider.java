@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import service.sitter.R;
 
 public class PrettyToastProvider {
@@ -16,6 +18,11 @@ public class PrettyToastProvider {
     public PrettyToastProvider(LayoutInflater layoutInflater, View root) {
         layout = layoutInflater.inflate(R.layout.pretty_toast,
                 (ViewGroup) root.findViewById(R.id.toast_layout_root));
+    }
+
+    public PrettyToastProvider(LayoutInflater layoutInflater, AppCompatActivity activity) {
+        layout = layoutInflater.inflate(R.layout.pretty_toast,
+                (ViewGroup) activity.findViewById(R.id.toast_layout_root));
     }
 
     public void showToast(String textForToast, Context context) {

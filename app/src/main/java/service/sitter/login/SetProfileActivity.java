@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -121,9 +122,7 @@ public class SetProfileActivity extends AppCompatActivity {
         // Get Profile Data
         locationFragment.getLiveData().observe(this, location -> this.location = location);
         // Clicking on adding user
-        addUserButton.setOnClickListener(l -> {
-            addUser();
-        });
+        addUserButton.setOnClickListener(l -> addUser());
 
         // Rendering Fragments
         getSupportFragmentManager()
@@ -152,7 +151,6 @@ public class SetProfileActivity extends AppCompatActivity {
         String phoneNumber = phoneNumberEditText.getText().toString();
         String locationStr = location != null ? location.toString() : "";
 
-
         if (userType == UserCategory.Parent) {
             addParent(profilePictureUriStr, phoneNumber, locationStr);
         } else if (userType == UserCategory.Babysitter) {
@@ -168,6 +166,7 @@ public class SetProfileActivity extends AppCompatActivity {
 
         db.addBabysitter(babysitter, () -> {
             Toast toast = Toast.makeText(getApplication(), String.format("Congrats %s :) you added successfully as a babysitter. you can now start look for requests.", babysitter.getFirstName()), Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             Intent intentMainActivity = new Intent(SetProfileActivity.this, BabysitterActivity.class);
             startActivity(intentMainActivity);
@@ -183,6 +182,7 @@ public class SetProfileActivity extends AppCompatActivity {
 
         db.addParent(parent, () -> {
             Toast toast = Toast.makeText(getApplication(), String.format("Congrats %s :) you added successfully as a parent. you can now start publish requests.", parent.getFirstName()), Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             Intent intentMainActivity = new Intent(SetProfileActivity.this, ParentActivity.class);
             startActivity(intentMainActivity);
