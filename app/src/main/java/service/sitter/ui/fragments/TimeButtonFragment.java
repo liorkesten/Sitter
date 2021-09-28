@@ -26,8 +26,6 @@ public class TimeButtonFragment extends Fragment {
         super(R.layout.fragment_time_button);
         this.buttonText = buttonText;
         this.listener = listener;
-
-
     }
 
     @Override
@@ -47,7 +45,6 @@ public class TimeButtonFragment extends Fragment {
                     listener.onButtonClicked(buttonText);
                     Log.d("TimeButtonFragment", buttonText);
                 }
-
             }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
             tpd.show();
 

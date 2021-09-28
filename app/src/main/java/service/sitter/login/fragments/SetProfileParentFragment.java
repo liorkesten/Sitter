@@ -27,6 +27,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import service.sitter.R;
 import service.sitter.databinding.FragmentSetProfileParentBinding;
@@ -50,6 +52,11 @@ public class SetProfileParentFragment extends Fragment {
     private Integer paymentLiveData;
     private Uri lastChildUri;
     private ChildAdapter childAdapter;
+    public static final Pattern VALID_DATE =
+            Pattern.compile("[0-9]{2}/[0-9]{2}/[0-9]{4}");
+
+
+
 
 
     public SetProfileParentFragment() {
@@ -126,7 +133,9 @@ public class SetProfileParentFragment extends Fragment {
                 editTextChildName.setError("Please enter a name");
                 allGood = false;
             }
-            if (editTextChildBirthday.getText().toString().equals("")){
+            Matcher matcher = VALID_DATE.matcher(editTextChildBirthday.getText().toString());
+            if (editTextChildBirthday.getText().toString().equals("") || !matcher.matches()){
+                System.out.println(editTextChildBirthday.getText().toString());
                 editTextChildBirthday.setError("Please enter date of birth");
                 allGood = false;
             }
