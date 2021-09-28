@@ -2,12 +2,16 @@ package service.sitter.recyclerview.children;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +20,6 @@ import java.util.List;
 
 import service.sitter.R;
 import service.sitter.models.Child;
-import service.sitter.utils.ImagesUtils;
 
 public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
 
@@ -26,10 +29,12 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
     private final List<Child> children = new ArrayList<>();
     private final IChildAdapterListener listener;
     private final boolean shouldFetchImages;
+    private final Context context;
 
-    public ChildAdapter(@NonNull IChildAdapterListener listener, boolean shouldFetchImages) {
+    public ChildAdapter(@NonNull IChildAdapterListener listener, boolean shouldFetchImages, Context context) {
         this.listener = listener;
         this.shouldFetchImages = shouldFetchImages;
+        this.context = context;
     }
 
     /**
@@ -53,20 +58,29 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull ChildViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChildViewHolder holder, int position) {
         Child child = children.get(position);
         holder.getNameTextView().setText(child.getName());
         String age = Integer.toString(child.getAge());
         holder.getAgeTextView().setText(age);
-        //TODO Delete this images - fetch from DB
         if (shouldFetchImages) {
-            ImagesUtils.updateImageView(child.getImage(), holder.getImageView());
-
-        }else{
+            Log.d(TAG, "shouldFetchImages is true");
+            Glide.with(context).load(child.getImage()).into(holder.getImageView());
+        } else {
+            Log.d(TAG, "shouldFetchImages is false");
             holder.getImageView().setImageURI(Uri.parse(child.getImage()));
         }
-
-        holder.rootView.setOnClickListener(v -> listener.onRequestClick(child));
+        holder.getImageView().setOnClickListener(v -> {
+            ImageButton imageView = holder.getImageView();
+            if (!imageView.isSelected()) {
+                imageView.setAlpha(0.80f);
+                imageView.setSelected(true);
+            } else {
+                imageView.setAlpha(0.35f);
+                imageView.setSelected(false);
+            }
+            listener.onRequestClick(child);
+        });
     }
 
     @Override

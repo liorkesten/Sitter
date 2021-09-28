@@ -37,6 +37,7 @@
         android:layout_marginBottom="10dp"
         android:padding="15dp"
         android:inputType="textPersonName"
+        android:text="lior kesten"
         android:background="@drawable/et_custom"
         android:textSize="15sp" />
 
@@ -45,6 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="@string/e_mail"
+        android:text="aa@gmail.com"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
@@ -58,6 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="@string/password"
+        android:text="1"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
@@ -72,6 +75,7 @@
         android:layout_height="50dp"
         android:hint="@string/re_type_password"
         android:layout_marginLeft="20dp"
+        android:text="1"
         android:layout_marginRight="20dp"
         android:padding="15dp"
         android:inputType="textPassword"

@@ -1,9 +1,5 @@
-package service.sitter.ui.parent.home;
+package service.sitter.ui.parent.publishRequest;
 
-import static java.lang.System.exit;
-
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,13 +22,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import service.sitter.MainActivity;
 import service.sitter.R;
-import service.sitter.databinding.FragmentHomeBinding;
+import service.sitter.databinding.FragmentPublishRequestBinding;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
-import service.sitter.login.SetProfileActivity;
-import service.sitter.models.Babysitter;
 import service.sitter.models.Child;
 import service.sitter.models.Parent;
 import service.sitter.models.Request;
@@ -42,50 +34,58 @@ import service.sitter.ui.fragments.DateFragment;
 import service.sitter.ui.fragments.LocationFragment;
 import service.sitter.ui.fragments.PaymentFragment;
 import service.sitter.ui.fragments.TimeFragment;
+import service.sitter.utils.PrettyToastProvider;
 import service.sitter.utils.SharedPreferencesUtils;
 
-public class HomeFragment extends Fragment {
+public class PublishRequestFragment extends Fragment {
 
-    private static final String TAG = HomeFragment.class.getSimpleName();
-    private HomeViewModel homeViewModel;
-    private FragmentHomeBinding binding;
+    private static final String TAG = PublishRequestFragment.class.getSimpleName();
+    private FragmentPublishRequestBinding binding;
     private LocalDate date = LocalDate.now();
     private String startTime = "";
     private String endTime = "";
     private int payment = 1;
     private Place location;
+    List<Child> children;
 
     private IDataBase db;
     private SharedPreferences sp;
     private Parent myUser;
+    private View layout;
+    private PrettyToastProvider prettyToastProvider;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         // Set UI Components
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentPublishRequestBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
         Button publishRequestButton = root.findViewById(R.id.publish_request_button);
         EditText descriptionEditText = root.findViewById(R.id.description_edit_text);
         RecyclerView childrenRecyclerView = root.findViewById(R.id.recycler_view_children);
+
+        LayoutInflater inflaterToast = getLayoutInflater();
+        prettyToastProvider = new PrettyToastProvider(inflaterToast, root);
 
         // Set Logic Components
         db = DataBase.getInstance();
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
         myUser = SharedPreferencesUtils.getParentFromSP(sp);
-
-        if (myUser == null) {
-            Log.e(TAG, "Error while loading user from SP");
-            exit(101);
-        }
-
+        children = new ArrayList<>();
         // Set Logic Business Components
         DateFragment dateFragment = new DateFragment();
         TimeFragment startTimeFragment = new TimeFragment("16:00", "Start Time");
         TimeFragment endTimeFragment = new TimeFragment("21:30", "End Time");
         PaymentFragment paymentFragment = new PaymentFragment(myUser.getDefaultPricePerHour());
         LocationFragment locationFragment = new LocationFragment();
-        ChildAdapter childAdapter = new ChildAdapter(child -> { /*TODO Implement this listener*/}, true);
+        ChildAdapter childAdapter = new ChildAdapter(child -> {
+            if (children.contains(child)) {
+                children.remove(child);
+            } else {
+                children.add(child);
+            }
+        }, true, getActivity().getApplication());
         childrenRecyclerView.setAdapter(childAdapter);
         childAdapter.setChildren(myUser.getChildren());
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
@@ -96,18 +96,24 @@ public class HomeFragment extends Fragment {
         // Get Request Data
         listenToObservers(dateFragment, startTimeFragment, endTimeFragment, paymentFragment, locationFragment);
 
+
         // Adding Request
         publishRequestButton.setOnClickListener(l -> {
+            if (shouldBlockPublishRequest()) {
+                return;
+            }
             String description = descriptionEditText.getText().toString();
             Request request = new Request(
                     myUser.getUuid(), this.date, startTime, endTime, location,
-                    null, payment, description
+                    children, payment, description
             );
 //            ProgressBar progressBar;
             db.addRequest(request, new IOnUploadingRequest() {
                 @Override
                 public void onSuccess() {
                     Log.d(TAG, "request was added successfully");
+                    prettyToastProvider.showToast("Your request was added successfully.", getActivity().getApplication());
+                    // TODO add once the button was clicked, move to manage requests.
 //                    pDialog.cancel();
 
                 }
@@ -137,6 +143,17 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+    private boolean shouldBlockPublishRequest() {
+        if (children.size() == 0) {
+            prettyToastProvider.showToast("You must choose child before publish request", getActivity().getApplication());
+            return true;
+        } else if (date.isBefore(LocalDate.now())) {
+            prettyToastProvider.showToast("Date can't be before the current time.", getActivity().getApplication());
+            return true;
+        }
+        return false;
+    }
+
     private void listenToObservers(DateFragment dateFragment, TimeFragment startTimeFragment, TimeFragment endTimeFragment, PaymentFragment paymentFragment, LocationFragment locationFragment) {
         dateFragment.getLiveData().observe(getViewLifecycleOwner(), newDate -> this.date = newDate);
         startTimeFragment.getLiveData().observe(getViewLifecycleOwner(), newStartTime -> this.startTime = newStartTime);
@@ -158,27 +175,5 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-
-    private void funcShouldBeDeletedOnceSpIsReadyInitMyUser() {
-        IDataBase db = DataBase.getInstance();
-        Babysitter b = new Babysitter("Noam", "Kesten", "n@gma", "0547718646", "NY", "URL_TO_IMAGE", false);
-        b.setUuid("123");
-        db.addBabysitter(b, null);
-        // First step - create new user with default values;
-        List<Child> children = new ArrayList<>();
-//        children.add(new Child("Daria", "10/10/2020", ));
-//        children.add(new Child("Gali", "10/10/2018", "Gali"));
-//        children.add(new Child("Mika", "10/10/2015", "Mika"));
-        Parent myParent = new Parent("Lior", "Kesten", "kestenlior@gmail.com", "+972547718647", "NY", "<URL_TO_IMAGE>", children, 60);
-        // Step 2: add the user to the db.
-        db.addParent(myParent, null);
-
-        // Step 3: save parent in SP.
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
-//         Step 4: Extract from SP.
-        myUser = SharedPreferencesUtils.getParentFromSP(sp);
-        Log.d(TAG, String.format("myUser initialized: <%s>", myUser.toString()));
     }
 }

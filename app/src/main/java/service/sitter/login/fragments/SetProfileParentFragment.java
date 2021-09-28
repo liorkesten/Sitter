@@ -2,11 +2,13 @@ package service.sitter.login.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,9 +28,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import service.sitter.R;
@@ -115,11 +119,26 @@ public class SetProfileParentFragment extends Fragment {
         });
 
         // confirm
-        builder.setPositiveButton(android.R.string.ok, (dialog, which) ->
-        {
-            if (isValidateChild(editTextChildBirthday)){
+        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+
+        });
+        // cancel
+        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss());
+        builder.setView(viewInflated);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            boolean allGood = true;
+            if (editTextChildName.getText().toString().equals("")){
+                editTextChildName.setError("Please enter a name");
+                allGood = false;
+            }
+            if (editTextChildBirthday.getText().toString().equals("")){
+                editTextChildBirthday.setError("Please enter date of birth");
+                allGood = false;
+            }
+            if (allGood){
                 dialog.dismiss();
-                // add child
                 Child child = new Child(editTextChildName.getText().toString(),
                         editTextChildBirthday.getText().toString(),
                         lastChildUri);
@@ -127,15 +146,70 @@ public class SetProfileParentFragment extends Fragment {
                 mutableLiveDataChildren.setValue(children);
                 childAdapter.setChildren(children);
             }
-            else{
-//                Toast.makeText(this, "Invalid fields of Child", Toast.LENGTH_LONG).show();
-            }
         });
-        // cancel
-        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
-        builder.show();
+
+        TextWatcher tw = new TextWatcher() {
+            private String current = "";
+            private String ddmmyyyy = "DDMMYYYY";
+            private Calendar cal = Calendar.getInstance();
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals(current)) {
+                    String clean = s.toString().replaceAll("[^\\d.]|\\.", "");
+                    String cleanC = current.replaceAll("[^\\d.]|\\.", "");
+
+                    int cl = clean.length();
+                    int sel = cl;
+                    for (int i = 2; i <= cl && i < 6; i += 2) {
+                        sel++;
+                    }
+                    //Fix for pressing delete next to a forward slash
+                    if (clean.equals(cleanC)) sel--;
+
+                    if (clean.length() < 8){
+                        clean = clean + ddmmyyyy.substring(clean.length());
+                    }else{
+                        //This part makes sure that when we finish entering numbers
+                        //the date is correct, fixing it otherwise
+                        int day  = Integer.parseInt(clean.substring(0,2));
+                        int mon  = Integer.parseInt(clean.substring(2,4));
+                        int year = Integer.parseInt(clean.substring(4,8));
+
+                        mon = mon < 1 ? 1 : mon > 12 ? 12 : mon;
+                        cal.set(Calendar.MONTH, mon-1);
+                        year = (year<1900)?1900:(year>2100)?2100:year;
+                        cal.set(Calendar.YEAR, year);
+                        // ^ first set year for the line below to work correctly
+                        //with leap years - otherwise, date e.g. 29/02/2012
+                        //would be automatically corrected to 28/02/2012
+
+                        day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
+                        clean = String.format("%02d%02d%02d",day, mon, year);
+                    }
+
+                    clean = String.format("%s/%s/%s", clean.substring(0, 2),
+                            clean.substring(2, 4),
+                            clean.substring(4, 8));
+
+                    sel = sel < 0 ? 0 : sel;
+                    current = clean;
+                    editTextChildBirthday.setText(current);
+                    editTextChildBirthday.setSelection(sel < current.length() ? sel : current.length());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
 
 
+        editTextChildBirthday.addTextChangedListener(tw);
     }
 
 
@@ -153,15 +227,7 @@ public class SetProfileParentFragment extends Fragment {
         if (resultCode == -1) {
             if (requestCode == RESULT_CODE_IMAGE) {
                 lastChildUri = Uri.parse(data.getData().toString());
-                Bitmap bitmapImage = null;
-                try {
-                    bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), lastChildUri);
-                    imageView.setImageBitmap(bitmapImage);
-//                    db.uploadImage(lastChildUri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-
-                }
+                Picasso.get().load(lastChildUri).into(imageView);
             }
         }
     }

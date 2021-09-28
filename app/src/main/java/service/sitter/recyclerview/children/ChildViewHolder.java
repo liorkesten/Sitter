@@ -1,10 +1,7 @@
 package service.sitter.recyclerview.children;
 
-import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,11 +26,6 @@ public class ChildViewHolder extends RecyclerView.ViewHolder {
         nameTextView = itemView.findViewById(R.id.itemChildName);
         ageTextView = itemView.findViewById(R.id.itemChildAge);
         imageChildButtonView = itemView.findViewById(R.id.item_child_image_button);
-
-        imageChildButtonView.setOnClickListener(v -> {
-            isSelected = !isSelected;
-            imageChildButtonView.setColorFilter(isSelected ? Color.GREEN : Color.TRANSPARENT);
-        });
     }
 
 

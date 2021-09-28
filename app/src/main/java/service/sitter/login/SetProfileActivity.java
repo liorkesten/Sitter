@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -24,12 +22,12 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.libraries.places.api.model.Place;
+import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import service.sitter.MainActivity;
+import service.sitter.ParentActivity;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
@@ -38,6 +36,7 @@ import service.sitter.login.fragments.SetProfileParentFragment;
 import service.sitter.models.Babysitter;
 import service.sitter.models.Child;
 import service.sitter.models.Parent;
+import service.sitter.models.UserCategory;
 import service.sitter.ui.babysitter.manageRequests.BabysitterActivity;
 import service.sitter.ui.fragments.LocationFragment;
 import service.sitter.utils.SharedPreferencesUtils;
@@ -45,9 +44,10 @@ import service.sitter.utils.SharedPreferencesUtils;
 public class SetProfileActivity extends AppCompatActivity {
 
     private final IDataBase db = DataBase.getInstance();
+    SharedPreferences sp;
     private Place location;
     private String phoneNumber = "";
-    boolean isParent = true;
+    UserCategory userType = UserCategory.Parent;
     ImageButton imageButtonProfilePicture;
     EditText phoneNumberEditText;
     TextView usernameTextView;
@@ -101,9 +101,9 @@ public class SetProfileActivity extends AppCompatActivity {
 
         // radio group listener
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            isParent = checkedId == R.id.parent_radio_button;
-            Log.d("SetProfile", "onCheckedChanged, isParent:  " + isParent);
-            Fragment fragment = isParent ? setProfileParentFragment : setProfileBabysitterFragment;
+            userType = (checkedId == R.id.parent_radio_button) ? UserCategory.Parent : UserCategory.Babysitter;
+            Log.d("SetProfile", "onCheckedChanged, isParent:  " + userType);
+            Fragment fragment = (userType == UserCategory.Parent) ? setProfileParentFragment : setProfileBabysitterFragment;
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.bottomFrameFragment, fragment)
@@ -146,35 +146,48 @@ public class SetProfileActivity extends AppCompatActivity {
     }
 
     private void addUser() {
-        if (isParent) {
-            Log.d(TAG, "creating new Parent");
-            setProfileParentFragment.getLiveDataChildren().
-                    observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
-            this.payment = setProfileParentFragment.getPayment();
-            Parent parent = new Parent(firstName, lastName, email, phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), children, payment);
-            SharedPreferencesUtils.saveParentToSP(sp, parent);
-            db.addParent(parent, () -> {
-                Toast toast = Toast.makeText(this, "message", Toast.LENGTH_LONG);
-                toast.show();
-                Intent intentMainActivity = new Intent(SetProfileActivity.this, MainActivity.class);
-                startActivity(intentMainActivity);
-            });
-        } else {
-            Log.d(TAG, "creating new Babysitter");
-            boolean hasMobility = setProfileBabysitterFragment.getLiveDataHasMobility().getValue();
-            Babysitter babysitter = new Babysitter(firstName, lastName, email, phoneNumberEditText.getText().toString(), location != null ? location.toString() : null, profilePictureUri.toString(), hasMobility);
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
-            SharedPreferencesUtils.saveBabysitterToSP(sp, babysitter);
-
-            db.addBabysitter(babysitter, () -> {
-                Toast toast = Toast.makeText(this, "message", Toast.LENGTH_LONG);
-                toast.show();
-                Intent intentMainActivity = new Intent(SetProfileActivity.this, BabysitterActivity.class);
-                startActivity(intentMainActivity);
-            });
+        this.payment = setProfileParentFragment.getPayment();
+        String profilePictureUriStr = (profilePictureUri != null) ? profilePictureUri.toString()
+                : null;
+//                : Uri.parse("android.resource://service.sitter/drawable/profile_picture_icon").toString();
+        String phoneNumber = phoneNumberEditText.getText().toString();
+        String locationStr = location != null ? location.toString() : "";
 
 
+        if (userType == UserCategory.Parent) {
+            addParent(profilePictureUriStr, phoneNumber, locationStr);
+        } else if (userType == UserCategory.Babysitter) {
+            addBabysitter(profilePictureUriStr, phoneNumber, locationStr);
         }
+    }
+
+    private void addBabysitter(String profilePictureUriStr, String phoneNumber, String locationStr) {
+        Log.d(TAG, "creating new Babysitter");
+        boolean hasMobility = setProfileBabysitterFragment.getLiveDataHasMobility().getValue();
+        Babysitter babysitter = new Babysitter(firstName, lastName, email, phoneNumber, locationStr, profilePictureUriStr, hasMobility);
+        SharedPreferencesUtils.saveBabysitterToSP(sp, babysitter);
+
+        db.addBabysitter(babysitter, () -> {
+            Toast toast = Toast.makeText(getApplication(), String.format("Congrats %s :) you added successfully as a babysitter. you can now start look for requests.", babysitter.getFirstName()), Toast.LENGTH_LONG);
+            toast.show();
+            Intent intentMainActivity = new Intent(SetProfileActivity.this, BabysitterActivity.class);
+            startActivity(intentMainActivity);
+        });
+    }
+
+    private void addParent(String profilePictureUriStr, String phoneNumber, String locationStr) {
+        Log.d(TAG, "creating new Parent");
+        setProfileParentFragment.getLiveDataChildren().
+                observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
+        Parent parent = new Parent(firstName, lastName, email, phoneNumber, locationStr, profilePictureUriStr, children, payment);
+        SharedPreferencesUtils.saveParentToSP(sp, parent);
+
+        db.addParent(parent, () -> {
+            Toast toast = Toast.makeText(getApplication(), String.format("Congrats %s :) you added successfully as a parent. you can now start publish requests.", parent.getFirstName()), Toast.LENGTH_LONG);
+            toast.show();
+            Intent intentMainActivity = new Intent(SetProfileActivity.this, ParentActivity.class);
+            startActivity(intentMainActivity);
+        });
     }
 
     @Override
@@ -184,13 +197,7 @@ public class SetProfileActivity extends AppCompatActivity {
         if (resultCode == -1) {
             if (requestCode == RESULT_CODE_IMAGE) {
                 profilePictureUri = data.getData();
-                Bitmap bitmapImage = null;
-                try {
-                    bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), profilePictureUri);
-                    imageButtonProfilePicture.setImageBitmap(bitmapImage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Picasso.get().load(profilePictureUri).into(imageButtonProfilePicture);
             }
         }
     }

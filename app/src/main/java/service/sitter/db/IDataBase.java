@@ -19,7 +19,7 @@ import service.sitter.models.UserCategory;
 import service.sitter.recommendations.IGetConnections;
 import service.sitter.recommendations.IGetParents;
 import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
-import service.sitter.ui.parent.home.IOnUploadingRequest;
+import service.sitter.ui.parent.publishRequest.IOnUploadingRequest;
 
 /**
  * IDataBase is the interface for application database - needed for mocking and testing.
