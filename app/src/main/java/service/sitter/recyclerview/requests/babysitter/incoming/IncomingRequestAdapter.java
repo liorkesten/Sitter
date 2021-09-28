@@ -1,11 +1,14 @@
 package service.sitter.recyclerview.requests.babysitter.incoming;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +19,6 @@ import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
 import service.sitter.models.UserCategory;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
-import service.sitter.utils.ImagesUtils;
 
 public class IncomingRequestAdapter extends RecyclerView.Adapter<IncomingRequestViewHolder> {
     // Database:
@@ -28,9 +30,11 @@ public class IncomingRequestAdapter extends RecyclerView.Adapter<IncomingRequest
     private final IRequestAdapterListener acceptButtonListener;
     private final IRequestAdapterListener denyButtonListener;
     private final UserCategory userCategory;
+    private Context context;
 
-    public IncomingRequestAdapter(@NonNull IRequestAdapterListener listener, IRequestAdapterListener acceptButtonListener, IRequestAdapterListener denyButtonListener, UserCategory userCategory) {
+    public IncomingRequestAdapter(@NonNull IRequestAdapterListener listener, IRequestAdapterListener acceptButtonListener, IRequestAdapterListener denyButtonListener, UserCategory userCategory, Context context) {
         this.userCategory = userCategory;
+        this.context = context;
         // Init db.
         db = DataBase.getInstance();
         // Setup listeners
@@ -57,12 +61,12 @@ public class IncomingRequestAdapter extends RecyclerView.Adapter<IncomingRequest
         holder.getTimeValueTextView().setText(request.getTime());
 
         // Fields that are extracted by the parent object (so db is needed).
-        if (userCategory == UserCategory.Babysitter){
+        if (userCategory == UserCategory.Babysitter) {
 
             db.getParent(request.getPublisherId(), parent -> {
                 // Assign fields from parent object.
                 holder.getNameValueTextView().setText(parent.getFullName());
-                ImagesUtils.updateImageView(parent.getImage(), holder.getProfileImageView());
+                Glide.with(this.context).load(parent.getImage()).into(holder.getProfileImageView());
 
             }, null);
         }

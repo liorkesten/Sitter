@@ -1,11 +1,14 @@
 package service.sitter.recyclerview.requests.babysitter.archived;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +19,6 @@ import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
 import service.sitter.models.UserCategory;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
-import service.sitter.utils.ImagesUtils;
 
 public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequestViewHolder> {
     // Database:
@@ -26,9 +28,11 @@ public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequest
     // Listener
     private final IRequestAdapterListener listener;
     private final UserCategory userCategory;
+    private Context context;
 
-    public ArchivedRequestAdapter(@NonNull IRequestAdapterListener listener, UserCategory userCategory) {
+    public ArchivedRequestAdapter(@NonNull IRequestAdapterListener listener, UserCategory userCategory, Context context) {
         this.userCategory = userCategory;
+        this.context = context;
         // Init db.
         db = DataBase.getInstance();
         // Setup listeners
@@ -53,18 +57,18 @@ public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequest
         holder.getTimeValueTextView().setText(request.getTime());
 
         // Fields that are extracted by the parent object (so db is needed).
-        if (userCategory == UserCategory.Babysitter){
+        if (userCategory == UserCategory.Babysitter) {
             db.getParent(request.getPublisherId(), parent -> {
                 // Assign fields from parent object.
                 holder.getNameValueTextView().setText(parent.getFullName());
-                ImagesUtils.updateImageView(parent.getImage(), holder.getProfileImageView());
+                Glide.with(this.context).load(parent.getImage()).into(holder.getProfileImageView());
 
             }, null);
-        }else{
+        } else {
             db.getBabysitter(request.getReceiverId(), babysitter -> {
                 // Assign fields from parent object.
                 holder.getNameValueTextView().setText(babysitter.getFullName());
-                ImagesUtils.updateImageView(babysitter.getImage(), holder.getProfileImageView());
+                Glide.with(this.context).load(babysitter.getImage()).into(holder.getProfileImageView());
 
             }, null);
         }

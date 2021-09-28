@@ -85,7 +85,7 @@ public class BabysitterActivity extends AppCompatActivity {
 
     @NonNull
     private IncomingRequestAdapter getIncomingRequestAdapter() {
-        IncomingRequestAdapter adapter = new IncomingRequestAdapter(/*TODO*/null, r -> db.acceptRequestByBabysitter(r, babysitter),/*TODO*/ null, UserCategory.Babysitter);
+        IncomingRequestAdapter adapter = new IncomingRequestAdapter(/*TODO*/null, r -> db.acceptRequestByBabysitter(r, babysitter),/*TODO*/ null, UserCategory.Babysitter, getApplication());
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataPendingRequestsOfBabysitter(babysitter.getUuid());
         if (requestsLiveData == null) {
@@ -105,7 +105,7 @@ public class BabysitterActivity extends AppCompatActivity {
 
     @NonNull
     private ApprovedRequestAdapter getApprovedRequestAdapter() {
-        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null, /*TODO*/ null, r -> db.cancelRequest(r, babysitter), UserCategory.Babysitter);
+        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null, /*TODO*/ null, r -> db.cancelRequest(r, babysitter), UserCategory.Babysitter, getApplication());
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataApprovedRequestsOfBabysitter(babysitter.getUuid());
         if (requestsLiveData == null) {
@@ -125,7 +125,7 @@ public class BabysitterActivity extends AppCompatActivity {
 
     @NonNull
     private ArchivedRequestAdapter getArchivedRequestAdapter() {
-        ArchivedRequestAdapter adapter = new ArchivedRequestAdapter(/*TODO*/null, UserCategory.Babysitter);
+        ArchivedRequestAdapter adapter = new ArchivedRequestAdapter(/*TODO*/null, UserCategory.Babysitter, getApplication());
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataArchivedRequestsOfBabysitter(babysitter.getUuid());
         if (requestsLiveData == null) {

@@ -17,6 +17,7 @@ import java.util.Map;
 import service.sitter.models.Babysitter;
 import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
+import service.sitter.ui.parent.publishRequest.IOnUploadingRequest;
 
 public class RequestsDataBase {
     private static final String TAG = RequestsDataBase.class.getSimpleName();
@@ -39,7 +40,7 @@ public class RequestsDataBase {
      * @param request - new request
      * @return false in case that the request is already exists in the db.
      */
-    public boolean addRequest(@NonNull Request request) {
+    public boolean addRequest(@NonNull Request request, IOnUploadingRequest listener) {
         String requestUuid = request.getUuid();
         if (Requests.containsKey(requestUuid)) {
             Log.e(TAG, String.format("request already exist : <%s>", requestUuid));
@@ -47,7 +48,9 @@ public class RequestsDataBase {
         }
 
         Requests.put(request.getUuid(), request);
-        firestore.collection(COLLECTION_FIRESTORE_NAME).document(requestUuid).set(request);
+        firestore.collection(COLLECTION_FIRESTORE_NAME).document(requestUuid).set(request)
+                .addOnSuccessListener(unused -> listener.onSuccess())
+                .addOnFailureListener(listener::onFailure);
 
         Log.d(TAG, String.format("request was added successfully: <%s>", requestUuid));
         return true;

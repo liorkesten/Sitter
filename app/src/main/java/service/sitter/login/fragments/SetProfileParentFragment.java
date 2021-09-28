@@ -3,7 +3,6 @@ package service.sitter.login.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,8 +24,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -224,15 +223,7 @@ public class SetProfileParentFragment extends Fragment {
         if (resultCode == -1) {
             if (requestCode == RESULT_CODE_IMAGE) {
                 lastChildUri = Uri.parse(data.getData().toString());
-                Bitmap bitmapImage = null;
-                try {
-                    bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), lastChildUri);
-                    imageView.setImageBitmap(bitmapImage);
-//                    db.uploadImage(lastChildUri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-
-                }
+                Picasso.get().load(lastChildUri).into(imageView);
             }
         }
     }

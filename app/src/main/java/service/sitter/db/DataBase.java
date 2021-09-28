@@ -25,7 +25,10 @@ import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
 import service.sitter.models.User;
 import service.sitter.models.UserCategory;
+import service.sitter.recommendations.IGetConnections;
+import service.sitter.recommendations.IGetParents;
 import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
+import service.sitter.ui.parent.publishRequest.IOnUploadingRequest;
 
 public class DataBase implements IDataBase {
     private static DataBase instance;
@@ -66,8 +69,8 @@ public class DataBase implements IDataBase {
         return instance;
     }
 
-    public boolean addRequest(@NonNull @NotNull Request request) {
-        return requestsDb.addRequest(request);
+    public boolean addRequest(@NonNull @NotNull Request request, IOnUploadingRequest listener) {
+        return requestsDb.addRequest(request, listener);
     }
 
     public boolean deleteRequest(String requestUuid) {
@@ -167,8 +170,6 @@ public class DataBase implements IDataBase {
     }
 
 
-
-
     public LiveData<List<Connection>> getLiveDataConnectionsOfParent(String parentId) {
         return connectionsDb.getLiveDataConnectionsOfParent(parentId);
     }
@@ -243,12 +244,38 @@ public class DataBase implements IDataBase {
             }
 
             @Override
-            public void connectionIsNotExist(User userA, User userB) {
+            public void connectionIsNotExist(String userA, String userB) {
                 Log.d(TAG, String.format("Connection is not exist, creating new connection between <%s> and <%s>.", userA, userB));
                 Connection connection = new Connection(userA, userB);
                 connectionsDb.addConnection(connection);
             }
         });
+    }
+
+    @Override
+    public LiveData<List<Recommendation>> getLiveDataRecommendationsOfParent(String parentUuid) {
+        return reccomendationsDb.getLiveDataRecommendationsOfParent(parentUuid);
+    }
+
+    @Override
+    public void addRecommendations(List<Recommendation> recommendations) {
+        reccomendationsDb.addRecommendations(recommendations);
+    }
+
+    @Override
+    public void getConnectionsOfParent(String userID, IGetConnections iGetConnections) {
+        connectionsDb.getConnectionsOfParent(userID, iGetConnections);
+    }
+
+    @Override
+    public void getConnectionsOfParents(List<Parent> parents, IGetConnections iGetConnections) {
+        connectionsDb.getConnectionsOfParents(parents, iGetConnections);
+
+    }
+
+    @Override
+    public void getParentsByPhoneNumbers(List<String> phoneNumbers, IGetParents iGetParents) {
+        usersDb.getParentsByPhoneNumbers(phoneNumbers, iGetParents);
     }
 
 }

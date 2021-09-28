@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "831028009831-v20qm1dl0ul1rkd3k79nth456u1g72q0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "service.sitter",
+            "certificate_hash": "49627d538695319d945c89534ead131e7cd1469f"
+          }
+        },
+        {
           "client_id": "831028009831-hqf0a3hi3ednhlhrncn1tktslhpuhp00.apps.googleusercontent.com",
           "client_type": 3
         }

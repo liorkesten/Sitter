@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -23,6 +22,7 @@ import service.sitter.models.Child;
 import service.sitter.models.Parent;
 import service.sitter.models.User;
 import service.sitter.models.UserCategory;
+import service.sitter.recommendations.IGetParents;
 import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
 
 public class UsersDataBase {
@@ -193,10 +193,12 @@ public class UsersDataBase {
     }
 
     public void getParents(List<String> parentsUUID, IApplyOnParents applier) {
-        firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME).whereIn("uuid", parentsUUID).addSnapshotListener((docs, err) -> {
-            List<Parent> parents = docs.toObjects(Parent.class);
-            applier.apply(parents);
-        });
+        firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME)
+                .whereIn("uuid", parentsUUID)
+                .addSnapshotListener((docs, err) -> {
+                    List<Parent> parents = docs.toObjects(Parent.class);
+                    applier.apply(parents);
+                });
     }
 
     public void getBabysitter(String userUID, IOnGettingBabysitterFromDb applierOnSuccess, OnFailureListener onFailureListener) {
@@ -210,5 +212,24 @@ public class UsersDataBase {
                 .addOnFailureListener(onFailureListener);
 
         documentSnapshotTask.addOnSuccessListener(snapshot -> applierOnSuccess.babysitterFound(snapshot.toObject(Babysitter.class)));
+    }
+
+    public void getParentsByPhoneNumbers(List<String> phoneNumbers, IGetParents iGetParents) {
+        if (phoneNumbers == null || phoneNumbers.size() == 0) {
+            Log.d(TAG, "phone numbers are empty" + phoneNumbers);
+            return;
+        }
+        Log.d(TAG, "getting parents of phone nubmers:" + phoneNumbers);
+        firestore.collection(COLLECTION_FIRESTORE_PARENT_NAME)
+                .whereIn("phoneNumber", phoneNumbers)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot == null) {
+                        //TODO
+                        Log.e(TAG, "snapshot is null");
+                    }
+                    List<Parent> parents = snapshot.toObjects(Parent.class);
+                    iGetParents.apply(parents);
+                });
     }
 }

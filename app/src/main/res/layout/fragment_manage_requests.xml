@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:fillViewport="true"
     android:paddingBottom="70dp"
-    tools:context=".ui.parent.home.HomeFragment">
+    tools:context=".ui.parent.publishRequest.PublishRequestFragment">
 
     <LinearLayout
         android:id="@+id/linear"
@@ -27,7 +27,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_upcoming_requests"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            android:text="@string/no_available_incoming_requests" />
 
         <TextView
             android:id="@+id/approved_requests_title"
@@ -40,7 +41,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_approved_requests"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            android:text="@string/no_available_approved_requests" />
 
         <TextView
             android:id="@+id/history_requests_title"
@@ -53,7 +55,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_history_requests"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            android:text="@string/no_available_archived_requests" />
 
 
     </LinearLayout>

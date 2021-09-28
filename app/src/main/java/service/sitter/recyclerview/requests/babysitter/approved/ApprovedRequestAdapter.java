@@ -1,11 +1,14 @@
 package service.sitter.recyclerview.requests.babysitter.approved;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +19,6 @@ import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
 import service.sitter.models.UserCategory;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
-import service.sitter.utils.ImagesUtils;
 
 public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequestViewHolder> {
     // Database:
@@ -29,8 +31,9 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
     private final IRequestAdapterListener cancelButtonListener;
 
     private final UserCategory userCategory;
+    private final Context context;
 
-    public ApprovedRequestAdapter(@NonNull IRequestAdapterListener listener, IRequestAdapterListener calenderButtonListener, IRequestAdapterListener cancelButtonListener, UserCategory userCategory) {
+    public ApprovedRequestAdapter(@NonNull IRequestAdapterListener listener, IRequestAdapterListener calenderButtonListener, IRequestAdapterListener cancelButtonListener, UserCategory userCategory, Context context) {
         // Init db.
         db = DataBase.getInstance();
         // Setup listeners
@@ -39,6 +42,7 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
         this.cancelButtonListener = cancelButtonListener;
 
         this.userCategory = userCategory;
+        this.context = context;
     }
 
     @NonNull
@@ -59,18 +63,18 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
         holder.getTimeValueTextView().setText(request.getTime());
 
         // Fields that are extracted by the parent object (so db is needed).
-        if (userCategory == UserCategory.Babysitter){
+        if (userCategory == UserCategory.Babysitter) {
             db.getParent(request.getPublisherId(), parent -> {
                 // Assign fields from parent object.
                 holder.getNameValueTextView().setText(parent.getFullName());
-                ImagesUtils.updateImageView(parent.getImage(), holder.getProfileImageView());
+                Glide.with(this.context).load(parent.getImage()).into(holder.getProfileImageView());
 
             }, null);
-        }else{
+        } else {
             db.getBabysitter(request.getReceiverId(), babysitter -> {
                 // Assign fields from parent object.
                 holder.getNameValueTextView().setText(babysitter.getFullName());
-                ImagesUtils.updateImageView(babysitter.getImage(), holder.getProfileImageView());
+                Glide.with(this.context).load(babysitter.getImage()).into(holder.getProfileImageView());
 
             }, null);
         }
