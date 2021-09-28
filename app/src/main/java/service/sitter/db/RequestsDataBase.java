@@ -5,8 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -18,7 +17,7 @@ import java.util.Map;
 import service.sitter.models.Babysitter;
 import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
-import service.sitter.ui.parent.home.IOnUploadingRequest;
+import service.sitter.ui.parent.publishRequest.IOnUploadingRequest;
 
 public class RequestsDataBase {
     private static final String TAG = RequestsDataBase.class.getSimpleName();

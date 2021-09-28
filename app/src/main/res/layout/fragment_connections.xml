@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:fillViewport="true"
     android:orientation="vertical"
-    tools:context=".ui.parent.home.HomeFragment">
+    tools:context=".ui.parent.publishRequest.PublishRequestFragment">
 
     <TextView
         android:id="@+id/my_connections"
@@ -17,11 +17,22 @@
         android:textColor="@color/black"
         android:textSize="24sp" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_my_connections"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="100dp">
+
+        <TextView
+            android:id="@+id/text_recycler_view_connections"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/no_available_connections" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_my_connections"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -62,10 +73,22 @@
         android:textColor="@color/black"
         android:textSize="24sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_recommendations"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="100dp">
+
+        <TextView
+            android:id="@+id/text_recycler_view_recommendations"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/no_available_recommendations" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_recommendations"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+    </RelativeLayout>
 
 
 </LinearLayout>

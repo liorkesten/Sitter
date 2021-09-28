@@ -28,7 +28,7 @@ import service.sitter.models.UserCategory;
 import service.sitter.recommendations.IGetConnections;
 import service.sitter.recommendations.IGetParents;
 import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
-import service.sitter.ui.parent.home.IOnUploadingRequest;
+import service.sitter.ui.parent.publishRequest.IOnUploadingRequest;
 
 public class DataBase implements IDataBase {
     private static DataBase instance;

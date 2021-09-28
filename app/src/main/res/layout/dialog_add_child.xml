@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Harry Potter"
+            android:text="daria"
             android:inputType="textPersonName" />
 
         <TextView
@@ -35,6 +36,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="DD/MM/YYYY"
+            android:text="10/10/2000"
             android:inputType="date" />
 
         <TextView

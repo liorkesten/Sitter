@@ -7,7 +7,7 @@
     android:background="@drawable/com_facebook_button_icon"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".ParentActivity">
 
     <TextView
         android:id="@+id/textView"

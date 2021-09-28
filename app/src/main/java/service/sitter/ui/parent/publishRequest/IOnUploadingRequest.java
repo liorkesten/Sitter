@@ -1,4 +1,4 @@
-package service.sitter.ui.parent.home;
+package service.sitter.ui.parent.publishRequest;
 
 public interface IOnUploadingRequest {
     public void onSuccess();

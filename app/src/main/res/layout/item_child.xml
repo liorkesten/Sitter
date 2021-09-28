@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginRight="4dp"
@@ -25,10 +24,12 @@
                 android:id="@+id/item_child_image_button"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_launcer"
-                android:background="@drawable/custom_img_btn"/>
+                android:alpha="0.25"
+                android:background="@drawable/custom_img_btn"
+                android:color="#66FF0000"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcer" />
 
         </androidx.cardview.widget.CardView>
 

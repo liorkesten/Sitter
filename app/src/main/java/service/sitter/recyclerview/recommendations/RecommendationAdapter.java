@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -16,14 +18,15 @@ import java.util.List;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.models.Recommendation;
-import service.sitter.utils.ImagesUtils;
 
 public class RecommendationAdapter extends RecyclerView.Adapter<service.sitter.recyclerview.recommendations.RecommendationViewHolder> {
     private final List<Recommendation> recommendations = new ArrayList<>();
     private final service.sitter.recyclerview.recommendations.IRecommendationAdapterListener listener;
+    private final Context context;
 
-    public RecommendationAdapter(@NonNull service.sitter.recyclerview.recommendations.IRecommendationAdapterListener listener) {
+    public RecommendationAdapter(@NonNull service.sitter.recyclerview.recommendations.IRecommendationAdapterListener listener, Context context) {
         this.listener = listener;
+        this.context = context;
     }
 
     public void setRecommendations(List<Recommendation> recommendations) {
@@ -47,7 +50,7 @@ public class RecommendationAdapter extends RecyclerView.Adapter<service.sitter.r
 
         DataBase.getInstance().getBabysitter(recommendation.getConnection().getSideBUId(), b -> {
             holder.getNameTextView().setText(b.getFullName());
-            ImagesUtils.updateImageView(b.getImage(), holder.getImageView());
+            Glide.with(this.context).load(b.getImage()).into(holder.getImageView());
         }, null);
 
         holder.getImageView().setOnClickListener(v -> {
