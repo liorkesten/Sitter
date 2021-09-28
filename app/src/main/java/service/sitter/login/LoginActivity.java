@@ -105,7 +105,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(getApplication(), options);
-
         signInButton.setOnClickListener(view -> signIn());
 
     }
