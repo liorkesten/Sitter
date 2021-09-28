@@ -19,6 +19,7 @@ import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
 import service.sitter.models.UserCategory;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
+import service.sitter.utils.ImagesUtils;
 
 public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequestViewHolder> {
     // Database:
@@ -61,14 +62,16 @@ public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequest
             db.getParent(request.getPublisherId(), parent -> {
                 // Assign fields from parent object.
                 holder.getNameValueTextView().setText(parent.getFullName());
-                Glide.with(this.context).load(parent.getImage()).into(holder.getProfileImageView());
+//                Glide.with(this.context).load(parent.getImage()).into(holder.getProfileImageView());
+                ImagesUtils.updateImageView(this.context, parent.getImage(), holder.getProfileImageView());
 
             }, null);
         } else {
             db.getBabysitter(request.getReceiverId(), babysitter -> {
                 // Assign fields from parent object.
                 holder.getNameValueTextView().setText(babysitter.getFullName());
-                Glide.with(this.context).load(babysitter.getImage()).into(holder.getProfileImageView());
+//                Glide.with(this.context).load(babysitter.getImage()).into(holder.getProfileImageView());
+                ImagesUtils.updateImageView(this.context, babysitter.getImage(), holder.getProfileImageView());
 
             }, null);
         }

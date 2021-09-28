@@ -18,6 +18,7 @@ import java.util.List;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.models.Recommendation;
+import service.sitter.utils.ImagesUtils;
 
 public class RecommendationAdapter extends RecyclerView.Adapter<service.sitter.recyclerview.recommendations.RecommendationViewHolder> {
     private final List<Recommendation> recommendations = new ArrayList<>();
@@ -50,7 +51,8 @@ public class RecommendationAdapter extends RecyclerView.Adapter<service.sitter.r
 
         DataBase.getInstance().getBabysitter(recommendation.getConnection().getSideBUId(), b -> {
             holder.getNameTextView().setText(b.getFullName());
-            Glide.with(this.context).load(b.getImage()).into(holder.getImageView());
+//            Glide.with(this.context).load(b.getImage()).into(holder.getImageView());
+            ImagesUtils.updateImageView(this.context, b.getImage(), holder.getImageView());
         }, null);
 
         holder.getImageView().setOnClickListener(v -> {

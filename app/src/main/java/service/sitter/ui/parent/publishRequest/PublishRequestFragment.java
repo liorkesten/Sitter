@@ -1,6 +1,7 @@
 package service.sitter.ui.parent.publishRequest;
 
 import static java.lang.System.exit;
+import static java.lang.Thread.sleep;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -58,7 +59,6 @@ public class PublishRequestFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         // Set UI Components
         binding = FragmentPublishRequestBinding.inflate(inflater, container, false);
         View root = binding.getRoot();

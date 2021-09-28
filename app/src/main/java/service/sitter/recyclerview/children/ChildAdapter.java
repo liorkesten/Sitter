@@ -20,6 +20,7 @@ import java.util.List;
 
 import service.sitter.R;
 import service.sitter.models.Child;
+import service.sitter.utils.ImagesUtils;
 
 public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
 
@@ -68,7 +69,8 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
         holder.getAgeTextView().setText(age);
         if (shouldFetchImages) {
             Log.d(TAG, "shouldFetchImages is true");
-            Glide.with(context).load(child.getImage()).into(holder.getImageView());
+//            Glide.with(context).load(child.getImage()).into(holder.getImageView());
+            ImagesUtils.updateImageView(this.context, child.getImage(), holder.getImageView());
         } else {
             Log.d(TAG, "shouldFetchImages is false");
             holder.getImageView().setImageURI(Uri.parse(child.getImage()));

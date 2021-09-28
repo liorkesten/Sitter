@@ -178,12 +178,12 @@ public class SetProfileActivity extends AppCompatActivity {
         setProfileParentFragment.getLiveDataChildren().
                 observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
         Parent parent = new Parent(firstName, lastName, email, phoneNumber, locationStr, profilePictureUriStr, children, payment);
-        SharedPreferencesUtils.saveParentToSP(sp, parent);
 
         db.addParent(parent, () -> {
             Toast toast = Toast.makeText(getApplication(), String.format("Congrats %s :) you added successfully as a parent. you can now start publish requests.", parent.getFirstName()), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
+            SharedPreferencesUtils.saveParentToSP(sp, parent);
             Intent intentMainActivity = new Intent(SetProfileActivity.this, ParentActivity.class);
             startActivity(intentMainActivity);
         });

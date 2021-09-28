@@ -20,7 +20,6 @@ public class DataBaseUtils {
     public static void uploadImage(Uri filePath, String imageID, IOnSuccessLoadingImage listener) {
         if (filePath != null) {
             Log.d(TAG, String.format("uploading filepath: <%s> and imageID: <%s>", filePath, imageID));
-            ImagesUtils.cachedUris.put(imageID, filePath);
             // Defining the child of storageReference
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageReference = storage.getReference();

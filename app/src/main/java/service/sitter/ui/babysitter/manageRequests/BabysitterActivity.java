@@ -21,6 +21,7 @@ import service.sitter.models.Babysitter;
 import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
 import service.sitter.models.UserCategory;
+import service.sitter.providers.CalendarProvider;
 import service.sitter.recyclerview.requests.babysitter.approved.ApprovedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.archived.ArchivedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.incoming.IncomingRequestAdapter;
@@ -105,7 +106,7 @@ public class BabysitterActivity extends AppCompatActivity {
 
     @NonNull
     private ApprovedRequestAdapter getApprovedRequestAdapter() {
-        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null, /*TODO*/ null, r -> db.cancelRequest(r, babysitter), UserCategory.Babysitter, getApplication());
+        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null, r -> CalendarProvider.AddCalendarEvent(this, r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.cancelRequest(r, babysitter), UserCategory.Babysitter, getApplication());
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataApprovedRequestsOfBabysitter(babysitter.getUuid());
         if (requestsLiveData == null) {
