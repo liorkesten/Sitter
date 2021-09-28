@@ -1,6 +1,7 @@
 package service.sitter.ui.parent.publishRequest;
 
 import static java.lang.System.exit;
+import static java.lang.Thread.sleep;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -61,7 +62,6 @@ public class PublishRequestFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         // Set UI Components
         binding = FragmentPublishRequestBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -77,7 +77,7 @@ public class PublishRequestFragment extends Fragment {
         db = DataBase.getInstance();
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
         myUser = SharedPreferencesUtils.getParentFromSP(sp);
-        if (myUser == null){
+        if (myUser == null) {
             Log.e(TAG, "User doesn't exist");
             exit(101);
         }
