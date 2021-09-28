@@ -1,24 +1,18 @@
 package service.sitter.login.fragments;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -42,7 +35,7 @@ import service.sitter.db.IDataBase;
 import service.sitter.models.Child;
 import service.sitter.recyclerview.children.ChildAdapter;
 import service.sitter.ui.fragments.PaymentFragment;
-import service.sitter.utils.DateUtils;
+//import service.sitter.utils.DateUtils;
 
 public class SetProfileParentFragment extends Fragment {
     private static final Uri DEFAULT_URI_CHILD_PICTURE = Uri.parse("android.resource://sitter/drawable/child_icon");
@@ -230,14 +223,6 @@ public class SetProfileParentFragment extends Fragment {
                 Picasso.get().load(lastChildUri).into(imageView);
             }
         }
-    }
-
-    private boolean isValidateChild(EditText editTextDate) {
-        if (!DateUtils.isValidDate(editTextDate.getText().toString(), "dd/MM/yyyy")){
-            editTextDate.setError("you must enter date of child in format dd/NN/yyyy");
-            return false;
-        }
-        return true;
     }
 
 }
