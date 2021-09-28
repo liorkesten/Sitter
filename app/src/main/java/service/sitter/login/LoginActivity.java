@@ -1,20 +1,21 @@
 package service.sitter.login;//package service.sitter.login;
 
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.util.Patterns;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -26,51 +27,40 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.shobhitpuri.custombuttons.GoogleSignInButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import service.sitter.ParentActivity;
 import service.sitter.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+    private final String TAG = LoginActivity.class.getSimpleName();
 
     private Button btnLogin, btnSignUp;
     private EditText email, password;
     private FirebaseAuth firebaseAuth;
-    FirebaseUser user;
-    FirebaseFirestore db;
-    static String LoggedIn_User_Email;
+    private FirebaseFirestore db;
     private static final int RC_SIGN_IN = 9001;
-    private final String TAG = LoginActivity.class.getSimpleName();
-    /*    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference mUserRef = mRootRef.child("users");*/
-    GoogleSignInClient mGoogleSignInClient;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
-    HashMap<String, Object> userDetails = new HashMap<>();
-    List<String> list = new ArrayList<>();
+    private GoogleSignInClient mGoogleSignInClient;
 
-    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-    StorageReference storageReference = firebaseStorage.getReference();
-    Intent intentSetProfile;
+    private List<String> list = new ArrayList<>();
+
+    private Intent intentSetProfile;
+    private Intent intentSignUp;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // check if user already logged in with the same phone
         firebaseAuth = FirebaseAuth.getInstance();
         intentSetProfile = new Intent(LoginActivity.this, SetProfileActivity.class);
+        // check if user already logged in with the same phone
+
         if (firebaseAuth.getCurrentUser() != null) {
             Log.d(TAG, String.format("User Already exists: <%s>", firebaseAuth.getCurrentUser().getDisplayName()));
             setExtras();
@@ -87,8 +77,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             db = FirebaseFirestore.getInstance();
 
 
-            btnSignUp.setOnClickListener(this);
-            btnLogin.setOnClickListener(this);
+            btnSignUp.setOnClickListener(l -> {
+                intentSignUp = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivityForResult(intentSignUp, 20/*TODO change code*/);
+            });
+            btnLogin.setOnClickListener(l -> signInAuth());
 
             GoogleSignInOptions options = new GoogleSignInOptions
                     .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -120,14 +113,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != RESULT_CANCELED) {
-            Log.d(TAG, "" + resultCode);
-            super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "requestCode" + requestCode);
+        Log.d(TAG, "resultCode" + resultCode);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 20) {
+            Log.d(TAG, "Entered to signup result code");
+            intentSignUp = data;
+            signupAuth();
+
+        } else if (resultCode != RESULT_CANCELED) {
 
             // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
             if (requestCode == RC_SIGN_IN) {
                 // The Task returned from this call is always completed, no need to attach
-                // a listener.
+                // a listener.android:noHistory
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                 handleSignInResult(task);
             }
@@ -214,7 +213,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.buttonSignUp) {
-            startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+//            startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
         } else {
             String getemail = email.getText().toString().trim();
             String getepassword = password.getText().toString().trim();
@@ -263,5 +262,68 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         return super.dispatchTouchEvent(ev);
     }
+
+    public void signupAuth() {
+        Log.d(TAG, "entered to signupAuth");
+        String firstName = intentSignUp.getStringExtra("firstName");
+        String lastName = intentSignUp.getStringExtra("lastName");
+        String email = intentSignUp.getStringExtra("email");
+        String password = intentSignUp.getStringExtra("password");
+        Log.d(TAG, String.format("firstName:<%s>,lastName:<%s>,email:<%s>,password:<%s>", firstName, lastName, email, password));
+
+
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "createUserWithEmail:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        String displayName = user.getDisplayName();
+                        String mail = user.getEmail();
+                        Log.d(TAG, "User extracted successfully via signup. Display name:" + displayName + ".Mail:" + mail);
+                        // After creating user, we should update the profile to set the display name - neeeded for SetProfile activity.
+                        firebaseAuth
+                                .getCurrentUser()
+                                .updateProfile(new UserProfileChangeRequest
+                                        .Builder()
+                                        .setDisplayName(firstName + " " + lastName)
+                                        .build())
+                                .addOnSuccessListener(v -> {
+                                    Log.d(TAG, "Updated user display name");
+                                    Toast toast = Toast.makeText(this, "User created successfully", Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
+                                    startActivity(intentSetProfile);
+                                });
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                        //TODO
+//                            updateUI(null);
+                    }
+                });
+    }
+
+    public void signInAuth() {
+        firebaseAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithEmail:success");
+
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        Log.d(TAG, "User extracted successfully via signup: " + user);
+                        startActivity(intentSetProfile);
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
 }

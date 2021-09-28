@@ -48,44 +48,45 @@ public class SignUpActivity extends AppCompatActivity {
             if (nameArr.length != 2) {
                 fullName.setError("You must enter first and last name to register.");
                 checkName = false;
-            }
-            else{
+            } else {
                 firstName = nameArr[0];
                 lastName = nameArr[1];
             }
-            if ((firstName.isEmpty() || lastName.isEmpty()) && checkName){
+            if ((firstName.isEmpty() || lastName.isEmpty()) && checkName) {
                 fullName.setError("You must enter a username to register.");
                 checkName = false;
             }
             mail = email.getText().toString();
-            if (mail.isEmpty()){
+            if (mail.isEmpty()) {
                 email.setError("You must enter a mail address to register.");
                 checkMail = false;
             }
-            if (!validate(mail) && checkMail){
+            if (!validate(mail) && checkMail) {
                 email.setError("Invalid mail address");
             }
             pass = password.getText().toString();
-            if(pass.isEmpty()){
+            if (pass.isEmpty()) {
                 password.setError("You must enter a password to register.");
                 checkPass = false;
             }
             rePass = retypePassword.getText().toString();
-            if(rePass.isEmpty()){
+            if (rePass.isEmpty()) {
                 retypePassword.setError("You must re-enter the password to register.");
                 checkPass = false;
             }
-            if(!rePass.equals(pass)){
+            if (!rePass.equals(pass)) {
                 retypePassword.setError("Passwords must match.");
                 checkPass = false;
             }
-            if (checkName && checkMail && checkPass){
-                Intent intentSetProfile = new Intent(SignUpActivity.this, SetProfileActivity.class);
-                intentSetProfile.putExtra("firstName", firstName);
-                intentSetProfile.putExtra("lastName", lastName);
-                intentSetProfile.putExtra("email", mail);
-                intentSetProfile.putExtra("password", pass);
-                startActivity(intentSetProfile);
+            if (checkName && checkMail && checkPass) {
+//                Intent intentSetProfile = new Intent(SignUpActivity.this, SetProfileActivity.class);
+                Intent loginIntent = new Intent();
+                loginIntent.putExtra("firstName", firstName);
+                loginIntent.putExtra("lastName", lastName);
+                loginIntent.putExtra("email", mail);
+                loginIntent.putExtra("password", pass);
+                setResult(20, loginIntent);
+//                startActivity(intentSetProfile);
                 finish();
             }
         });
