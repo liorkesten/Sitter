@@ -121,7 +121,7 @@ public class ManageRequestsFragment extends Fragment {
 
     @NonNull
     private ApprovedRequestAdapter getApprovedRequestAdapter() {
-        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null, /*TODO*/ r -> CalendarProvider.AddCalendarEvent(getActivity(), r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/, UserCategory.Parent, getActivity().getApplication());
+        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null,  r -> CalendarProvider.AddCalendarEvent(getActivity(), r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/, UserCategory.Parent, getActivity().getApplication());
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataApprovedRequestsOfParent(parent.getUuid());
         if (requestsLiveData == null) {

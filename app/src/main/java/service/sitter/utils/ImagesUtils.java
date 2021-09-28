@@ -1,9 +1,11 @@
 package service.sitter.utils;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -21,20 +23,20 @@ public class ImagesUtils {
      * @param imageUri
      * @param imageView
      */
-    public static void updateImageView(String imageUri, ImageView imageView) {
+    public static void updateImageView(Context context, String imageUri, ImageView imageView) {
         Log.d("ImageUtils", "cache:\n" + ImagesUtils.cachedUris.toString());
         Log.d("ImageUtils", "got imageUri: " + imageUri);
         if (!cachedUris.containsKey(imageUri)) {
             Log.d("ImageUtils", "imageUri is not in the cache");
             DataBaseUtils.loadImage(imageUri, (uri) -> {
-                cachedUris.put(imageUri, uri);
                 Log.d("ImageUtils", "Added imageUri to cache:" + uri);
-                Picasso.get().load(uri).into(imageView);
+                Glide.with(context).load(uri).into(imageView);
+                cachedUris.put(imageUri, uri);
                 Log.d("ImageUtils", "Set imageUri into imageView");
             });
         } else {
             Log.d("ImageUtils", "Image uri is in the cache: " + imageUri);
-            Picasso.get().load(cachedUris.get(imageUri)).into(imageView);
+            Glide.with(context).load(cachedUris.get(imageUri)).into(imageView);
         }
     }
 }
