@@ -18,10 +18,11 @@
 
         <ImageButton
             android:id="@+id/profile_picture_image_button"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginTop="24dp"
+            android:alpha="0.25"
             android:background="@drawable/custom_img_btn"
             android:backgroundTint="@color/white"
             android:contentDescription="Add Profile Picture"

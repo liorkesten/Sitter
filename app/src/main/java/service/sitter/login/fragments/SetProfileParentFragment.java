@@ -240,8 +240,8 @@ public class SetProfileParentFragment extends Fragment {
     private void areYouSureYouWantToDeleteChildDialog(Child child) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle("Delete child");
-        builder.setMessage("Are you sure you want to delete the child?");
+        builder.setTitle("Delete item");
+        builder.setMessage("Are you sure you want to delete this item?");
 
         builder.setPositiveButton("YES", (dialog, which) -> {
             children.remove(child);

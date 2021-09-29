@@ -28,6 +28,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import service.sitter.ParentActivity;
 import service.sitter.R;
@@ -61,6 +63,8 @@ public class SetProfileActivity extends AppCompatActivity {
     private SetProfileParentFragment setProfileParentFragment;
     private SetProfileBabysitterFragment setProfileBabysitterFragment;
     private String firstName = "", lastName = "", email = "", password = "";
+    public static final Pattern VALID_PHONE_NUMBER =
+            Pattern.compile("05\\d{8}");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,12 +155,16 @@ public class SetProfileActivity extends AppCompatActivity {
 //                : Uri.parse("android.resource://service.sitter/drawable/profile_picture_icon").toString();
         String phoneNumber = phoneNumberEditText.getText().toString();
         String locationStr = location != null ? location.getId() : "";
-
-
-        if (userType == UserCategory.Parent) {
-            addParent(profilePictureUriStr, phoneNumber, locationStr);
-        } else if (userType == UserCategory.Babysitter) {
-            addBabysitter(profilePictureUriStr, phoneNumber, locationStr);
+        Matcher matcher = VALID_PHONE_NUMBER.matcher(phoneNumber);
+        if (!matcher.matches()){
+            phoneNumberEditText.setError("Invalid phone number");
+        }
+        else{
+            if (userType == UserCategory.Parent) {
+                addParent(profilePictureUriStr, phoneNumber, locationStr);
+            } else if (userType == UserCategory.Babysitter) {
+                addBabysitter(profilePictureUriStr, phoneNumber, locationStr);
+            }
         }
     }
 
