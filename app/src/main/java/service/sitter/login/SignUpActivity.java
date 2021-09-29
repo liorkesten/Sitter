@@ -1,5 +1,7 @@
 package service.sitter.login;
 
+import static service.sitter.login.LoginActivity.MAIL_RESULT_CODE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -85,7 +87,7 @@ public class SignUpActivity extends AppCompatActivity {
                 loginIntent.putExtra("lastName", lastName);
                 loginIntent.putExtra("email", mail);
                 loginIntent.putExtra("password", pass);
-                setResult(20, loginIntent);
+                setResult(MAIL_RESULT_CODE, loginIntent);
 //                startActivity(intentSetProfile);
                 finish();
             }

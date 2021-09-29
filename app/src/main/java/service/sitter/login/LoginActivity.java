@@ -38,13 +38,17 @@ import java.util.List;
 import service.sitter.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    private final String TAG = LoginActivity.class.getSimpleName();
+    public static final int FACEBOOK_RESULT_CODE = 15;
+    public static final int GOOGLE_RESULT_CODE = 16;
+    public static final int MAIL_RESULT_CODE = 17;
 
-    private Button btnLogin, btnSignUp;
+    private final String TAG = LoginActivity.class.getSimpleName();
+    private Button signInButton, signUpButton;
     private EditText email, password;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
     private static final int RC_SIGN_IN = 9001;
+
 
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -69,30 +73,44 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // first time visiting or in case of in-completing signup
         else {
             setContentView(R.layout.activity_login);
-            GoogleSignInButton signInButton = (GoogleSignInButton) findViewById(R.id.sign_in_button);
-            btnSignUp = findViewById(R.id.buttonSignUp);
-            btnLogin = findViewById(R.id.buttonLogin);
+            signUpButton = findViewById(R.id.buttonSignUp);
+            this.signInButton = findViewById(R.id.buttonLogin);
             email = findViewById(R.id.editTextEmail);
             password = findViewById(R.id.editTextPassword);
             db = FirebaseFirestore.getInstance();
 
-
-            btnSignUp.setOnClickListener(l -> {
-                intentSignUp = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivityForResult(intentSignUp, 20/*TODO change code*/);
-            });
-            btnLogin.setOnClickListener(l -> signInAuth());
-
-            GoogleSignInOptions options = new GoogleSignInOptions
-                    .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .build();
-
-            mGoogleSignInClient = GoogleSignIn.getClient(getApplication(), options);
-            signInButton.setOnClickListener(view -> signIn());
+            // Set listeners on buttons:
+            // Signup button
+            setupSignUpButtonListener();
+            this.signInButton.setOnClickListener(l -> signInAuth());
+            setupSignInWithGoogleButton();
+            setUpSignInWithFacebookButton();
         }
 
+    }
+
+    private void setUpSignInWithFacebookButton() {
+        //TODO
+    }
+
+    private void setupSignInWithGoogleButton() {
+        GoogleSignInButton googleSignInButton = (GoogleSignInButton) findViewById(R.id.sign_in_google_button);
+        GoogleSignInOptions options = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(getApplication(), options);
+        googleSignInButton.setOnClickListener(view -> signInWithGoogle());
+
+    }
+
+    private void setupSignUpButtonListener() {
+        signUpButton.setOnClickListener(l -> {
+            intentSignUp = new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivityForResult(intentSignUp, MAIL_RESULT_CODE/*TODO change code*/);
+        });
     }
 
     private void setExtras() {
@@ -103,11 +121,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //            intentSetProfile.putExtra("password", firebaseAuth.getCurrentUser().);
     }
 
-    private void signIn() {
+    private void signInWithGoogle() {
         if (firebaseAuth.getCurrentUser() == null) {
 
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, RC_SIGN_IN);
+            startActivityForResult(signInIntent, GOOGLE_RESULT_CODE);
         }
     }
 
@@ -116,7 +134,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Log.d(TAG, "requestCode" + requestCode);
         Log.d(TAG, "resultCode" + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 20) {
+        if (resultCode == MAIL_RESULT_CODE) {
             Log.d(TAG, "Entered to signup result code");
             intentSignUp = data;
             signupAuth();
@@ -124,7 +142,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else if (resultCode != RESULT_CANCELED) {
 
             // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-            if (requestCode == RC_SIGN_IN) {
+            if (requestCode == GOOGLE_RESULT_CODE) {
                 // The Task returned from this call is always completed, no need to attach
                 // a listener.android:noHistory
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -188,21 +206,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     Toast.makeText(LoginActivity.this, "Error while saving data", Toast.LENGTH_SHORT).show();
                                 }
                             });
-
-
                         }
-
                     } else {
                         Toast.makeText(LoginActivity.this, "Something Went Wrong", Toast.LENGTH_LONG).show();
                     }
                 });
     }
-
-/*    private void writeNewUser(String userId,String email, String firstname,String lastname,String dob) {
-        User user = new User(firstname,lastname, email,dob);
-        mUserRef.child(userId).setValue(user);
-    }*/
-
 
     @Override
     protected void onStart() {
@@ -290,7 +299,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         .build())
                                 .addOnSuccessListener(v -> {
                                     Log.d(TAG, "Updated user display name");
-                                    Toast toast = Toast.makeText(this, "User created successfully", Toast.LENGTH_LONG);
+                                    Toast toast = Toast.makeText(this.getApplication(), "User created successfully", Toast.LENGTH_LONG);
                                     toast.setGravity(Gravity.CENTER, 0, 0);
                                     toast.show();
                                     startActivity(intentSetProfile);
@@ -324,6 +333,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 });
     }
-
-
 }
