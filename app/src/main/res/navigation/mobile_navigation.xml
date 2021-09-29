@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="service.sitter.ui.parent.manageRequests.ManageRequestsFragment"
-        android:label="@string/title_manage"
+        android:label="@string/title_manage_requests_parent"
         tools:layout="@layout/fragment_manage_requests" />
 
     <fragment

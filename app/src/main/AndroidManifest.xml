@@ -30,7 +30,7 @@
         <activity
             android:name=".ui.babysitter.manageRequests.BabysitterActivity"
             android:exported="true"
-            android:label="Babysitter - Manage Requests" />
+            android:label="@string/title_manage_requests_babysitter" />
 
         <activity
             android:name=".login.SignUpActivity"

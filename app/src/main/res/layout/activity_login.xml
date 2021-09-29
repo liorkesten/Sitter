@@ -4,50 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/com_facebook_button_icon"
     android:gravity="center_horizontal"
-    android:label="@string/title_login_activity"
     android:orientation="vertical"
     tools:context=".ParentActivity">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="131dp"
-        android:layout_marginTop="30dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
         android:gravity="bottom|center_horizontal|center_vertical"
+        android:paddingBottom="64dp"
         android:text="@string/app_name"
         android:textSize="36sp"
+        android:textColor="@color/primary"
         android:textStyle="bold" />
-
-    <com.shobhitpuri.custombuttons.GoogleSignInButton
-        android:id="@+id/sign_in_google_button"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        android:text="Sign in with Google"
-        app:isDarkTheme="false" />
-
-    <!--    <com.facebook.login.widget.LoginButton-->
-    <!--        android:id="@+id/sign_in_facebook_button"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content" />-->
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_weight="1"
-        android:gravity="bottom|center_horizontal"
-        android:text="OR"
-        android:textSize="24sp" />
 
     <LinearLayout
         android:id="@+id/loginContainer"
         android:layout_width="417dp"
-        android:layout_height="421dp"
+        android:layout_height="match_parent"
         android:gravity="clip_vertical"
         android:orientation="vertical"
         android:padding="30dp">
@@ -74,33 +50,99 @@
             android:inputType="textPassword"
             android:text="" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+
+        <Button
+            android:id="@+id/buttonLogin"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="12dp"
+            android:text="Sign in"
+            android:textAllCaps="false" />
 
-            <Button
-                android:id="@+id/buttonLogin"
+        <!--    <com.facebook.login.widget.LoginButton-->
+        <!--        android:id="@+id/sign_in_facebook_button"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content" />-->
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="64dp">
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_weight="0.5"
-                android:text="Login" />
+                android:background="@android:color/transparent"
+                android:text="-----------------------------"
+                android:textColor="#C1C1C1" />
 
-            <Button
-                android:id="@+id/buttonSignUp"
+            <TextView
+                android:id="@+id/but_book_now"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:text="Sign Up" />
+                android:background="@android:color/transparent"
+                android:text="OR"
+                android:textColor="#C1C1C1" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="-----------------------------"
+                android:textColor="#C1C1C1" />
         </LinearLayout>
 
+        <com.shobhitpuri.custombuttons.GoogleSignInButton
+            android:id="@+id/sign_in_google_button"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:text="Sign in with Google"
+            app:isDarkTheme="false" />
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="-----------------------------"
+                android:textColor="#C1C1C1" />
+
+            <TextView
+                android:id="@+id/but_book_now2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="Don't have account ?"
+                android:textColor="#C1C1C1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="-----------------------------"
+                android:textColor="#C1C1C1" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:text="Sign Up" />
     </LinearLayout>
 
 
