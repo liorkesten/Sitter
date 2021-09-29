@@ -52,6 +52,7 @@
 
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
+            android:backgroundTint="@color/white"
             android:src="@drawable/add_connection_img" />
 
         <EditText
