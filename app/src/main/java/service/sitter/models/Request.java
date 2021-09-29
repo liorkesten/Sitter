@@ -1,6 +1,5 @@
 package service.sitter.models;
 
-import com.google.android.libraries.places.api.model.Place;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -19,7 +18,7 @@ public class Request implements Serializable {
     private String startTime;
     private String endTime;
     // TODO Location
-    private Place location;
+    private String location;
     private List<Child> children;
     private int pricePerHour;
     private String description;
@@ -31,7 +30,7 @@ public class Request implements Serializable {
     }
 
     public Request(String publisherId, LocalDate date, String startTime, String endTime,
-                   Place location, List<Child> children, int pricePerHour, String description) {
+                   String location, List<Child> children, int pricePerHour, String description) {
         this.uuid = UUID.randomUUID().toString();
         this.publisherId = publisherId;
         this.date = (date != null) ? date.toString() : "";
@@ -85,7 +84,7 @@ public class Request implements Serializable {
         return endTime;
     }
 
-    public Place getLocation() {
+    public String getLocation() {
         return location;
     }
 
@@ -133,7 +132,7 @@ public class Request implements Serializable {
         this.endTime = endTime;
     }
 
-    public void setLocation(Place location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 

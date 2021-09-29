@@ -110,8 +110,9 @@ public class PublishRequestFragment extends Fragment {
                 return;
             }
             String description = descriptionEditText.getText().toString();
+            String locationID = location != null ? location.getId() : "";
             Request request = new Request(
-                    myUser.getUuid(), this.date, startTime, endTime, location,
+                    myUser.getUuid(), this.date, startTime, endTime, locationID,
                     children, payment, description
             );
 //            ProgressBar progressBar;
@@ -174,7 +175,7 @@ public class PublishRequestFragment extends Fragment {
         startTime = startTimeFragment.getLiveData().getValue();
         endTime = endTimeFragment.getLiveData().getValue();
         payment = paymentFragment.getLiveData().getValue();
-        location = locationFragment.getLiveData().getValue();
+        location = (locationFragment.getLiveData() != null) ? locationFragment.getLiveData().getValue() : null;
     }
 
 
