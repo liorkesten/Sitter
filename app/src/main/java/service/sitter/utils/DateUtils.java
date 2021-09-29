@@ -2,6 +2,7 @@ package service.sitter.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 public class DateUtils {
     public static boolean isValidDate(String inDate, String format) {
@@ -13,5 +14,9 @@ public class DateUtils {
             return false;
         }
         return true;
+    }
+
+    public static String getFormattedDate(LocalDate date) {
+        return date.getDayOfMonth() + "/" +  date.getMonth().getValue() +"/" + date.getYear();
     }
 }

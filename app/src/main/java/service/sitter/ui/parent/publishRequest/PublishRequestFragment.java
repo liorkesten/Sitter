@@ -85,7 +85,7 @@ public class PublishRequestFragment extends Fragment {
         TimeFragment startTimeFragment = new TimeFragment("18:00", "Start Time");
         TimeFragment endTimeFragment = new TimeFragment("20:00", "End Time");
         PaymentFragment paymentFragment = new PaymentFragment(myUser.getDefaultPricePerHour());
-        LocationFragment locationFragment = new LocationFragment();
+        LocationFragment locationFragment = new LocationFragment(myUser.getLocation());
         ChildAdapter childAdapter = new ChildAdapter(child -> {
             if (children.contains(child)) {
                 children.remove(child);

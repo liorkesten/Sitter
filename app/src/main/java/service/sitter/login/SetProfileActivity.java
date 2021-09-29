@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -149,7 +150,8 @@ public class SetProfileActivity extends AppCompatActivity {
                 : null;
 //                : Uri.parse("android.resource://service.sitter/drawable/profile_picture_icon").toString();
         String phoneNumber = phoneNumberEditText.getText().toString();
-        String locationStr = location != null ? location.toString() : "";
+        String locationStr = location != null ? location.getId() : "";
+
 
         if (userType == UserCategory.Parent) {
             addParent(profilePictureUriStr, phoneNumber, locationStr);
@@ -178,6 +180,12 @@ public class SetProfileActivity extends AppCompatActivity {
         setProfileParentFragment.getLiveDataChildren().
                 observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
         Parent parent = new Parent(firstName, lastName, email, phoneNumber, locationStr, profilePictureUriStr, children, payment);
+
+        // validating that added children
+        if (children.isEmpty()) {
+            Toast.makeText(this, "Parent must has Children to continue", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         db.addParent(parent, () -> {
             Toast toast = Toast.makeText(getApplication(), String.format("Congrats %s :) you added successfully as a parent. you can now start publish requests.", parent.getFirstName()), Toast.LENGTH_LONG);
