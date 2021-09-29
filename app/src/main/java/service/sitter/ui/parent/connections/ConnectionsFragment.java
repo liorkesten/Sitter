@@ -34,6 +34,7 @@ import service.sitter.recommendations.CallLogsRecommendationProvider;
 import service.sitter.recyclerview.connections.ConnectionAdapter;
 import service.sitter.recyclerview.recommendations.RecommendationAdapter;
 import service.sitter.utils.PrettyToastProvider;
+import service.sitter.utils.RecyclerViewUtils;
 import service.sitter.utils.SharedPreferencesUtils;
 
 public class ConnectionsFragment extends Fragment {
@@ -145,7 +146,7 @@ public class ConnectionsFragment extends Fragment {
                 connectionAdapter.setConnections(connections);
                 this.connections.clear();
                 this.connections.addAll(connections);
-                switchBetweenRecAndTextInConnectionsContainer(root);
+                RecyclerViewUtils.switchBetweenRecAndText(root, connections, R.id.recycler_view_my_connections, R.id.text_recycler_view_connections);
             }
         });
         recyclerViewConnection.setAdapter(connectionAdapter);
@@ -170,37 +171,13 @@ public class ConnectionsFragment extends Fragment {
                 Log.d(TAG, "Set new recommendations for recommendation adapter -  " + recommendations);
                 this.recommendations.clear();
                 this.recommendations.addAll(recommendations);
-                switchBetweenRecAndTextInRecommendationsContainer(root);
+                RecyclerViewUtils.switchBetweenRecAndText(root, recommendations, R.id.recycler_view_recommendations, R.id.text_recycler_view_recommendations);
                 adapter.setRecommendations(recommendations);
             }
         });
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-    }
-
-    private void switchBetweenRecAndTextInConnectionsContainer(View root) {
-        RecyclerView recyclerViewConnection = root.findViewById(R.id.recycler_view_my_connections);
-        TextView viewById = root.findViewById(R.id.text_recycler_view_connections);
-        if (connections.isEmpty()) {
-            viewById.setVisibility(View.VISIBLE);
-            recyclerViewConnection.setVisibility(View.GONE);
-        } else {
-            viewById.setVisibility(View.GONE);
-            recyclerViewConnection.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void switchBetweenRecAndTextInRecommendationsContainer(View root) {
-        RecyclerView recyclerViewRecommendations = root.findViewById(R.id.recycler_view_recommendations);
-        TextView viewById = root.findViewById(R.id.text_recycler_view_recommendations);
-        if (recommendations.isEmpty()) {
-            viewById.setVisibility(View.VISIBLE);
-            recyclerViewRecommendations.setVisibility(View.GONE);
-        } else {
-            viewById.setVisibility(View.GONE);
-            recyclerViewRecommendations.setVisibility(View.VISIBLE);
-        }
     }
 }
 
