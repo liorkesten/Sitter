@@ -102,6 +102,7 @@ public class SetProfileParentFragment extends Fragment {
         lastChildUri = DEFAULT_URI_CHILD_PICTURE;
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Add Child");
+
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_add_child, (ViewGroup) getView(), false);
         EditText editTextChildName = (EditText) viewInflated.findViewById(R.id.edit_text_child_name);
         EditText editTextChildBirthday = (EditText) viewInflated.findViewById(R.id.edit_text_child_birthday);

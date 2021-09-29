@@ -163,10 +163,10 @@ public class SetProfileActivity extends AppCompatActivity {
             phoneNumberEditText.setError("Invalid phone number");
             allGood = false;
         }
-        if (location == null){
-            Toast.makeText(this, "location must be provided", Toast.LENGTH_LONG).show();
-            allGood = false;
-        }
+//        if (location == null){
+//            Toast.makeText(this, "location must be provided", Toast.LENGTH_LONG).show();
+//            allGood = false;
+//        }
         if (allGood){
             if (userType == UserCategory.Parent) {
                 if (children.size() > 0)

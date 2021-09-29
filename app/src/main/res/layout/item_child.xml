@@ -24,12 +24,9 @@
                 android:id="@+id/item_child_image_button"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:adjustViewBounds="true"
-                android:alpha="0.25"
-                android:background="@drawable/custom_img_btn"
-                android:color="#66FF0000"
                 android:scaleType="centerCrop"
-                android:src="@drawable/profile_picture_icon" />
+                android:src="@drawable/profile_picture_icon"
+                android:background="@drawable/custom_img_btn"/>
 
         </androidx.cardview.widget.CardView>
 

@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.22291666666666668" />
+        <entry key="../../.gradle/caches/transforms-3/18eeff31949c522535cd58983c1bdd97/transformed/core-1.5.0/res/layout/custom_dialog.xml" value="0.1578125" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/activity_babysitter.xml" value="0.1" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/activity_login.xml" value="0.15677083333333333" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/activity_set_profile.xml" value="0.1" />
@@ -16,6 +17,7 @@
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_request.xml" value="0.1125" />
         <entry key="app/src/main/res/drawable/btn_custom.xml" value="0.1984375" />
         <entry key="app/src/main/res/drawable/checked_button.xml" value="0.1984375" />
+        <entry key="app/src/main/res/drawable/curve_shape.xml" value="0.17395833333333333" />
         <entry key="app/src/main/res/drawable/custom_img_btn.xml" value="0.1984375" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.26197916666666665" />
         <entry key="app/src/main/res/drawable/img.xml" value="0.2703125" />
@@ -24,7 +26,7 @@
         <entry key="app/src/main/res/drawable/radio_flat_selector.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/radio_flat_text_selector.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/drawable/round_button.xml" value="0.21666666666666667" />
-        <entry key="app/src/main/res/layout-v28/fragment_payment.xml" value="0.24583333333333332" />
+        <entry key="app/src/main/res/layout-v28/fragment_payment.xml" value="0.4925925925925926" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.45" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_set_profile.xml" value="0.28007889546351084" />

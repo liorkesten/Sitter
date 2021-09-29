@@ -45,14 +45,14 @@ public class PaymentFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_payment, container, false);
         Log.d("PaymentFragment onViewCreated", "created");
         TextView titleTextView = view.findViewById(R.id.payment_title);
-        titleTextView.setText(getString(R.string.payment_title) + defaultPayment);
+        titleTextView.setText(getString(R.string.payment_title) + " " + defaultPayment+ "$");
 
         paymentSlider = (com.google.android.material.slider.Slider) view.findViewById(R.id.paymentSlider);
         paymentSlider.setValue(defaultPayment);
         paymentSlider.addOnChangeListener((slider, value, fromUser) -> {
             Log.d(TAG, "payment changed to: " + value);
             paymentLiveData.setValue((int) value);
-            titleTextView.setText(getString(R.string.payment_title) + (int) value);
+            titleTextView.setText(getString(R.string.payment_title) +" " + (int) value+"$");
 
         });
 
