@@ -22,11 +22,11 @@
 
             <ImageButton
                 android:id="@+id/item_child_image_button"
+                android:background="@drawable/custom_img_btn"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/profile_picture_icon"
-                android:background="@drawable/custom_img_btn"/>
+                android:src="@drawable/profile_picture_icon" />
 
         </androidx.cardview.widget.CardView>
 
