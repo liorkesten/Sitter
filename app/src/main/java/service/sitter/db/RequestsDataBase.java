@@ -105,6 +105,7 @@ public class RequestsDataBase {
                     } else {
                         List<Request> requests = new ArrayList<>();
                         List<DocumentSnapshot> documentSnapshots = value.getDocuments();
+                        Log.d(TAG, documentSnapshots.toString());
                         documentSnapshots.forEach(doc -> requests.add(doc.toObject(Request.class)));
                         liveDataRequests.setValue(requests);
                         Log.d(TAG, "All requests extracted successfully");

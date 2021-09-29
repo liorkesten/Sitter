@@ -1,6 +1,5 @@
 package service.sitter.models;
 
-import com.google.android.libraries.places.api.model.Place;
 
 import java.io.Serializable;
 import java.time.LocalDate;
