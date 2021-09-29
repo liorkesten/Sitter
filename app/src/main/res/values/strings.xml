@@ -5,7 +5,7 @@
     <string name="title_login_activity">Login</string>
     <string name="title_sign_up_activity">Sign Up</string>
     <string name="title_manage_requests_babysitter">Babysitter - Manage Requests</string>
-    <string name="title_manage_requests_parent">Parent - Manage Requests</string>
+    <string name="title_manage_requests_parent">Manage Requests</string>
     <string name="title_connections">Connections</string>
     <string name="comment_hint">Add a comment… (Optional)</string>
     <string name="payment_title">Set your payment:  </string>
