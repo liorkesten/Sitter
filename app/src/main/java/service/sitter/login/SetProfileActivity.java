@@ -43,6 +43,7 @@ import service.sitter.models.Parent;
 import service.sitter.models.UserCategory;
 import service.sitter.ui.babysitter.manageRequests.BabysitterActivity;
 import service.sitter.ui.fragments.LocationFragment;
+import service.sitter.utils.PrettyToastProvider;
 import service.sitter.utils.SharedPreferencesUtils;
 
 public class SetProfileActivity extends AppCompatActivity {
@@ -56,6 +57,7 @@ public class SetProfileActivity extends AppCompatActivity {
     EditText phoneNumberEditText;
     TextView usernameTextView;
     Uri profilePictureUri;
+    private PrettyToastProvider prettyToastProvider;
     private int payment;
     private List<Child> children;
     private static final int RESULT_CODE_IMAGE = 100;
@@ -149,6 +151,7 @@ public class SetProfileActivity extends AppCompatActivity {
     }
 
     private void addUser() {
+        boolean allGood = true;
         this.payment = setProfileParentFragment.getPayment();
         String profilePictureUriStr = (profilePictureUri != null) ? profilePictureUri.toString()
                 : null;
@@ -158,10 +161,18 @@ public class SetProfileActivity extends AppCompatActivity {
         Matcher matcher = VALID_PHONE_NUMBER.matcher(phoneNumber);
         if (!matcher.matches()){
             phoneNumberEditText.setError("Invalid phone number");
+            allGood = false;
         }
-        else{
+        if (location == null){
+            Toast.makeText(this, "location must be provided", Toast.LENGTH_LONG).show();
+            allGood = false;
+        }
+        if (allGood){
             if (userType == UserCategory.Parent) {
-                addParent(profilePictureUriStr, phoneNumber, locationStr);
+                if (children.size() > 0)
+                    addParent(profilePictureUriStr, phoneNumber, locationStr);
+                else
+                    Toast.makeText(this, "please add your children", Toast.LENGTH_LONG).show();
             } else if (userType == UserCategory.Babysitter) {
                 addBabysitter(profilePictureUriStr, phoneNumber, locationStr);
             }
