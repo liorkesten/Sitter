@@ -169,6 +169,7 @@ public class ConnectionsFragment extends Fragment {
                 Log.d(TAG, "Set new recommendations for recommendation adapter -  " + recommendations);
                 this.recommendations.clear();
                 this.recommendations.addAll(recommendations);
+                switchBetweenRecAndTextInRecommendationsContainer(root);
                 adapter.setRecommendations(recommendations);
             }
         });
