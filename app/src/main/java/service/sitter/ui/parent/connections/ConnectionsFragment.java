@@ -1,6 +1,7 @@
 package service.sitter.ui.parent.connections;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +54,7 @@ public class ConnectionsFragment extends Fragment {
     EditText editTextAddConnection;
     ImageButton add_connection_button;
     private PrettyToastProvider prettyToastProvider;
+    private LiveData<List<Connection>> connectionsLiveData;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -133,8 +135,8 @@ public class ConnectionsFragment extends Fragment {
     private void setConnectionRecyclerView(View root) {
         RecyclerView recyclerViewConnection = root.findViewById(R.id.recycler_view_my_connections);
         TextView viewById = root.findViewById(R.id.text_recycler_view_connections);
-        ConnectionAdapter connectionAdapter = new ConnectionAdapter(connection -> { /*TODO Implement this listener*/}, getActivity().getApplication());
-        LiveData<List<Connection>> connectionsLiveData = db.getLiveDataConnectionsOfParent(myUser.getUuid());
+        ConnectionAdapter connectionAdapter = new ConnectionAdapter(this::areYouSureYouWantToDeleteConnectionDialog, getActivity().getApplication());
+        connectionsLiveData = db.getLiveDataConnectionsOfParent(myUser.getUuid());
         if (connectionsLiveData == null) {
             //TODO
         }
@@ -179,5 +181,27 @@ public class ConnectionsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
     }
+
+
+    private void areYouSureYouWantToDeleteConnectionDialog(Connection connection) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle("Delete connection");
+        builder.setMessage("Are you sure you want to delete this connection?");
+
+        builder.setPositiveButton("YES", (dialog, which) -> {
+            db.deleteConnection(connection.getUuid());
+            dialog.dismiss();
+        });
+
+        builder.setNegativeButton("NO", (dialog, which) -> {
+            // Do nothing
+            dialog.dismiss();
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 }
 
