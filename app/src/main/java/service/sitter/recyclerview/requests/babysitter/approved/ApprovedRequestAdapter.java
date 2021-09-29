@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +82,9 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
 
         // Set listeners:
         // Adapter passes the rootView that was clicked. The activity should initialize the adapter with specific listener
-        holder.getRootView().setOnClickListener(v -> listener.onButtonClicked(request));
+        if (listener != null) {
+            holder.getRootView().setOnClickListener(v -> listener.onButtonClicked(request));
+        }
         holder.getCalenderButton().setOnClickListener(v -> calenderButtonListener.onButtonClicked(request));
         holder.getCancelButton().setOnClickListener(v -> cancelButtonListener.onButtonClicked(request));
     }

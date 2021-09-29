@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/com_facebook_button_icon"
     android:gravity="center_horizontal"
+    android:label="@string/title_login_activity"
     android:orientation="vertical"
     tools:context=".ParentActivity">
 
@@ -29,7 +30,7 @@
         android:text="Sign in with Google"
         app:isDarkTheme="false" />
 
-<!--    <com.facebook.login.widget.LoginButton-->
+    <!--    <com.facebook.login.widget.LoginButton-->
     <!--        android:id="@+id/sign_in_facebook_button"-->
     <!--        android:layout_width="wrap_content"-->
     <!--        android:layout_height="wrap_content" />-->
