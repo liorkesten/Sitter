@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.Calendar;
 
 import service.sitter.R;
+import service.sitter.utils.DateUtils;
 
 public class DateFragment extends Fragment {
     private static final String TAG = DateFragment.class.getSimpleName();
@@ -37,14 +38,14 @@ public class DateFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_date, container, false);
 
         Button buttonDate = (Button) view.findViewById(R.id.button_date_dialog);
-        buttonDate.setText(defaultDate.toString());
+        buttonDate.setText(DateUtils.getFormattedDate(defaultDate));
         buttonDate.setOnClickListener(v -> {
             Calendar cal = Calendar.getInstance();
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
                     (view1, year, monthOfYear, dayOfMonth) -> {
-                        LocalDate newDate = LocalDate.of(year, monthOfYear, dayOfMonth);
-                        buttonDate.setText(newDate.toString());
+                        LocalDate newDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
+                        buttonDate.setText(DateUtils.getFormattedDate(newDate));
                         LocalDate oldDate = currentDateLiveData.getValue();
                         currentDateLiveData.setValue(newDate);
                         Log.d(TAG, String.format(("Date changed from <%s> to <%s>"), oldDate, newDate));

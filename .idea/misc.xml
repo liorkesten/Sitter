@@ -25,8 +25,8 @@
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_connection.xml" value="0.1" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_recommendation.xml" value="0.1" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/item_request.xml" value="0.1125" />
-        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.14114583333333333" />
         <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/layout/pretty_toast.xml" value="0.1" />
+        <entry key="..\:/repos/Studies/post-pc/Sitter/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.14114583333333333" />
         <entry key="app/src/main/res/drawable/btn_custom.xml" value="0.1984375" />
         <entry key="app/src/main/res/drawable/checked_button.xml" value="0.1984375" />
         <entry key="app/src/main/res/drawable/custom_img_btn.xml" value="0.1984375" />
@@ -49,7 +49,7 @@
         <entry key="app/src/main/res/layout/fragment_date.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.12360688956433637" />
         <entry key="app/src/main/res/layout/fragment_location.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_manage_requests.xml" value="0.2140625" />
+        <entry key="app/src/main/res/layout/fragment_manage_requests.xml" value="0.12554112554112554" />
         <entry key="app/src/main/res/layout/fragment_publish_request.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_set_profile_babysitter.xml" value="0.16049382716049382" />
         <entry key="app/src/main/res/layout/fragment_set_profile_babysitter_bottom_frame.xml" value="0.24166666666666667" />

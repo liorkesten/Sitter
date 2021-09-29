@@ -22,6 +22,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="@string/upcoming_requests_title"
+            android:textColor="@color/black"
+            android:textSize="24sp"
             tools:background="#009900" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -36,6 +38,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="@string/approved_requests_title"
+            android:textColor="@color/black"
+            android:textSize="24sp"
             tools:background="#009900" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -50,6 +54,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="@string/history_requests_title"
+            android:textColor="@color/black"
+            android:textSize="24sp"
             tools:background="#009900" />
 
         <androidx.recyclerview.widget.RecyclerView

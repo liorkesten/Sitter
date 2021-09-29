@@ -181,6 +181,12 @@ public class SetProfileActivity extends AppCompatActivity {
                 observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
         Parent parent = new Parent(firstName, lastName, email, phoneNumber, locationStr, profilePictureUriStr, children, payment);
 
+        // validating that added children
+        if (children.isEmpty()) {
+            Toast.makeText(this, "Parent must has Children to continue", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         db.addParent(parent, () -> {
             Toast toast = Toast.makeText(getApplication(), String.format("Congrats %s :) you added successfully as a parent. you can now start publish requests.", parent.getFirstName()), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
