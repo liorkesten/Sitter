@@ -17,6 +17,7 @@ import service.sitter.db.IDataBase;
 import service.sitter.models.Request;
 import service.sitter.models.UserCategory;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
+import service.sitter.utils.DateUtils;
 import service.sitter.utils.ImagesUtils;
 
 public class IncomingRequestAdapter extends RecyclerView.Adapter<IncomingRequestViewHolder> {
@@ -55,7 +56,7 @@ public class IncomingRequestAdapter extends RecyclerView.Adapter<IncomingRequest
         // Load
         Request request = requests.get(position);
         // Update values of view holder:
-        holder.getDateValueTextView().setText(request.getDate());
+        holder.getDateValueTextView().setText(DateUtils.getFormattedDateFromString(request.getDate()));
         holder.getDescriptionValueTextView().setText(request.getDescription());
         holder.getTimeValueTextView().setText(request.getTime());
 

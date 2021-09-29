@@ -28,6 +28,7 @@ import service.sitter.R;
 import service.sitter.databinding.FragmentConnectionsBinding;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
+import service.sitter.models.Babysitter;
 import service.sitter.models.Connection;
 import service.sitter.models.Parent;
 import service.sitter.models.Recommendation;
@@ -127,7 +128,17 @@ public class ConnectionsFragment extends Fragment {
             }
             Log.d(TAG, "add_connection_button was clicked");
             prettyToastProvider.showToast("looking for babysitter...", this.getContext());
-            db.getBabysitterByPhoneNumber(phoneNumber, b -> db.addConnection(myUser, b));
+            db.getBabysitterByPhoneNumber(phoneNumber, new IOnGettingBabysitterFromDb() {
+                @Override
+                public void babysitterFound(Babysitter babysitter) {
+                    db.addConnection(myUser, babysitter);
+                }
+
+                @Override
+                public void onFailure(String phoneNumber) {
+                    prettyToastProvider.showToast(String.format("Could not find any babysitter with phone number %s", phoneNumber), getActivity().getApplication());
+                }
+            });
         });
     }
 

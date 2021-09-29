@@ -14,9 +14,12 @@ import java.util.List;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
+import service.sitter.models.Babysitter;
 import service.sitter.models.Request;
 import service.sitter.models.UserCategory;
 import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
+import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
+import service.sitter.utils.DateUtils;
 import service.sitter.utils.ImagesUtils;
 
 public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequestViewHolder> {
@@ -51,7 +54,7 @@ public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequest
         // Load
         Request request = requests.get(position);
         // Update values of view holder:
-        holder.getDateValueTextView().setText(request.getDate());
+        holder.getDateValueTextView().setText(DateUtils.getFormattedDateFromString(request.getDate()));
         holder.getDescriptionValueTextView().setText(request.getDescription());
         holder.getTimeValueTextView().setText(request.getTime());
 
@@ -65,11 +68,18 @@ public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequest
 
             }, null);
         } else {
-            db.getBabysitter(request.getReceiverId(), babysitter -> {
-                // Assign fields from parent object.
-                holder.getNameValueTextView().setText(babysitter.getFullName());
+            db.getBabysitter(request.getReceiverId(), new IOnGettingBabysitterFromDb() {
+                @Override
+                public void babysitterFound(Babysitter babysitter) {
+                    // Assign fields from parent object.
+                    holder.getNameValueTextView().setText(babysitter.getFullName());
 //                Glide.with(this.context).load(babysitter.getImage()).into(holder.getProfileImageView());
-                ImagesUtils.updateImageView(this.context, babysitter.getImage(), holder.getProfileImageView());
+                    ImagesUtils.updateImageView(context, babysitter.getImage(), holder.getProfileImageView());
+                }
+
+                @Override
+                public void onFailure(String phoneNumber) {
+                }
 
             }, null);
         }
