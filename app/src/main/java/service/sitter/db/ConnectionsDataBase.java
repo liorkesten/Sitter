@@ -69,12 +69,12 @@ public class ConnectionsDataBase {
      * @return false if the Connection doe's not exist in the DB.
      */
     public boolean deleteConnection(String connectionUuid) {
-        if (!Connections.containsKey(connectionUuid)) {
-            Log.e(TAG, String.format("Connection that should be deleted is not exist : <%s>", connectionUuid));
-            return false;
-        }
+//        if (!Connections.containsKey(connectionUuid)) {
+//            Log.e(TAG, String.format("Connection that should be deleted is not exist : <%s>", connectionUuid));
+//            return false;
+//        }
 
-        Connections.remove(connectionUuid);
+//        Connections.remove(connectionUuid);
         firestore.collection(COLLECTION_FIRESTORE_NAME).document(connectionUuid).delete();
 
         Log.d(TAG, String.format("Connection was deleted successfully: <%s>", connectionUuid));

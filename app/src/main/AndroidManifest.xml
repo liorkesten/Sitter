@@ -18,32 +18,33 @@
         android:icon="@drawable/ic_sitter"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_sitter"
-        android:supportsRtl="true"
         android:screenOrientation="locked"
+        android:supportsRtl="true"
         android:theme="@style/Theme.Sitter">
 
 
         <activity
             android:name=".login.SetProfileActivity"
-            android:label="@string/app_name" />
+            android:label="@string/title_set_profile" />
 
         <activity
             android:name=".ui.babysitter.manageRequests.BabysitterActivity"
             android:exported="true"
-            android:label="@string/app_name" />
+            android:label="Babysitter - Manage Requests" />
 
         <activity
             android:name=".login.SignUpActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:label="@string/title_sign_up_activity" />
 
         <activity
             android:name=".ParentActivity"
-            android:screenOrientation="locked"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="locked" />
         <activity
             android:name=".login.LoginActivity"
-            android:screenOrientation="locked"
-            android:label="@string/app_name">
+            android:label="@string/title_login_activity"
+            android:screenOrientation="locked">
             <!--            android:theme="@style/splashScreenTheme">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

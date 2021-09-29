@@ -80,6 +80,10 @@ public class SignUpActivity extends AppCompatActivity {
                 retypePassword.setError("Passwords must match.");
                 checkPass = false;
             }
+            if (pass.length() < 6) {
+                retypePassword.setError("Password should be at least 6 characters.");
+                checkPass = false;
+            }
             if (checkName && checkMail && checkPass) {
 //                Intent intentSetProfile = new Intent(SignUpActivity.this, SetProfileActivity.class);
                 Intent loginIntent = new Intent();

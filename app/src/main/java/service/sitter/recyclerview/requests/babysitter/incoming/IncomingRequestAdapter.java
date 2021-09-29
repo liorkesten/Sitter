@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +74,9 @@ public class IncomingRequestAdapter extends RecyclerView.Adapter<IncomingRequest
 
         // Set listeners:
         // Adapter passes the rootView that was clicked. The activity should initialize the adapter with specific listener
-        holder.getRootView().setOnClickListener(v -> listener.onButtonClicked(request));
+        if (listener != null) {
+            holder.getRootView().setOnClickListener(v -> listener.onButtonClicked(request));
+        }
         // In case that the acceptButtonListener is null, the button should be gone.
         if (acceptButtonListener == null) {
             holder.getAcceptButton().setVisibility(View.GONE);

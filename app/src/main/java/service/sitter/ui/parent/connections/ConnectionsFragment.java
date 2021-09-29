@@ -1,6 +1,7 @@
 package service.sitter.ui.parent.connections;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,7 @@ import service.sitter.recommendations.CallLogsRecommendationProvider;
 import service.sitter.recyclerview.connections.ConnectionAdapter;
 import service.sitter.recyclerview.recommendations.RecommendationAdapter;
 import service.sitter.utils.PrettyToastProvider;
+import service.sitter.utils.RecyclerViewUtils;
 import service.sitter.utils.SharedPreferencesUtils;
 
 public class ConnectionsFragment extends Fragment {
@@ -53,6 +55,7 @@ public class ConnectionsFragment extends Fragment {
     EditText editTextAddConnection;
     ImageButton add_connection_button;
     private PrettyToastProvider prettyToastProvider;
+    private LiveData<List<Connection>> connectionsLiveData;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -124,6 +127,7 @@ public class ConnectionsFragment extends Fragment {
                 return;
             }
             Log.d(TAG, "add_connection_button was clicked");
+            prettyToastProvider.showToast("looking for babysitter...", this.getContext());
             db.getBabysitterByPhoneNumber(phoneNumber, new IOnGettingBabysitterFromDb() {
                 @Override
                 public void babysitterFound(Babysitter babysitter) {
@@ -142,8 +146,8 @@ public class ConnectionsFragment extends Fragment {
     private void setConnectionRecyclerView(View root) {
         RecyclerView recyclerViewConnection = root.findViewById(R.id.recycler_view_my_connections);
         TextView viewById = root.findViewById(R.id.text_recycler_view_connections);
-        ConnectionAdapter connectionAdapter = new ConnectionAdapter(connection -> { /*TODO Implement this listener*/}, getActivity().getApplication());
-        LiveData<List<Connection>> connectionsLiveData = db.getLiveDataConnectionsOfParent(myUser.getUuid());
+        ConnectionAdapter connectionAdapter = new ConnectionAdapter(this::areYouSureYouWantToDeleteConnectionDialog, getActivity().getApplication());
+        connectionsLiveData = db.getLiveDataConnectionsOfParent(myUser.getUuid());
         if (connectionsLiveData == null) {
             //TODO
         }
@@ -155,7 +159,7 @@ public class ConnectionsFragment extends Fragment {
                 connectionAdapter.setConnections(connections);
                 this.connections.clear();
                 this.connections.addAll(connections);
-                switchBetweenRecAndTextInConnectionsContainer(root);
+                RecyclerViewUtils.switchBetweenRecAndText(root, connections, R.id.recycler_view_my_connections, R.id.text_recycler_view_connections);
             }
         });
         recyclerViewConnection.setAdapter(connectionAdapter);
@@ -180,6 +184,7 @@ public class ConnectionsFragment extends Fragment {
                 Log.d(TAG, "Set new recommendations for recommendation adapter -  " + recommendations);
                 this.recommendations.clear();
                 this.recommendations.addAll(recommendations);
+                RecyclerViewUtils.switchBetweenRecAndText(root, recommendations, R.id.recycler_view_recommendations, R.id.text_recycler_view_recommendations);
                 adapter.setRecommendations(recommendations);
             }
         });
@@ -188,28 +193,26 @@ public class ConnectionsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
     }
 
-    private void switchBetweenRecAndTextInConnectionsContainer(View root) {
-        RecyclerView recyclerViewConnection = root.findViewById(R.id.recycler_view_my_connections);
-        TextView viewById = root.findViewById(R.id.text_recycler_view_connections);
-        if (connections.isEmpty()) {
-            viewById.setVisibility(View.VISIBLE);
-            recyclerViewConnection.setVisibility(View.GONE);
-        } else {
-            viewById.setVisibility(View.GONE);
-            recyclerViewConnection.setVisibility(View.VISIBLE);
-        }
+
+    private void areYouSureYouWantToDeleteConnectionDialog(Connection connection) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle("Delete connection");
+        builder.setMessage("Are you sure you want to delete this connection?");
+
+        builder.setPositiveButton("YES", (dialog, which) -> {
+            db.deleteConnection(connection.getUuid());
+            dialog.dismiss();
+        });
+
+        builder.setNegativeButton("NO", (dialog, which) -> {
+            // Do nothing
+            dialog.dismiss();
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
-    private void switchBetweenRecAndTextInRecommendationsContainer(View root) {
-        RecyclerView recyclerViewRecommendations = root.findViewById(R.id.recycler_view_recommendations);
-        TextView viewById = root.findViewById(R.id.text_recycler_view_recommendations);
-        if (recommendations.isEmpty()) {
-            viewById.setVisibility(View.VISIBLE);
-            recyclerViewRecommendations.setVisibility(View.GONE);
-        } else {
-            viewById.setVisibility(View.GONE);
-            recyclerViewRecommendations.setVisibility(View.VISIBLE);
-        }
-    }
 }
 

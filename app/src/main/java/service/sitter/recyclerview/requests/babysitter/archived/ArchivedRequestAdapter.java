@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +86,9 @@ public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequest
 
         // Set listeners:
         // Adapter passes the rootView that was clicked. The activity should initialize the adapter with specific listener
+        if (listener != null){
         holder.getRootView().setOnClickListener(v -> listener.onButtonClicked(request));
+        }
     }
 
     @Override

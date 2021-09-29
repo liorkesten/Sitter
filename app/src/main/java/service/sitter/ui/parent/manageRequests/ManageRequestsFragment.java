@@ -30,6 +30,7 @@ import service.sitter.providers.CalendarProvider;
 import service.sitter.recyclerview.requests.babysitter.approved.ApprovedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.archived.ArchivedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.incoming.IncomingRequestAdapter;
+import service.sitter.utils.RecyclerViewUtils;
 import service.sitter.utils.SharedPreferencesUtils;
 
 public class ManageRequestsFragment extends Fragment {
@@ -42,6 +43,7 @@ public class ManageRequestsFragment extends Fragment {
 
     private ManageRequestsViewModel dashboardViewModel;
     private FragmentManageRequestsBinding binding;
+    private View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class ManageRequestsFragment extends Fragment {
                 new ViewModelProvider(this).get(ManageRequestsViewModel.class);
 
         binding = FragmentManageRequestsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        root = binding.getRoot();
 
         setRecyclerView(root, R.id.recycler_view_upcoming_requests, RequestStatus.Pending);
         setRecyclerView(root, R.id.recycler_view_approved_requests, RequestStatus.Approved);
@@ -113,6 +115,7 @@ public class ManageRequestsFragment extends Fragment {
             } else {
                 Log.d(TAG, "Set new requests for request IncomingRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
+                RecyclerViewUtils.switchBetweenRecAndText(root, requests, R.id.recycler_view_upcoming_requests, R.id.text_recycler_view_upcoming_requests);
             }
         });
 
@@ -121,7 +124,7 @@ public class ManageRequestsFragment extends Fragment {
 
     @NonNull
     private ApprovedRequestAdapter getApprovedRequestAdapter() {
-        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null,  r -> CalendarProvider.AddCalendarEvent(getActivity(), r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/, UserCategory.Parent, getActivity().getApplication());
+        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null, r -> CalendarProvider.AddCalendarEvent(getActivity(), r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/, UserCategory.Parent, getActivity().getApplication());
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataApprovedRequestsOfParent(parent.getUuid());
         if (requestsLiveData == null) {
@@ -133,6 +136,8 @@ public class ManageRequestsFragment extends Fragment {
             } else {
                 Log.d(TAG, "Set new requests for  ApprovedRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
+                RecyclerViewUtils.switchBetweenRecAndText(root, requests, R.id.recycler_view_approved_requests, R.id.text_recycler_view_approved_requests);
+
             }
         });
 
@@ -153,6 +158,7 @@ public class ManageRequestsFragment extends Fragment {
             } else {
                 Log.d(TAG, "Set new requests for  ArchivedRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
+                RecyclerViewUtils.switchBetweenRecAndText(root, requests, R.id.recycler_view_history_requests, R.id.text_recycler_view_history_requests);
             }
         });
 

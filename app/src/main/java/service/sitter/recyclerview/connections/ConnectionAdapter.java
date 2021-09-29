@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ import service.sitter.utils.ImagesUtils;
 
 public class ConnectionAdapter extends RecyclerView.Adapter<service.sitter.recyclerview.connections.ConnectionViewHolder> {
     private final List<Connection> connections = new ArrayList<>();
-    private final service.sitter.recyclerview.connections.IConnectionAdapterListener listener;
+    private final IConnectionAdapterListener listener;
     private final Context context;
 
     public ConnectionAdapter(@NonNull service.sitter.recyclerview.connections.IConnectionAdapterListener listener, Context context) {
