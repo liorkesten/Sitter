@@ -24,11 +24,25 @@
             android:text="@string/upcoming_requests_title"
             tools:background="#009900" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_upcoming_requests"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:text="@string/no_available_incoming_requests" />
+            android:layout_height="200dp">
+
+            <TextView
+                android:id="@+id/text_recycler_view_upcoming_requests"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/no_available_incoming_requests" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_upcoming_requests"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:text="@string/no_available_incoming_requests" />
+
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/approved_requests_title"
@@ -38,11 +52,26 @@
             android:text="@string/approved_requests_title"
             tools:background="#009900" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_approved_requests"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:text="@string/no_available_approved_requests" />
+            android:layout_height="200dp">
+
+            <TextView
+                android:id="@+id/text_recycler_view_approved_requests"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/no_available_approved_requests" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_approved_requests"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:text="@string/no_available_approved_requests" />
+
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/history_requests_title"
@@ -52,12 +81,25 @@
             android:text="@string/history_requests_title"
             tools:background="#009900" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_history_requests"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:text="@string/no_available_archived_requests" />
+            android:layout_height="200dp">
 
+            <TextView
+                android:id="@+id/text_recycler_view_history_requests"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/no_available_archived_requests" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_history_requests"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:text="@string/no_available_archived_requests" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 </ScrollView>
