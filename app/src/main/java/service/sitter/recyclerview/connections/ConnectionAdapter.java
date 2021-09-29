@@ -17,7 +17,9 @@ import java.util.List;
 
 import service.sitter.R;
 import service.sitter.db.DataBase;
+import service.sitter.models.Babysitter;
 import service.sitter.models.Connection;
+import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
 import service.sitter.utils.ImagesUtils;
 
 public class ConnectionAdapter extends RecyclerView.Adapter<service.sitter.recyclerview.connections.ConnectionViewHolder> {
@@ -48,11 +50,19 @@ public class ConnectionAdapter extends RecyclerView.Adapter<service.sitter.recyc
     @Override
     public void onBindViewHolder(@NonNull @NotNull service.sitter.recyclerview.connections.ConnectionViewHolder holder, int position) {
         Connection connection = connections.get(position);
-        DataBase.getInstance().getBabysitter(connection.getSideBUId(), b -> {
-            holder.getNameTextView().setText(b.getFullName());
+        DataBase.getInstance().getBabysitter(connection.getSideBUId(), new IOnGettingBabysitterFromDb() {
+                    @Override
+                    public void babysitterFound(Babysitter babysitter) {
+                        holder.getNameTextView().setText(babysitter.getFullName());
 //            Glide.with(context).load(b.getImage()).into(holder.getImageView());
-            ImagesUtils.updateImageView(this.context, b.getImage(), holder.getImageView());
-        }, null);
+                        ImagesUtils.updateImageView(context, babysitter.getImage(), holder.getImageView());
+                    }
+
+                    @Override
+                    public void onFailure(String phoneNumber) { }
+
+
+                }, null);
 
         holder.rootView.setOnClickListener(v -> listener.onConnectionClick(connection));
     }

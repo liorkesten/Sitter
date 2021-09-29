@@ -17,7 +17,9 @@ import java.util.List;
 
 import service.sitter.R;
 import service.sitter.db.DataBase;
+import service.sitter.models.Babysitter;
 import service.sitter.models.Recommendation;
+import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
 import service.sitter.utils.ImagesUtils;
 
 public class RecommendationAdapter extends RecyclerView.Adapter<service.sitter.recyclerview.recommendations.RecommendationViewHolder> {
@@ -49,10 +51,18 @@ public class RecommendationAdapter extends RecyclerView.Adapter<service.sitter.r
     public void onBindViewHolder(@NonNull RecommendationViewHolder holder, int position) {
         Recommendation recommendation = recommendations.get(position);
 
-        DataBase.getInstance().getBabysitter(recommendation.getConnection().getSideBUId(), b -> {
-            holder.getNameTextView().setText(b.getFullName());
+        DataBase.getInstance().getBabysitter(recommendation.getConnection().getSideBUId(), new IOnGettingBabysitterFromDb() {
+            @Override
+            public void babysitterFound(Babysitter babysitter) {
+                holder.getNameTextView().setText(babysitter.getFullName());
 //            Glide.with(this.context).load(b.getImage()).into(holder.getImageView());
-            ImagesUtils.updateImageView(this.context, b.getImage(), holder.getImageView());
+                ImagesUtils.updateImageView(context, babysitter.getImage(), holder.getImageView());
+            }
+
+            @Override
+            public void onFailure(String phoneNumber) {
+            }
+
         }, null);
 
         holder.getImageView().setOnClickListener(v -> {

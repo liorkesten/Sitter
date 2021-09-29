@@ -62,8 +62,8 @@
     <string name="set_profile_title_babysitter_or_parent">Who Are You?</string>
     <string name="title_phone_number">Enter your phone number</string>
     <string name="babysitter_mobility_switch">Has Car</string>
-    <string name="my_connections">My connections</string>
-    <string name="recommendations_title">recommended for you</string>
+    <string name="my_connections">My Connections</string>
+    <string name="recommendations_title">Recommended For You</string>
     <string name="add_new_connection">Add new Connection</string>
     <string name="load_picture_button_text">Load Picture</string>
     <string name="hint_phone_number">+97254777777</string>
@@ -74,5 +74,6 @@
     <string name="no_available_archived_requests">No available archived requests</string>
     <string name="no_available_incoming_requests">no_available_incoming_requests</string>
     <string name="empty_description"> ~~~</string>
+    <string name="title_connection_add">Enter babysitter phone number</string>
 
 </resources>

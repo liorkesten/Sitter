@@ -182,6 +182,7 @@ public class UsersDataBase {
         querySnapshotTask.addOnSuccessListener(docs -> {
             if (docs.size() == 0) {
                 Log.e(TAG, String.format("Babysitter is not found with phone number: <%s>", phoneNumber));
+                listener.onFailure(phoneNumber);
                 return;
             }
             if (docs.size() > 1) {
