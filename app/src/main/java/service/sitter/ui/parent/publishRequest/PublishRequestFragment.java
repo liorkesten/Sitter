@@ -1,7 +1,6 @@
 package service.sitter.ui.parent.publishRequest;
 
 import static java.lang.System.exit;
-import static java.lang.Thread.sleep;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -133,8 +131,7 @@ public class PublishRequestFragment extends Fragment {
             });
 //            progressBar = new ProgressBar(this.getContext());
 //            progressBar. setMessage("loading..");
-            Toast.makeText(this.getContext(), "loading", Toast.LENGTH_LONG).show();
-
+            prettyToastProvider.showToast("uploading your request...", this.getContext());
 
         });
 

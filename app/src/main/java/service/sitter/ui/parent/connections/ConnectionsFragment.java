@@ -123,6 +123,7 @@ public class ConnectionsFragment extends Fragment {
                 return;
             }
             Log.d(TAG, "add_connection_button was clicked");
+            prettyToastProvider.showToast("looking for babysitter...", this.getContext());
             db.getBabysitterByPhoneNumber(phoneNumber, b -> db.addConnection(myUser, b));
         });
     }
