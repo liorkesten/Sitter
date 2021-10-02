@@ -52,15 +52,12 @@ public class ManageRequestsFragment extends Fragment {
     private ManageRequestsViewModel dashboardViewModel;
     private FragmentManageRequestsBinding binding;
     private View root;
-    private TextView name;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Load db:
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
         db = DataBase.getInstance();
-
-        name = root.findViewById(R.id.item_babysitter_request_archived_name_value);
 
         // Extract babysitter from SP.
         parent = SharedPreferencesUtils.getParentFromSP(sp);
@@ -70,7 +67,6 @@ public class ManageRequestsFragment extends Fragment {
 
         binding = FragmentManageRequestsBinding.inflate(inflater, container, false);
         root = binding.getRoot();
-
         setRecyclerView(root, R.id.recycler_view_upcoming_requests, RequestStatus.Pending);
         setRecyclerView(root, R.id.recycler_view_approved_requests, RequestStatus.Approved);
         setRecyclerView(root, R.id.recycler_view_history_requests, RequestStatus.Archived);
@@ -134,7 +130,7 @@ public class ManageRequestsFragment extends Fragment {
 
     @NonNull
     private ApprovedRequestAdapter getApprovedRequestAdapter() {
-        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(request -> openPopUpWindow(getContext()), r -> CalendarProvider.AddCalendarEvent(getActivity(), r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/, UserCategory.Parent, getActivity().getApplication());
+        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(request -> openPopUpWindow(), r -> CalendarProvider.AddCalendarEvent(getActivity(), r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/, UserCategory.Parent, getActivity().getApplication());
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataApprovedRequestsOfParent(parent.getUuid());
         if (requestsLiveData == null) {
@@ -153,21 +149,20 @@ public class ManageRequestsFragment extends Fragment {
         return adapter;
     }
 
-    private void openPopUpWindow(Context context){
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popup_layout, null);
+    private void openPopUpWindow(){
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.popup_layout, (ViewGroup) getView(), false);
         // create the popup window
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = true; // lets taps outside the popup also dismiss it
-        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+        final PopupWindow popupWindow = new PopupWindow(viewInflated, width, height, focusable);
 
         // show the popup window
         // which view you pass in doesn't matter, it is only used for the window tolken
         popupWindow.showAtLocation(root, Gravity.CENTER, 0, 0);
 
         // dismiss the popup window when touched
-        popupView.setOnTouchListener(new View.OnTouchListener() {
+        viewInflated.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 popupWindow.dismiss();

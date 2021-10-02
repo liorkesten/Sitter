@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/itemRequestDateTitle"
                 android:layout_marginEnd="8dp"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/item_babysitter_request_approved_date_value"
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="5PM-8PM"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -70,14 +70,14 @@
                 android:id="@+id/itemRequestDescriptionTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/itemRequestDescriptionTitle"
+                android:text="@string/name_of_approver"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/item_babysitter_request_approved_desc_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/empty_description"
+                android:hint="@string/name_approver_title"
                 android:textSize="16sp" />
 
         </LinearLayout>

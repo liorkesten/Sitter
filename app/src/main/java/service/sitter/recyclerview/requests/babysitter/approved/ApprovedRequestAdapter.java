@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
@@ -56,9 +58,17 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
     public void onBindViewHolder(@NonNull ApprovedRequestViewHolder holder, int position) {
         // Load
         Request request = requests.get(position);
+        View viewInflated = LayoutInflater.from(holder.getRootView().getContext()).inflate(R.layout.popup_layout, (ViewGroup) holder.getRootView(), false);
+        TextView description = viewInflated.findViewById(R.id.item_babysitter_request_archived_desc_value);
+        TextView date = viewInflated.findViewById(R.id.item_babysitter_request_archived_date_value);
+        TextView time = viewInflated.findViewById(R.id.item_babysitter_request_archived_time_value);
         // Update values of view holder:
-        holder.getDateValueTextView().setText(DateUtils.getFormattedDateFromString(request.getDate()));
-        holder.getDescriptionValueTextView().setText(request.getDescription());
+
+        description.setText(request.getDescription());
+        date.setText(request.getDate());
+        time.setText(request.getTime());
+        holder.getDateValueTextView().setText(request.getDate());
+        //holder.getDescriptionValueTextView().setText(request.getDescription());
         holder.getTimeValueTextView().setText(request.getTime());
 
         // Fields that are extracted by the parent object (so db is needed).
@@ -74,6 +84,12 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
             db.getBabysitter(request.getReceiverId(), new IOnGettingBabysitterFromDb() {
                 @Override
                 public void babysitterFound(Babysitter babysitter) {
+
+                    TextView name = viewInflated.findViewById(R.id.item_babysitter_request_archived_name_value);
+                    TextView mobility = viewInflated.findViewById(R.id.item_babysitter_mobility_edit);
+                    name.setText(babysitter.getFirstName());
+                    if (babysitter.isHasCar())
+                        mobility.setText(R.string.yes);
                     // Assign fields from parent object.
                     holder.getNameValueTextView().setText(babysitter.getFirstName());
 //                Glide.with(this.context).load(babysitter.getImage()).into(holder.getProfileImageView());

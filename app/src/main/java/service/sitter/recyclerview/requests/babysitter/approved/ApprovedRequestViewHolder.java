@@ -40,6 +40,7 @@ public class ApprovedRequestViewHolder extends RecyclerView.ViewHolder {
         // Views:
         dateValueTextView = itemView.findViewById(R.id.item_babysitter_request_approved_date_value);
         timeValueTextView = itemView.findViewById(R.id.item_babysitter_request_approved_time_value);
+        nameValueTextView = itemView.findViewById(R.id.item_babysitter_request_approved_desc_value);
         descriptionValueTextView = itemView.findViewById(R.id.item_babysitter_request_approved_desc_value);
         profileImageView = itemView.findViewById(R.id.item_babysitter_request_approved_profile_image);
 
