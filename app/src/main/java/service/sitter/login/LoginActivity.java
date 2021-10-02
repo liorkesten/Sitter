@@ -47,7 +47,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText email, password;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
-    private static final int RC_SIGN_IN = 9001;
 
 
     private GoogleSignInClient mGoogleSignInClient;
@@ -109,7 +108,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void setupSignUpButtonListener() {
         signUpButton.setOnClickListener(l -> {
             intentSignUp = new Intent(LoginActivity.this, SignUpActivity.class);
-            startActivityForResult(intentSignUp, MAIL_RESULT_CODE/*TODO change code*/);
+            startActivityForResult(intentSignUp, MAIL_RESULT_CODE);
         });
     }
 
@@ -134,30 +133,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Log.d(TAG, "requestCode" + requestCode);
         Log.d(TAG, "resultCode" + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == MAIL_RESULT_CODE) {
+        if (resultCode == RESULT_CANCELED) {
+            Log.e(TAG, "The result was failed - result code equals to " + resultCode);
+            return;
+        } else if (resultCode == MAIL_RESULT_CODE) {
             Log.d(TAG, "Entered to signup result code");
             intentSignUp = data;
             signupAuth();
-
-        } else if (resultCode != RESULT_CANCELED) {
-
-            // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-            if (requestCode == GOOGLE_RESULT_CODE) {
-                // The Task returned from this call is always completed, no need to attach
-                // a listener.android:noHistory
-                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                handleSignInResult(task);
-            }
+        }
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        else if (requestCode == GOOGLE_RESULT_CODE) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.android:noHistory
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
         }
     }
 
     private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
+            Toast.makeText(getApplicationContext(), "Signing Success", Toast.LENGTH_SHORT).show();
             // Signed in successfully, show authenticated UI.
             updateUI(account);
         } catch (ApiException e) {
+            Toast.makeText(getApplicationContext(), "Signing Failed", Toast.LENGTH_SHORT).show();
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());

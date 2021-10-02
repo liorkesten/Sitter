@@ -85,14 +85,12 @@ public class SignUpActivity extends AppCompatActivity {
                 checkPass = false;
             }
             if (checkName && checkMail && checkPass) {
-                Intent intentSetProfile = new Intent(SignUpActivity.this, SetProfileActivity.class);
                 Intent loginIntent = new Intent();
                 loginIntent.putExtra("firstName", firstName);
                 loginIntent.putExtra("lastName", lastName);
                 loginIntent.putExtra("email", mail);
                 loginIntent.putExtra("password", pass);
                 setResult(MAIL_RESULT_CODE, loginIntent);
-                startActivity(intentSetProfile);
                 finish();
             }
         });
