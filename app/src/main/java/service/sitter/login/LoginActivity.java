@@ -38,7 +38,6 @@ import java.util.List;
 import service.sitter.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final int FACEBOOK_RESULT_CODE = 15;
     public static final int GOOGLE_RESULT_CODE = 16;
     public static final int MAIL_RESULT_CODE = 17;
 
@@ -55,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private Intent intentSetProfile;
     private Intent intentSignUp;
+    Intent googleSignInIntent;
 
 
     @Override
@@ -113,9 +113,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void signInWithGoogle() {
         if (firebaseAuth.getCurrentUser() == null) {
-
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, GOOGLE_RESULT_CODE);
+            googleSignInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(googleSignInIntent, GOOGLE_RESULT_CODE);
         }
     }
 
@@ -137,27 +136,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // The Task returned from this call is always completed, no need to attach
             // a listener.android:noHistory
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            googleHandleSignInResult(task);
         }
     }
 
-    private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
+    private void googleHandleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Toast.makeText(getApplicationContext(), "Signing Success", Toast.LENGTH_SHORT).show();
             // Signed in successfully, show authenticated UI.
-            updateUI(account);
+            googleUpdateUI(account);
         } catch (ApiException e) {
             Toast.makeText(getApplicationContext(), "Signing Failed", Toast.LENGTH_SHORT).show();
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
+            googleUpdateUI(null);
         }
     }
 
 
-    public void updateUI(final GoogleSignInAccount googleSignInAccount) {
+    public void googleUpdateUI(final GoogleSignInAccount googleSignInAccount) {
 
 //        Log.d("token", googleSignInAccount.getIdToken());
         AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
@@ -304,6 +303,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void signInAuth() {
+        if (!areSignInFieldsValid()) {
+            return;
+        }
+
         firebaseAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -316,9 +319,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
+                        Toast t = Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT);
+                        t.setGravity(Gravity.CENTER, 0, 0);
+                        t.show();
                     }
                 });
+    }
+
+    private boolean areSignInFieldsValid() {
+        String getemail = email.getText().toString().trim();
+        String getepassword = password.getText().toString().trim();
+
+        if (getemail.isEmpty()) {
+            Toast.makeText(LoginActivity.this, "Type Email", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(getemail).matches()) {
+            Toast.makeText(LoginActivity.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (getepassword.isEmpty()) {
+            Toast.makeText(LoginActivity.this, "Type Password", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }
