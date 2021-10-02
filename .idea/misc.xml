@@ -47,14 +47,15 @@
         <entry key="app/src/main/res/layout/fragment_set_profile_top_frame.xml" value="0.14947916666666666" />
         <entry key="app/src/main/res/layout/fragment_time_button.xml" value="0.1" />
         <entry key="app/src/main/res/layout/header.xml" value="0.25416666666666665" />
-        <entry key="app/src/main/res/layout/item_babysitter_request_approved.xml" value="0.75" />
-        <entry key="app/src/main/res/layout/item_babysitter_request_archived.xml" value="0.18229166666666666" />
+        <entry key="app/src/main/res/layout/item_babysitter_request_approved.xml" value="0.55" />
+        <entry key="app/src/main/res/layout/item_babysitter_request_archived.xml" value="0.335" />
         <entry key="app/src/main/res/layout/item_babysitter_request_incoming.xml" value="0.36041666666666666" />
         <entry key="app/src/main/res/layout/item_child.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/item_connection.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_recommendation.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_request.xml" value="0.23676737739060963" />
         <entry key="app/src/main/res/layout/item_reuqest.xml" value="0.25416666666666665" />
+        <entry key="app/src/main/res/layout/popup_layout.xml" value="0.45" />
         <entry key="app/src/main/res/layout/pretty_toast.xml" value="0.1578125" />
       </map>
     </option>

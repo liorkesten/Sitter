@@ -91,6 +91,7 @@ public class SetProfileActivity extends AppCompatActivity {
 
         // set UI components
         imageButtonProfilePicture = findViewById(R.id.profile_picture_image_button);
+        backButtonSetProfile = findViewById(R.id.backButtonSetProfile);
         phoneNumberEditText = findViewById(R.id.phone_number_edit_text);
         usernameTextView = findViewById(R.id.user_name_text_view);
         LocationFragment locationFragment = new LocationFragment();
