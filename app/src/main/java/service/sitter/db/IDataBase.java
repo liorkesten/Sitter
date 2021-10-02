@@ -62,7 +62,11 @@ public interface IDataBase {
 
     void getParent(String userUID, IGetParent applierOnSuccess, OnFailureListener onFailureListener);
 
+    Parent getParent(String userUID) throws UserNotFoundException;
+
     public Babysitter getBabysitter(String userUID) throws UserNotFoundException;
+
+    public boolean isUserExist(String userUID);
 
     public void getBabysitterByPhoneNumber(String phonerNumber, IOnGettingBabysitterFromDb listener);
 
@@ -83,7 +87,7 @@ public interface IDataBase {
 
     void addConnection(User userA, User userB);
 
-    void getBabysitter(String userUID, IOnGettingBabysitterFromDb applierOnSuccess, OnFailureListener onFailureListener);
+    void getBabysitter(String userUID, IOnGettingBabysitterFromDb applierOnSuccess);
 
     LiveData<List<Recommendation>> getLiveDataRecommendationsOfParent(String uuid);
 

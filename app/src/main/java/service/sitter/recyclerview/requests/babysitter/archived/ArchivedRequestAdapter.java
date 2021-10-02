@@ -81,13 +81,13 @@ public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequest
                 public void onFailure(String phoneNumber) {
                 }
 
-            }, null);
+            });
         }
 
         // Set listeners:
         // Adapter passes the rootView that was clicked. The activity should initialize the adapter with specific listener
-        if (listener != null){
-        holder.getRootView().setOnClickListener(v -> listener.onButtonClicked(request));
+        if (listener != null) {
+            holder.getRootView().setOnClickListener(v -> listener.onButtonClicked(request));
         }
     }
 

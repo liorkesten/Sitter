@@ -38,6 +38,7 @@ import service.sitter.ParentActivity;
 import service.sitter.R;
 import service.sitter.db.DataBase;
 import service.sitter.db.IDataBase;
+import service.sitter.db.UserNotFoundException;
 import service.sitter.login.fragments.SetProfileBabysitterFragment;
 import service.sitter.login.fragments.SetProfileParentFragment;
 import service.sitter.models.Babysitter;
@@ -46,14 +47,15 @@ import service.sitter.models.Parent;
 import service.sitter.models.UserCategory;
 import service.sitter.ui.babysitter.manageRequests.BabysitterActivity;
 import service.sitter.ui.fragments.LocationFragment;
+import service.sitter.ui.parent.connections.IOnGettingBabysitterFromDb;
 import service.sitter.utils.SharedPreferencesUtils;
 
 public class SetProfileActivity extends AppCompatActivity {
+    private static final String TAG = SetProfileActivity.class.getSimpleName();
 
-    private final IDataBase db = DataBase.getInstance();
+    private IDataBase db;
     SharedPreferences sp;
     private Place location;
-    private String phoneNumber = "";
     UserCategory userType = UserCategory.Parent;
     ImageButton imageButtonProfilePicture;
     EditText phoneNumberEditText;
@@ -62,7 +64,6 @@ public class SetProfileActivity extends AppCompatActivity {
     private int payment;
     private List<Child> children;
     private static final int RESULT_CODE_IMAGE = 100;
-    private static final String TAG = SetProfileActivity.class.getSimpleName();
     private SetProfileParentFragment setProfileParentFragment;
     private SetProfileBabysitterFragment setProfileBabysitterFragment;
     private String firstName = "", lastName = "", email = "";
@@ -75,18 +76,58 @@ public class SetProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "created");
+        // get info from registration
+        db = DataBase.getInstance();
         sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
-
-        if (SharedPreferencesUtils.getParentFromSP(sp) != null) {
-            Intent intentMainActivity = new Intent(SetProfileActivity.this, ParentActivity.class);
-            startActivity(intentMainActivity);
-        } else if (SharedPreferencesUtils.getBabysitterFromSP(sp) != null) {
-            Intent intentMainActivity = new Intent(SetProfileActivity.this, BabysitterActivity.class);
-            startActivity(intentMainActivity);
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Log.d(TAG, "Error with fetching user - user is null");
+            exit(101);
         }
 
-        setContentView(R.layout.activity_set_profile);
+        // Choose flow:
+        if (canSkipSetProfileActivityUsingSP()) {
+            skipSetProfileActivityUsingSP();
+        }
+        Log.d(TAG, String.format("Trying to find babysitter with ID <%s> ", currentUser.getUid()));
+        db.getBabysitter(currentUser.getUid(), new IOnGettingBabysitterFromDb() {
+            @Override
+            public void babysitterFound(Babysitter babysitter) {
+                if (babysitter == null) {
+                    db.getParent(currentUser.getUid(),
+                            p -> {
+                                if (p == null) {
+                                    stayInSetProfileActivity();
+                                } else {
+                                    SharedPreferencesUtils.saveParentToSP(sp, p);
+                                    moveToParentActivity();
+                                }
+                            }, null);
+                } else {
+                    Log.d(TAG, "Babysitter found: " + babysitter);
+                    SharedPreferencesUtils.saveBabysitterToSP(sp, babysitter);
+                    moveToBabysitterActivity();
+                }
+            }
 
+            @Override
+            public void onFailure(String phoneNumber) {
+                Log.d(TAG, String.format("Babysitter with ID <%s> didn't found: ", currentUser.getUid()));
+                Log.d(TAG, String.format("Trying to find parent with ID <%s> ", currentUser.getUid()));
+
+            }
+        });
+//        else if (canSkipSetProfileActivityUsingDB()) {
+//            skipSetProfileActivityUsingDB();
+//        } else {
+//            stayInSetProfileActivity();
+//        }
+
+
+    }
+
+    private void stayInSetProfileActivity() {
+        setContentView(R.layout.activity_set_profile);
 
         // set UI components
         imageButtonProfilePicture = findViewById(R.id.profile_picture_image_button);
@@ -96,12 +137,7 @@ public class SetProfileActivity extends AppCompatActivity {
         RadioGroup radioGroup = findViewById(R.id.parent_or_babysitter_radio_group);
         Button addUserButton = findViewById(R.id.add_user_button);
 
-        // get info from registration
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            Log.d(TAG, "Error with fetching user - user is null");
-            exit(101);
-        }
+
         setValuesFromUserAccount();
         fillDetails();
 
@@ -141,6 +177,51 @@ public class SetProfileActivity extends AppCompatActivity {
                 .replace(R.id.location_fragment_container_view, locationFragment)
                 .replace(R.id.bottomFrameFragment, setProfileParentFragment)
                 .commit();
+    }
+
+    private void skipSetProfileActivityUsingDB() {
+        try {
+            Babysitter b = db.getBabysitter(currentUser.getUid());
+            SharedPreferencesUtils.saveBabysitterToSP(sp, b);
+            moveToBabysitterActivity();
+
+        } catch (UserNotFoundException e) {
+            try {
+                Parent p = db.getParent(currentUser.getUid());
+                SharedPreferencesUtils.saveParentToSP(sp, p);
+                moveToParentActivity();
+            } catch (UserNotFoundException ignored) {
+            }
+        }
+    }
+
+    private boolean canSkipSetProfileActivityUsingDB() {
+        try {
+            db.getBabysitter(currentUser.getUid());
+            return true;
+        } catch (UserNotFoundException e) {
+            try {
+                db.getParent(currentUser.getUid());
+                return true;
+            } catch (UserNotFoundException userNotFoundException) {
+                return false;
+            }
+        }
+    }
+
+    private void skipSetProfileActivityUsingSP() {
+        if (SharedPreferencesUtils.getParentFromSP(sp) != null) {
+            Intent intentMainActivity = new Intent(SetProfileActivity.this, ParentActivity.class);
+            startActivity(intentMainActivity);
+        } else if (SharedPreferencesUtils.getBabysitterFromSP(sp) != null) {
+            Intent intentMainActivity = new Intent(SetProfileActivity.this, BabysitterActivity.class);
+            startActivity(intentMainActivity);
+        }
+    }
+
+    private boolean canSkipSetProfileActivityUsingSP() {
+        return (SharedPreferencesUtils.getParentFromSP(sp) != null) ||
+                SharedPreferencesUtils.getBabysitterFromSP(sp) != null;
     }
 
     private void setValuesFromUserAccount() {
@@ -185,14 +266,16 @@ public class SetProfileActivity extends AppCompatActivity {
         Log.d(TAG, "creating new Babysitter");
         boolean hasMobility = setProfileBabysitterFragment.getLiveDataHasMobility().getValue();
         Babysitter babysitter = new Babysitter(firstName, lastName, email, phoneNumber, locationStr, profilePictureUriStr, hasMobility);
+        babysitter.setUuid(currentUser.getUid());
+
         SharedPreferencesUtils.saveBabysitterToSP(sp, babysitter);
 
         db.addBabysitter(babysitter, () -> {
             Toast toast = Toast.makeText(getApplication(), String.format("Congrats %s :) you added successfully as a babysitter. you can now start look for requests.", babysitter.getFirstName()), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
-            Intent intentMainActivity = new Intent(SetProfileActivity.this, BabysitterActivity.class);
-            startActivity(intentMainActivity);
+
+            moveToBabysitterActivity();
         });
     }
 
@@ -201,7 +284,7 @@ public class SetProfileActivity extends AppCompatActivity {
         setProfileParentFragment.getLiveDataChildren().
                 observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
         Parent parent = new Parent(firstName, lastName, email, phoneNumber, locationStr, profilePictureUriStr, children, payment);
-
+        parent.setUuid(currentUser.getUid());
         // validating that added children
         if (children.isEmpty()) {
             Toast.makeText(this, "Parent must insert children to continue", Toast.LENGTH_LONG).show();
@@ -213,8 +296,7 @@ public class SetProfileActivity extends AppCompatActivity {
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             SharedPreferencesUtils.saveParentToSP(sp, parent);
-            Intent intentMainActivity = new Intent(SetProfileActivity.this, ParentActivity.class);
-            startActivity(intentMainActivity);
+            moveToParentActivity();
         });
     }
 
@@ -237,5 +319,13 @@ public class SetProfileActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    private void moveToBabysitterActivity() {
+        startActivity(new Intent(SetProfileActivity.this, BabysitterActivity.class));
+    }
+
+    private void moveToParentActivity() {
+        startActivity(new Intent(SetProfileActivity.this, ParentActivity.class));
     }
 }

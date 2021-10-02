@@ -60,7 +60,7 @@ public class ConnectionAdapter extends RecyclerView.Adapter<service.sitter.recyc
                     public void onFailure(String phoneNumber) { }
 
 
-                }, null);
+                });
 
         holder.rootView.setOnClickListener(v -> listener.onConnectionClick(connection));
     }
