@@ -71,6 +71,7 @@ public class SetProfileActivity extends AppCompatActivity {
             Pattern.compile("05\\d{8}");
 
     FirebaseUser currentUser;
+    ImageButton backButtonSetProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +132,7 @@ public class SetProfileActivity extends AppCompatActivity {
 
         // set UI components
         imageButtonProfilePicture = findViewById(R.id.profile_picture_image_button);
+        backButtonSetProfile = findViewById(R.id.backButtonSetProfile);
         phoneNumberEditText = findViewById(R.id.phone_number_edit_text);
         usernameTextView = findViewById(R.id.user_name_text_view);
         LocationFragment locationFragment = new LocationFragment();
@@ -177,6 +179,8 @@ public class SetProfileActivity extends AppCompatActivity {
                 .replace(R.id.location_fragment_container_view, locationFragment)
                 .replace(R.id.bottomFrameFragment, setProfileParentFragment)
                 .commit();
+
+        backButtonSetProfile.setOnClickListener(v -> finish());
     }
 
     private void skipSetProfileActivityUsingDB() {

@@ -56,17 +56,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestViewHolder> {
         Context context = holder.textView.getContext();
 
         // Adapter passes the rootView that was clicked. The activity should initialize the adapter with specific listener.
-        holder.rootView.setOnClickListener(v -> openPopUpWindow(context));
-    }
-
-
-    private void openPopUpWindow(Context context){
-        TextView tv = new TextView(context);
-        PopupWindow popUp;
-        LinearLayout layout = new LinearLayout(context);
-        popUp = new PopupWindow();
-        popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10);
-        popUp.update(50, 50, 300, 80);
+        holder.rootView.setOnClickListener(v -> listener.onRequestClick(request));
     }
 
     @Override

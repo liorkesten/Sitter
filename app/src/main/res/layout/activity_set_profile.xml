@@ -136,5 +136,11 @@
         android:text="Set Profile"
         android:textColor="@color/secondary" />
 
+    <ImageButton
+        android:id="@+id/backButtonSetProfile"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_arrow_left" />
+
 
 </LinearLayout>

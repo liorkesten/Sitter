@@ -1,12 +1,17 @@
 package service.sitter.ui.parent.manageRequests;
 
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -27,6 +32,7 @@ import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
 import service.sitter.models.UserCategory;
 import service.sitter.providers.CalendarProvider;
+import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
 import service.sitter.recyclerview.requests.babysitter.approved.ApprovedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.archived.ArchivedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.incoming.IncomingRequestAdapter;
@@ -110,7 +116,7 @@ public class ManageRequestsFragment extends Fragment {
         }
         requestsLiveData.observeForever(requests -> {
             if (requests == null) {
-                Log.e(TAG, "Requests is nil");
+                Log.e(TAG, "Requests is null");
             } else {
                 Log.d(TAG, "Set new requests for request IncomingRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
@@ -123,7 +129,7 @@ public class ManageRequestsFragment extends Fragment {
 
     @NonNull
     private ApprovedRequestAdapter getApprovedRequestAdapter() {
-        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(/*TODO*/null, r -> CalendarProvider.AddCalendarEvent(getActivity(), r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/, UserCategory.Parent, getActivity().getApplication());
+        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(request -> openPopUpWindow(getContext()), r -> CalendarProvider.AddCalendarEvent(getActivity(), r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/, UserCategory.Parent, getActivity().getApplication());
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataApprovedRequestsOfParent(parent.getUuid());
         if (requestsLiveData == null) {
@@ -131,7 +137,7 @@ public class ManageRequestsFragment extends Fragment {
         }
         requestsLiveData.observeForever(requests -> {
             if (requests == null) {
-                Log.e(TAG, "Requests is nil");
+                Log.e(TAG, "Requests is null");
             } else {
                 Log.d(TAG, "Set new requests for  ApprovedRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
@@ -140,6 +146,15 @@ public class ManageRequestsFragment extends Fragment {
         });
 
         return adapter;
+    }
+
+    private void openPopUpWindow(Context context){
+        TextView tv = new TextView(context);
+        PopupWindow popUp;
+        LinearLayout layout = new LinearLayout(context);
+        popUp = new PopupWindow();
+        popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10);
+        popUp.update(50, 50, 300, 80);
     }
 
     @NonNull
@@ -152,14 +167,13 @@ public class ManageRequestsFragment extends Fragment {
         }
         requestsLiveData.observeForever(requests -> {
             if (requests == null) {
-                Log.e(TAG, "Requests is nil");
+                Log.e(TAG, "Requests is null");
             } else {
                 Log.d(TAG, "Set new requests for  ArchivedRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
                 RecyclerViewUtils.switchBetweenRecAndText(root, requests, R.id.recycler_view_history_requests, R.id.text_recycler_view_history_requests);
             }
         });
-
         return adapter;
     }
 }

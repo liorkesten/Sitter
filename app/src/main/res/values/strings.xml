@@ -45,6 +45,7 @@
     <string name="register">Register</string>
     <string name="re_type_password">Re-type Password</string>
     <string name="your_name">Full Name</string>
+    <string name="name_of_approver">Name:</string>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
@@ -77,7 +78,7 @@
     <string name="no_available_approved_requests">No available approved requests</string>
     <string name="no_available_archived_requests">No available archived requests</string>
     <string name="no_available_incoming_requests">no_available_incoming_requests</string>
-    <string name="empty_description"> ~~~</string>
+    <string name="empty_description"> No description</string>
     <string name="title_connection_add">Enter babysitter phone number</string>
 
 </resources>

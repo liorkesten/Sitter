@@ -85,13 +85,6 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/item_babysitter_request_approved_name_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lior Kesten"
-        android:textSize="20sp" />
-
     <androidx.cardview.widget.CardView
         android:layout_width="85dp"
         android:layout_height="85dp"
