@@ -155,6 +155,19 @@ public class UsersDataBase {
         documentSnapshotTask.addOnSuccessListener(snapshot -> applierOnSuccess.parentFound(snapshot.toObject(Parent.class)));
     }
 
+    public Parent getParent(String userUID) throws UserNotFoundException {
+        DocumentSnapshot snapshot = firestore
+                .collection(COLLECTION_FIRESTORE_PARENT_NAME)
+                .document(userUID)
+                .get()
+                .getResult();
+
+        if (snapshot == null) {
+            throw new UserNotFoundException(userUID);
+        }
+        return (Parent) snapshot.toObject(Parent.class);
+    }
+
     public Babysitter getBabysitter(String userUID) throws UserNotFoundException {
         DocumentSnapshot snapshot = firestore.collection(COLLECTION_FIRESTORE_BABYSITTER_NAME).document(userUID).get().getResult();
         if (snapshot == null) {
@@ -204,17 +217,17 @@ public class UsersDataBase {
                 });
     }
 
-    public void getBabysitter(String userUID, IOnGettingBabysitterFromDb applierOnSuccess, OnFailureListener onFailureListener) {
+    public void getBabysitter(String userUID, IOnGettingBabysitterFromDb listener) {
         if (userUID == null || userUID.equals("")) {
             return;
         }
         Task<DocumentSnapshot> documentSnapshotTask = firestore
                 .collection(COLLECTION_FIRESTORE_BABYSITTER_NAME)
                 .document(userUID)
-                .get()
-                .addOnFailureListener(onFailureListener);
+                .get();
 
-        documentSnapshotTask.addOnSuccessListener(snapshot -> applierOnSuccess.babysitterFound(snapshot.toObject(Babysitter.class)));
+        documentSnapshotTask.addOnSuccessListener(snapshot -> listener.babysitterFound(snapshot.toObject(Babysitter.class)));
+        documentSnapshotTask.addOnFailureListener(snapshot -> listener.onFailure(""));
     }
 
     public void getParentsByPhoneNumbers(List<String> phoneNumbers, IGetParents iGetParents) {
@@ -234,5 +247,10 @@ public class UsersDataBase {
                     List<Parent> parents = snapshot.toObjects(Parent.class);
                     iGetParents.apply(parents);
                 });
+    }
+
+    public boolean isUserExist(String userUID) {
+        //TODO
+        return false;
     }
 }

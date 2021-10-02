@@ -8,7 +8,6 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,7 +36,7 @@ import java.util.List;
 
 import service.sitter.R;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity {
     public static final int GOOGLE_RESULT_CODE = 16;
     public static final int MAIL_RESULT_CODE = 17;
 
@@ -68,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.d(TAG, String.format("User Already exists: <%s>", firebaseAuth.getCurrentUser().getDisplayName()));
             startActivity(intentSetProfile);
         }
+
         // first time visiting or in case of in-completing signup
         else {
             setContentView(R.layout.activity_login);
@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             setupSignUpButtonListener();
             this.signInButton.setOnClickListener(l -> signInAuth());
             setupSignInWithGoogleButton();
-            setUpSignInWithFacebookButton();
+//            setUpSignInWithFacebookButton();
         }
 
     }
@@ -92,7 +92,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void setupSignInWithGoogleButton() {
-        GoogleSignInButton googleSignInButton = (GoogleSignInButton) findViewById(R.id.sign_in_google_button);
         GoogleSignInOptions options = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -100,6 +99,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(getApplication(), options);
+
+        GoogleSignInButton googleSignInButton = (GoogleSignInButton) findViewById(R.id.sign_in_google_button);
         googleSignInButton.setOnClickListener(view -> signInWithGoogle());
 
     }
@@ -116,27 +117,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             googleSignInIntent = mGoogleSignInClient.getSignInIntent();
             startActivityForResult(googleSignInIntent, GOOGLE_RESULT_CODE);
         }
+        //TODO Handle with cases that user is not null.
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "requestCode" + requestCode);
         Log.d(TAG, "resultCode" + resultCode);
+        Log.d(TAG, "data" + data);
+
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_CANCELED) {
-            Log.e(TAG, "The result was failed - result code equals to " + resultCode);
-            return;
-        } else if (resultCode == MAIL_RESULT_CODE) {
-            Log.d(TAG, "Entered to signup result code");
-            intentSignUp = data;
-            signupAuth();
-        }
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        else if (requestCode == GOOGLE_RESULT_CODE) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.android:noHistory
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            googleHandleSignInResult(task);
+
+        switch (requestCode) {
+            case MAIL_RESULT_CODE:
+                Log.d(TAG, "Request code in onActivityResult is MAIL_RESULT_CODE");
+                intentSignUp = data;
+                signupAuth();
+                break;
+            // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+            case GOOGLE_RESULT_CODE:
+                Log.d(TAG, "Request code in onActivityResult is GOOGLE_RESULT_CODE");
+                // The Task returned from this call is always completed, no need to attach
+                // a listener.android:noHistory
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                googleHandleSignInResult(task);
+                break;
         }
     }
 
@@ -146,12 +151,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(getApplicationContext(), "Signing Success", Toast.LENGTH_SHORT).show();
             // Signed in successfully, show authenticated UI.
             googleUpdateUI(account);
-        } catch (ApiException e) {
+        } catch (
+                ApiException e) {
             Toast.makeText(getApplicationContext(), "Signing Failed", Toast.LENGTH_SHORT).show();
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            googleUpdateUI(null);
         }
     }
 
@@ -160,8 +165,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 //        Log.d("token", googleSignInAccount.getIdToken());
         AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
-
-
         firebaseAuth.signInWithCredential(authCredential)
                 .addOnCompleteListener(LoginActivity.this, AuthResultTask -> {
                     if (AuthResultTask.isSuccessful()) {
@@ -169,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         if (googleSignInAccount != null) {
                             final String userID = user.getUid();
-                            Log.d(TAG, userID.toString());
+                            Log.d(TAG, userID);
                             db.collection("Users").get().addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
@@ -205,49 +208,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
         //firebaseAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.buttonSignUp) {
-//            startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
-        } else {
-            String getemail = email.getText().toString().trim();
-            String getepassword = password.getText().toString().trim();
-
-            if (getemail.isEmpty()) {
-                Toast.makeText(LoginActivity.this, "Type Email", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (!Patterns.EMAIL_ADDRESS.matcher(getemail).matches()) {
-                Toast.makeText(LoginActivity.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (getepassword.isEmpty()) {
-                Toast.makeText(LoginActivity.this, "Type Password", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-
-            callsignin(getemail, getepassword);
-
-        }
-    }
-
-    private void callsignin(String email, String password) {
-
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    Log.d("TESTING", "sign In Successful:" + task.isSuccessful());
-                    if (!task.isSuccessful()) {
-                        Log.w("TESTING", "signInWithEmail:failed", task.getException());
-                        Toast.makeText(LoginActivity.this, "" + (task.getException().getMessage().equals("There is no user record corresponding to this identifier. The user may have been deleted.") ? task.getException().getMessage().replace("There is no user record corresponding to this identifier. The user may have been deleted.", "User not found. Please register") : task.getException().getMessage().replace("The password is invalid or the user does not have a password.", "Password entered is incorrect.")), Toast.LENGTH_LONG).show();
-                    } else {
-                        startActivity(intentSetProfile);
-                        finish();
-                    }
-                });
-
     }
 
     @Override

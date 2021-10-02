@@ -85,7 +85,7 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
                 }
 
 
-            }, null);
+            });
         }
 
 

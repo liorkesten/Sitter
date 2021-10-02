@@ -153,10 +153,18 @@ public class DataBase implements IDataBase {
         usersDb.getParent(userUID, applierOnSuccess, onFailureListener);
     }
 
+    @Override
+    public Parent getParent(String userUID) throws UserNotFoundException {
+        return usersDb.getParent(userUID);
+    }
 
     @Override
-    public void getBabysitter(String userUID, IOnGettingBabysitterFromDb applierOnSuccess, OnFailureListener onFailureListener) {
-        usersDb.getBabysitter(userUID, applierOnSuccess, onFailureListener);
+    public boolean isUserExist(String userUID){
+        return usersDb.isUserExist(userUID);
+    }
+    @Override
+    public void getBabysitter(String userUID, IOnGettingBabysitterFromDb listener) {
+        usersDb.getBabysitter(userUID, listener);
     }
 
     @Override

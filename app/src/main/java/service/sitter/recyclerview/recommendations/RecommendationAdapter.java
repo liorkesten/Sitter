@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -63,7 +61,7 @@ public class RecommendationAdapter extends RecyclerView.Adapter<service.sitter.r
             public void onFailure(String phoneNumber) {
             }
 
-        }, null);
+        });
 
         holder.getImageView().setOnClickListener(v -> {
             holder.getRootView().setVisibility(View.GONE);
