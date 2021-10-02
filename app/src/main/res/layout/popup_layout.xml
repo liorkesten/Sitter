@@ -9,8 +9,8 @@
 
     <LinearLayout
         android:id="@+id/linearItemVertical"
-        android:layout_width="268dp"
-        android:layout_height="123dp"
+        android:layout_width="277dp"
+        android:layout_height="139dp"
         android:orientation="vertical">
 
 
@@ -83,6 +83,28 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearMobility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/itemRequestMobilityTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mobility_ans"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/item_babysitter_mobility_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint=" No"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/linearDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -103,6 +125,7 @@
                 android:textSize="16sp" />
 
         </LinearLayout>
+
 
     </LinearLayout>
 

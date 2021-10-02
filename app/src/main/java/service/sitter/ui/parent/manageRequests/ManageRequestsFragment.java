@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -50,12 +52,15 @@ public class ManageRequestsFragment extends Fragment {
     private ManageRequestsViewModel dashboardViewModel;
     private FragmentManageRequestsBinding binding;
     private View root;
+    private TextView name;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Load db:
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplication());
         db = DataBase.getInstance();
+
+        name = root.findViewById(R.id.item_babysitter_request_archived_name_value);
 
         // Extract babysitter from SP.
         parent = SharedPreferencesUtils.getParentFromSP(sp);
@@ -149,13 +154,34 @@ public class ManageRequestsFragment extends Fragment {
     }
 
     private void openPopUpWindow(Context context){
-        TextView tv = new TextView(context);
-        PopupWindow popUp;
-        LinearLayout layout = new LinearLayout(context);
-        popUp = new PopupWindow();
-        popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10);
-        popUp.update(50, 50, 300, 80);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup_layout, null);
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(root, Gravity.CENTER, 0, 0);
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
     }
+//        TextView tv = new TextView(context);
+//        PopupWindow popUp;
+//        LinearLayout layout = new LinearLayout(context);
+//        popUp = new PopupWindow();
+//        popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10);
+//        popUp.update(50, 50, 300, 80);
+
 
     @NonNull
     private ArchivedRequestAdapter getArchivedRequestAdapter() {

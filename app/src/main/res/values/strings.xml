@@ -46,6 +46,7 @@
     <string name="re_type_password">Re-type Password</string>
     <string name="your_name">Full Name</string>
     <string name="name_of_approver">Name:</string>
+    <string name="mobility_ans">Mobility:</string>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
