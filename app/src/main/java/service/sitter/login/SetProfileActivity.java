@@ -163,16 +163,9 @@ public class SetProfileActivity extends AppCompatActivity {
             phoneNumberEditText.setError("Invalid phone number");
             allGood = false;
         }
-//        if (location == null){
-//            Toast.makeText(this, "location must be provided", Toast.LENGTH_LONG).show();
-//            allGood = false;
-//        }
         if (allGood){
             if (userType == UserCategory.Parent) {
-                if (children.size() > 0)
-                    addParent(profilePictureUriStr, phoneNumber, locationStr);
-                else
-                    Toast.makeText(this, "please add your children", Toast.LENGTH_LONG).show();
+                addParent(profilePictureUriStr, phoneNumber, locationStr);
             } else if (userType == UserCategory.Babysitter) {
                 addBabysitter(profilePictureUriStr, phoneNumber, locationStr);
             }
@@ -202,12 +195,12 @@ public class SetProfileActivity extends AppCompatActivity {
 
         // validating that added children
         if (children.isEmpty()) {
-            Toast.makeText(this, "Parent must has Children to continue", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Parent must insert children to continue", Toast.LENGTH_LONG).show();
             return;
         }
 
         db.addParent(parent, () -> {
-            Toast toast = Toast.makeText(getApplication(), String.format("Congrats %s :) you added successfully as a parent. you can now start publish requests.", parent.getFirstName()), Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplication(), String.format("Congrats %s ! you were added successfully as a parent. Now you can start publishing requests.", parent.getFirstName()), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             SharedPreferencesUtils.saveParentToSP(sp, parent);

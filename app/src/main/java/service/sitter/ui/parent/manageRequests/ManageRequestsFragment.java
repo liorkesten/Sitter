@@ -91,7 +91,6 @@ public class ManageRequestsFragment extends Fragment {
             case Archived:
                 // TODO
                 return getArchivedRequestAdapter();
-
             case Deleted:
                 // TODO
                 return null;
@@ -137,7 +136,6 @@ public class ManageRequestsFragment extends Fragment {
                 Log.d(TAG, "Set new requests for  ApprovedRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
                 RecyclerViewUtils.switchBetweenRecAndText(root, requests, R.id.recycler_view_approved_requests, R.id.text_recycler_view_approved_requests);
-
             }
         });
 

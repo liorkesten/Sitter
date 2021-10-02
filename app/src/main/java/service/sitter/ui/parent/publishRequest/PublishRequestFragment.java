@@ -150,10 +150,10 @@ public class PublishRequestFragment extends Fragment {
 
     private boolean shouldBlockPublishRequest() {
         if (children.size() == 0) {
-            prettyToastProvider.showToast("You must choose child before publishing", getActivity().getApplication());
+            prettyToastProvider.showToast("You must choose one or more children before publishing", getActivity().getApplication());
             return true;
         } else if (date.isBefore(LocalDate.now())) {
-            prettyToastProvider.showToast("Date can't be before the current time.", getActivity().getApplication());
+            prettyToastProvider.showToast("Date can't be previous to current time.", getActivity().getApplication());
             return true;
         }
         return false;

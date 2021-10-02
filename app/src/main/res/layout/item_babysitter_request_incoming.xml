@@ -121,19 +121,21 @@
 
         <ImageButton
             android:id="@+id/item_babysitter_request_incoming_accept_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+
             android:backgroundTint="@color/white"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+            android:src="@drawable/ic_baseline_check"
             app:tint="#01B91F" />
         />
 
         <ImageButton
             android:id="@+id/item_babysitter_request_incoming_deny_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:paddingTop="25dp"
             android:backgroundTint="@color/white"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+            android:src="@drawable/ic_baseline_cancel_other"
             app:tint="#FF0000" />
 
     </LinearLayout>

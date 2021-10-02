@@ -1,8 +1,14 @@
 package service.sitter.recyclerview.requests.parent;
 
+import android.app.Activity;
+import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,9 +53,20 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestViewHolder> {
     public void onBindViewHolder(@NonNull @NotNull RequestViewHolder holder, int position) {
         Request request = requests.get(position);
         holder.textView.setText(request.getPublisherId()); // TODO Change from to string.
+        Context context = holder.textView.getContext();
 
-        // Adapter passes the rootView that was clicked. The activity should intilizae the adapter with specific listener.
-        holder.rootView.setOnClickListener(v -> listener.onRequestClick(request));
+        // Adapter passes the rootView that was clicked. The activity should initialize the adapter with specific listener.
+        holder.rootView.setOnClickListener(v -> openPopUpWindow(context));
+    }
+
+
+    private void openPopUpWindow(Context context){
+        TextView tv = new TextView(context);
+        PopupWindow popUp;
+        LinearLayout layout = new LinearLayout(context);
+        popUp = new PopupWindow();
+        popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10);
+        popUp.update(50, 50, 300, 80);
     }
 
     @Override
