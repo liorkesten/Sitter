@@ -1,11 +1,12 @@
 package service.sitter.login;
 
+import static java.lang.System.exit;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,8 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.libraries.places.api.model.Place;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,7 +46,6 @@ import service.sitter.models.Parent;
 import service.sitter.models.UserCategory;
 import service.sitter.ui.babysitter.manageRequests.BabysitterActivity;
 import service.sitter.ui.fragments.LocationFragment;
-import service.sitter.utils.PrettyToastProvider;
 import service.sitter.utils.SharedPreferencesUtils;
 
 public class SetProfileActivity extends AppCompatActivity {
@@ -57,7 +59,6 @@ public class SetProfileActivity extends AppCompatActivity {
     EditText phoneNumberEditText;
     TextView usernameTextView;
     Uri profilePictureUri;
-    private PrettyToastProvider prettyToastProvider;
     private int payment;
     private List<Child> children;
     private static final int RESULT_CODE_IMAGE = 100;
@@ -67,6 +68,8 @@ public class SetProfileActivity extends AppCompatActivity {
     private String firstName = "", lastName = "", email = "", password = "";
     public static final Pattern VALID_PHONE_NUMBER =
             Pattern.compile("05\\d{8}");
+
+    FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,11 +97,12 @@ public class SetProfileActivity extends AppCompatActivity {
         Button addUserButton = findViewById(R.id.add_user_button);
 
         // get info from registration
-        Intent infoFromRegistration = getIntent();
-        firstName = infoFromRegistration.getStringExtra("firstName");
-        lastName = infoFromRegistration.getStringExtra("lastName");
-        email = infoFromRegistration.getStringExtra("email");
-        password = infoFromRegistration.getStringExtra("password");
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Log.d(TAG, "Error with fetching user - user is null");
+            exit(101);
+        }
+
         fillDetails();
 
         // set Logic Components
@@ -141,13 +145,13 @@ public class SetProfileActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void fillDetails() {
-        if (firstName == null || lastName == null) {
+        if (currentUser.getDisplayName() == null || currentUser.getDisplayName().equals("")) {
             usernameTextView.setText("Welcome User");
-        } else if (!firstName.isEmpty() && !lastName.isEmpty()) {
+        } else {
+            String firstName = currentUser.getDisplayName().split(" ", 2)[0];
             Resources res = getResources();
             usernameTextView.setText(res.getString(R.string.welcome_message, firstName));
         }
-
     }
 
     private void addUser() {
@@ -159,11 +163,11 @@ public class SetProfileActivity extends AppCompatActivity {
         String phoneNumber = phoneNumberEditText.getText().toString();
         String locationStr = location != null ? location.getId() : "";
         Matcher matcher = VALID_PHONE_NUMBER.matcher(phoneNumber);
-        if (!matcher.matches()){
+        if (!matcher.matches()) {
             phoneNumberEditText.setError("Invalid phone number");
             allGood = false;
         }
-        if (allGood){
+        if (allGood) {
             if (userType == UserCategory.Parent) {
                 addParent(profilePictureUriStr, phoneNumber, locationStr);
             } else if (userType == UserCategory.Babysitter) {

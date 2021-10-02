@@ -66,7 +66,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (firebaseAuth.getCurrentUser() != null) {
             Log.d(TAG, String.format("User Already exists: <%s>", firebaseAuth.getCurrentUser().getDisplayName()));
-            setExtras();
             startActivity(intentSetProfile);
         }
         // first time visiting or in case of in-completing signup
@@ -110,14 +109,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             intentSignUp = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivityForResult(intentSignUp, MAIL_RESULT_CODE);
         });
-    }
-
-    private void setExtras() {
-        String fullName = firebaseAuth.getCurrentUser().getDisplayName();
-        intentSetProfile.putExtra("firstName", fullName.split(" ")[0]);
-        intentSetProfile.putExtra("lastName", fullName.split(" ")[1]);
-        intentSetProfile.putExtra("email", firebaseAuth.getCurrentUser().getEmail());
-//            intentSetProfile.putExtra("password", firebaseAuth.getCurrentUser().);
     }
 
     private void signInWithGoogle() {
@@ -190,14 +181,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     if (list.contains(userID)) {
                                         Log.d(TAG, "User already exist - " + userID);
                                         list.clear();
-                                        setExtras();
                                         startActivity(intentSetProfile);
                                         finishAffinity();
                                         Toast.makeText(LoginActivity.this, "Logged in successfully.", Toast.LENGTH_LONG).show();
                                     } else {
                                         Log.d(TAG, "User creating - " + userID);
                                         list.clear();
-                                        setExtras();
                                         startActivity(intentSetProfile);
                                         finishAffinity();
                                     }
@@ -255,7 +244,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Log.w("TESTING", "signInWithEmail:failed", task.getException());
                         Toast.makeText(LoginActivity.this, "" + (task.getException().getMessage().equals("There is no user record corresponding to this identifier. The user may have been deleted.") ? task.getException().getMessage().replace("There is no user record corresponding to this identifier. The user may have been deleted.", "User not found. Please register") : task.getException().getMessage().replace("The password is invalid or the user does not have a password.", "Password entered is incorrect.")), Toast.LENGTH_LONG).show();
                     } else {
-                        setExtras();
                         startActivity(intentSetProfile);
                         finish();
                     }
