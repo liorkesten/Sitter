@@ -58,7 +58,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Who needs babysitter?" />
+            android:text="Who needs babysitter?"
+            android:layout_marginBottom="8dp"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_children"
@@ -71,18 +73,20 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:layout_marginBottom="8dp"
             tools:background="#999999" />
 
         <EditText
             android:id="@+id/description_edit_text"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:autofillHints="Add a Comment"
             android:hint="@string/comment_hint"
+            android:paddingLeft="8sp"
             android:inputType="textMultiLine"
             android:lines="4"
+            android:background="@drawable/edit_text_border"
             android:maxLines="5"
             android:minLines="3" />
 
