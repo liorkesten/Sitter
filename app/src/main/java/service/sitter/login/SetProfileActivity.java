@@ -70,6 +70,7 @@ public class SetProfileActivity extends AppCompatActivity {
             Pattern.compile("05\\d{8}");
 
     FirebaseUser currentUser;
+    ImageButton backButtonSetProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +142,11 @@ public class SetProfileActivity extends AppCompatActivity {
                 .replace(R.id.location_fragment_container_view, locationFragment)
                 .replace(R.id.bottomFrameFragment, setProfileParentFragment)
                 .commit();
+
+        backButtonSetProfile.setOnClickListener(v -> finish());
     }
+
+
 
     @SuppressLint("SetTextI18n")
     private void fillDetails() {

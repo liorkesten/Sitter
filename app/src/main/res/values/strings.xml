@@ -77,7 +77,7 @@
     <string name="no_available_approved_requests">No available approved requests</string>
     <string name="no_available_archived_requests">No available archived requests</string>
     <string name="no_available_incoming_requests">no_available_incoming_requests</string>
-    <string name="empty_description"> ~~~</string>
+    <string name="empty_description">No description</string>
     <string name="title_connection_add">Enter babysitter phone number</string>
 
 </resources>
