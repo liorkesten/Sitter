@@ -65,7 +65,7 @@ public class SetProfileActivity extends AppCompatActivity {
     private static final String TAG = SetProfileActivity.class.getSimpleName();
     private SetProfileParentFragment setProfileParentFragment;
     private SetProfileBabysitterFragment setProfileBabysitterFragment;
-    private String firstName = "", lastName = "", email = "", password = "";
+    private String firstName = "", lastName = "", email = "";
     public static final Pattern VALID_PHONE_NUMBER =
             Pattern.compile("05\\d{8}");
 
@@ -102,7 +102,7 @@ public class SetProfileActivity extends AppCompatActivity {
             Log.d(TAG, "Error with fetching user - user is null");
             exit(101);
         }
-
+        setValuesFromUserAccount();
         fillDetails();
 
         // set Logic Components
@@ -143,12 +143,17 @@ public class SetProfileActivity extends AppCompatActivity {
                 .commit();
     }
 
+    private void setValuesFromUserAccount() {
+        firstName = currentUser.getDisplayName().split(" ")[0];
+        lastName = currentUser.getDisplayName().split(" ")[1]; // TODO Maybe it won't work with google auth.
+        email = currentUser.getEmail();
+    }
+
     @SuppressLint("SetTextI18n")
     private void fillDetails() {
         if (currentUser.getDisplayName() == null || currentUser.getDisplayName().equals("")) {
             usernameTextView.setText("Welcome User");
         } else {
-            String firstName = currentUser.getDisplayName().split(" ", 2)[0];
             Resources res = getResources();
             usernameTextView.setText(res.getString(R.string.welcome_message, firstName));
         }
