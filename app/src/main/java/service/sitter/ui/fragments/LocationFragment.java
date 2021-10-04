@@ -55,9 +55,8 @@ public class LocationFragment extends Fragment {
 
         autocompleteSupportFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
         autocompleteSupportFragment.setHint("Enter Location");
-        autocompleteSupportFragment.setCountry("ISR");
         EditText editTextLocation = (EditText) autocompleteSupportFragment.getView().findViewById(R.id.places_autocomplete_search_input);
-        editTextLocation.setTextSize(20.0f);
+        editTextLocation.setTextSize(14.0f);
         autocompleteSupportFragment.getView().findViewById(R.id.places_autocomplete_search_button).setVisibility(View.GONE);
         autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.LAT_LNG, Place.Field.ID, Place.Field.NAME));
 

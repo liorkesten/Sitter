@@ -155,6 +155,9 @@ public class PublishRequestFragment extends Fragment {
         } else if (date.isBefore(LocalDate.now())) {
             prettyToastProvider.showToast("Date can't be previous to current time.", getActivity().getApplication());
             return true;
+        } else if (location == null) {
+            prettyToastProvider.showToast("Location can't be empty.", getActivity().getApplication());
+            return true;
         }
         return false;
     }

@@ -19,6 +19,7 @@
         <entry key="app/src/main/res/drawable/checked_button.xml" value="0.1984375" />
         <entry key="app/src/main/res/drawable/curve_shape.xml" value="0.17395833333333333" />
         <entry key="app/src/main/res/drawable/custom_img_btn.xml" value="0.1984375" />
+        <entry key="app/src/main/res/drawable/edit_text_border.xml" value="0.3398148148148148" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.26197916666666665" />
         <entry key="app/src/main/res/drawable/ic_outline_cancel.xml" value="0.17395833333333333" />
         <entry key="app/src/main/res/drawable/img.xml" value="0.2703125" />
@@ -45,17 +46,17 @@
         <entry key="app/src/main/res/layout/fragment_set_profile_parent.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_set_profile_parent_bottom_frame.xml" value="0.1094224924012158" />
         <entry key="app/src/main/res/layout/fragment_set_profile_top_frame.xml" value="0.14947916666666666" />
+        <entry key="app/src/main/res/layout/fragment_time.xml" value="0.14628623188405798" />
         <entry key="app/src/main/res/layout/fragment_time_button.xml" value="0.1" />
         <entry key="app/src/main/res/layout/header.xml" value="0.25416666666666665" />
-        <entry key="app/src/main/res/layout/item_babysitter_request_approved.xml" value="0.55" />
-        <entry key="app/src/main/res/layout/item_babysitter_request_archived.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/item_babysitter_request_approved.xml" value="0.75" />
+        <entry key="app/src/main/res/layout/item_babysitter_request_archived.xml" value="0.18229166666666666" />
         <entry key="app/src/main/res/layout/item_babysitter_request_incoming.xml" value="0.36041666666666666" />
         <entry key="app/src/main/res/layout/item_child.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/item_connection.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_recommendation.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_request.xml" value="0.23676737739060963" />
         <entry key="app/src/main/res/layout/item_reuqest.xml" value="0.25416666666666665" />
-        <entry key="app/src/main/res/layout/popup_layout.xml" value="0.45" />
         <entry key="app/src/main/res/layout/pretty_toast.xml" value="0.1578125" />
       </map>
     </option>
