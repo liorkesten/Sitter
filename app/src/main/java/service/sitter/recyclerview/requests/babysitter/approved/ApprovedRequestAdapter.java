@@ -1,9 +1,13 @@
 package service.sitter.recyclerview.requests.babysitter.approved;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,7 +31,7 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
     // Requests
     private final List<Request> requests = new ArrayList<>();
     // Listener
-    private final IRequestAdapterListener listener;
+    private IRequestAdapterListener listener;
     private final IRequestAdapterListener calenderButtonListener;
     private final IRequestAdapterListener cancelButtonListener;
 
@@ -46,6 +50,35 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
         this.context = context;
     }
 
+    private void openPopUpWindow(View v, Request request, Babysitter babysitter, View viewInflated){
+        //View viewInflated = LayoutInflater.from(context).inflate(R.layout.popup_layout, (ViewGroup) (v), false);
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(viewInflated, width, height, focusable);
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+        TextView description = viewInflated.findViewById(R.id.item_babysitter_request_archived_desc_value);
+        TextView date = viewInflated.findViewById(R.id.item_babysitter_request_archived_date_value);
+        TextView time = viewInflated.findViewById(R.id.item_babysitter_request_archived_time_value);
+        // Update values of view holder:
+
+        description.setText(request.getDescription());
+        date.setText(request.getDate());
+        time.setText(request.getTime());
+
+        // dismiss the popup window when touched
+        viewInflated.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
+    }
+
     @NonNull
     @Override
     public ApprovedRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -58,15 +91,6 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
     public void onBindViewHolder(@NonNull ApprovedRequestViewHolder holder, int position) {
         // Load
         Request request = requests.get(position);
-        View viewInflated = LayoutInflater.from(holder.getRootView().getContext()).inflate(R.layout.popup_layout, (ViewGroup) holder.getRootView(), false);
-        TextView description = viewInflated.findViewById(R.id.item_babysitter_request_archived_desc_value);
-        TextView date = viewInflated.findViewById(R.id.item_babysitter_request_archived_date_value);
-        TextView time = viewInflated.findViewById(R.id.item_babysitter_request_archived_time_value);
-        // Update values of view holder:
-
-        description.setText(request.getDescription());
-        date.setText(request.getDate());
-        time.setText(request.getTime());
         holder.getDateValueTextView().setText(request.getDate());
         //holder.getDescriptionValueTextView().setText(request.getDescription());
         holder.getTimeValueTextView().setText(request.getTime());
@@ -84,7 +108,8 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
             db.getBabysitter(request.getReceiverId(), new IOnGettingBabysitterFromDb() {
                 @Override
                 public void babysitterFound(Babysitter babysitter) {
-
+                    View viewInflated = LayoutInflater.from(holder.getRootView().getContext()).inflate(R.layout.popup_layout, (ViewGroup) holder.getRootView(), false);
+                    listener = request1 -> openPopUpWindow(holder.getRootView(), request, babysitter, viewInflated);
                     TextView name = viewInflated.findViewById(R.id.item_babysitter_request_archived_name_value);
                     TextView mobility = viewInflated.findViewById(R.id.item_babysitter_mobility_edit);
                     name.setText(babysitter.getFirstName());
@@ -99,7 +124,6 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
                 @Override
                 public void onFailure(String phoneNumber) {
                 }
-
 
             });
         }

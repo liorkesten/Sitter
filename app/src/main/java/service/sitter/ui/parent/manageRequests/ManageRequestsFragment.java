@@ -130,7 +130,7 @@ public class ManageRequestsFragment extends Fragment {
 
     @NonNull
     private ApprovedRequestAdapter getApprovedRequestAdapter() {
-        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(request -> openPopUpWindow(), r -> CalendarProvider.AddCalendarEvent(getActivity(), r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/, UserCategory.Parent, getActivity().getApplication());
+        ApprovedRequestAdapter adapter = new ApprovedRequestAdapter(null, r -> CalendarProvider.AddCalendarEvent(getActivity(), r.getStartTime(), r.getEndTime(), r.getDate()), r -> db.deleteRequest(r.getUuid()) /*TODO add popup that asks if the user sure that he wants to delete the request*/, UserCategory.Parent, getActivity().getApplication());
         // SetAdapter
         LiveData<List<Request>> requestsLiveData = db.getLiveDataApprovedRequestsOfParent(parent.getUuid());
         if (requestsLiveData == null) {
@@ -149,27 +149,7 @@ public class ManageRequestsFragment extends Fragment {
         return adapter;
     }
 
-    private void openPopUpWindow(){
-        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.popup_layout, (ViewGroup) getView(), false);
-        // create the popup window
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = true; // lets taps outside the popup also dismiss it
-        final PopupWindow popupWindow = new PopupWindow(viewInflated, width, height, focusable);
 
-        // show the popup window
-        // which view you pass in doesn't matter, it is only used for the window tolken
-        popupWindow.showAtLocation(root, Gravity.CENTER, 0, 0);
-
-        // dismiss the popup window when touched
-        viewInflated.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                popupWindow.dismiss();
-                return true;
-            }
-        });
-    }
 //        TextView tv = new TextView(context);
 //        PopupWindow popUp;
 //        LinearLayout layout = new LinearLayout(context);
