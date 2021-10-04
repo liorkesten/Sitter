@@ -55,7 +55,7 @@
                 android:id="@+id/item_babysitter_request_approved_time_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="5PM-8PM"
+                android:hint=" 5PM-8PM"
                 android:textSize="16sp" />
 
         </LinearLayout>

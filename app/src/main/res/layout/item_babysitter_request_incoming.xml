@@ -30,8 +30,8 @@
                 android:id="@+id/item_babysitter_request_date_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="19/10/2020"
-                android:textSize="18sp" />
+                android:hint=" 19/10/2020"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -53,8 +53,8 @@
                 android:id="@+id/item_babysitter_request_time_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="5PM-8PM"
-                android:textSize="18sp" />
+                android:hint=" 5PM-8PM"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
