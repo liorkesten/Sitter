@@ -49,7 +49,7 @@ public class CalendarProvider {
 //        i.putExtra("allDay", false);
 //        i.putExtra("rule", "FREQ=YEARLY");
         i.putExtra("endTime", timeInMillisecondsEnd);
-        i.putExtra("title", "Babysitter - ");
+        i.putExtra("title", "Babysitting Event");
         context.startActivity(i);
     }
 }

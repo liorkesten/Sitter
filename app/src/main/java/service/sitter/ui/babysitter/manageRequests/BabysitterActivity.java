@@ -25,6 +25,7 @@ import service.sitter.providers.CalendarProvider;
 import service.sitter.recyclerview.requests.babysitter.approved.ApprovedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.archived.ArchivedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.incoming.IncomingRequestAdapter;
+import service.sitter.utils.RecyclerViewUtils;
 import service.sitter.utils.SharedPreferencesUtils;
 
 public class BabysitterActivity extends AppCompatActivity {
@@ -98,6 +99,9 @@ public class BabysitterActivity extends AppCompatActivity {
             } else {
                 Log.d(TAG, "Set new requests for request IncomingRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
+                RecyclerViewUtils.switchBetweenRecAndText(findViewById(android.R.id.content).getRootView()  , requests, R.id.babysitter_recycler_view_incoming_requests, R.id.text_recycler_view_upcoming_requests);
+
+
             }
         });
 
@@ -118,6 +122,7 @@ public class BabysitterActivity extends AppCompatActivity {
             } else {
                 Log.d(TAG, "Set new requests for  ApprovedRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
+                RecyclerViewUtils.switchBetweenRecAndText(findViewById(android.R.id.content).getRootView()  , requests, R.id.babysitter_recycler_view_approved_requests, R.id.text_recycler_view_approved_requests);
             }
         });
 

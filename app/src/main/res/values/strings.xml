@@ -14,7 +14,7 @@
     <string name="user_exists">User already logged in</string>
     <string name="sign_in_facebook">Sign in with Facebook</string>
     <string name="sign_in_google">Sign in with Google</string>
-    <string name="welcome_message">Welcome, %1$s! \nSet Your Profile</string>
+    <string name="welcome_message">Welcome, %1$s!</string>
 
     <string name="Email">Email</string>
     <string name="Password">Password</string>
@@ -80,7 +80,7 @@
     <string name="no_available_connections">No available connections</string>
     <string name="no_available_approved_requests">No available approved requests</string>
     <string name="no_available_archived_requests">No available archived requests</string>
-    <string name="no_available_incoming_requests">no_available_incoming_requests</string>
+    <string name="no_available_incoming_requests">no available incoming requests</string>
     <string name="empty_description"> No description</string>
     <string name="title_connection_add">Enter babysitter phone number</string>
 
