@@ -4,7 +4,7 @@
     <string name="title_set_profile">Set Profile</string>
     <string name="title_login_activity">Login</string>
     <string name="title_sign_up_activity">Sign Up</string>
-    <string name="title_manage_requests_babysitter">Babysitter - Manage Requests</string>
+    <string name="title_manage_requests_babysitter">Babysitter Dashboard</string>
     <string name="title_manage_requests_parent">Manage Requests</string>
     <string name="title_connections">Connections</string>
     <string name="comment_hint">Add a comment… (Optional)</string>
@@ -45,7 +45,7 @@
     <string name="register">Register</string>
     <string name="re_type_password">Re-type Password</string>
     <string name="your_name">Full Name</string>
-    <string name="name_of_approver">Name: </string>
+    <string name="name_of_approver">Parent: </string>
     <string name="name_approver_title"> John</string>
     <string name="mobility_ans">Mobility: </string>
     <string name="yes">Yes</string>

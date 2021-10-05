@@ -143,6 +143,8 @@ public class BabysitterActivity extends AppCompatActivity {
             } else {
                 Log.d(TAG, "Set new requests for  ArchivedRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
+                RecyclerViewUtils.switchBetweenRecAndText(findViewById(android.R.id.content).getRootView()  , requests, R.id.babysitter_recycler_view_history_requests, R.id.text_recycler_view_history_requests);
+
             }
         });
 

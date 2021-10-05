@@ -66,7 +66,7 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
         // Update values of view holder:
 
         description.setText(request.getDescription());
-        date.setText(request.getDate());
+        date.setText(DateUtils.getFormattedDateFromString(request.getDate()));
         time.setText(request.getTime());
 
         // dismiss the popup window when touched
@@ -91,7 +91,7 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
     public void onBindViewHolder(@NonNull ApprovedRequestViewHolder holder, int position) {
         // Load
         Request request = requests.get(position);
-        holder.getDateValueTextView().setText(request.getDate());
+        holder.getDateValueTextView().setText(DateUtils.getFormattedDateFromString(request.getDate()));
         //holder.getDescriptionValueTextView().setText(request.getDescription());
         holder.getTimeValueTextView().setText(request.getTime());
 

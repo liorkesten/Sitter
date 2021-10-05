@@ -30,7 +30,7 @@ public class ArchivedRequestViewHolder extends RecyclerView.ViewHolder {
         dateValueTextView = itemView.findViewById(R.id.item_babysitter_request_archived_date_value);
         timeValueTextView = itemView.findViewById(R.id.item_babysitter_request_archived_time_value);
         descriptionValueTextView = itemView.findViewById(R.id.item_babysitter_request_archived_desc_value);
-        nameValueTextView = itemView.findViewById(R.id.item_babysitter_request_archived_name_value);
+        nameValueTextView = itemView.findViewById(R.id.item_request_name_text_value);
         profileImageView = itemView.findViewById(R.id.item_babysitter_request_archived_profile_image);
     }
 

@@ -57,12 +57,11 @@ public class ArchivedRequestAdapter extends RecyclerView.Adapter<ArchivedRequest
         holder.getDateValueTextView().setText(DateUtils.getFormattedDateFromString(request.getDate()));
         holder.getDescriptionValueTextView().setText(request.getDescription());
         holder.getTimeValueTextView().setText(request.getTime());
-
         // Fields that are extracted by the parent object (so db is needed).
         if (userCategory == UserCategory.Babysitter) {
             db.getParent(request.getPublisherId(), parent -> {
                 // Assign fields from parent object.
-                holder.getNameValueTextView().setText(parent.getFullName());
+                holder.getNameValueTextView().setText(parent.getFirstName());
 //                Glide.with(this.context).load(parent.getImage()).into(holder.getProfileImageView());
                 ImagesUtils.updateImageView(this.context, parent.getImage(), holder.getProfileImageView());
 
