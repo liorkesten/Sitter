@@ -1,7 +1,5 @@
 package service.sitter.db;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -248,12 +246,12 @@ public class DataBase implements IDataBase {
 
             @Override
             public void connectionFound(Connection connection) {
-                Log.d(TAG, String.format("Didn't add new connection - connection between <%s> and <%s> is already exists.", userA, userB));
+                //Log.d(TAG, String.format("Didn't add new connection - connection between <%s> and <%s> is already exists.", userA, userB));
             }
 
             @Override
             public void connectionIsNotExist(String userA, String userB) {
-                Log.d(TAG, String.format("Connection is not exist, creating new connection between <%s> and <%s>.", userA, userB));
+                //Log.d(TAG, String.format("Connection is not exist, creating new connection between <%s> and <%s>.", userA, userB));
                 Connection connection = new Connection(userA, userB);
                 connectionsDb.addConnection(connection);
             }

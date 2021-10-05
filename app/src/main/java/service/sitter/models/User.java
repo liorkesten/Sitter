@@ -1,7 +1,5 @@
 package service.sitter.models;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +120,7 @@ public abstract class User implements Serializable {
     }
 
     public void addConnection(Connection newConnection) {
-        Log.d(TAG, String.format("Adding new connection <%s> to <%s> user.", newConnection, this));
+        //Log.d(TAG, String.format("Adding new connection <%s> to <%s> user.", newConnection, this));
         this.connections.add(newConnection);
     }
 

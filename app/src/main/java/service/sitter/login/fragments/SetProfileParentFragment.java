@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +67,7 @@ public class SetProfileParentFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "created");
+        //Log.d(TAG, "created");
         binding = FragmentSetProfileParentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         PaymentFragment paymentFragment = new PaymentFragment();

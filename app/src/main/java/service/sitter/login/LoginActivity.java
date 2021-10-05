@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         // check if user already logged in with the same phone
 
         if (firebaseAuth.getCurrentUser() != null) {
-            Log.d(TAG, String.format("User Already exists: <%s>", firebaseAuth.getCurrentUser().getDisplayName()));
+            //Log.d(TAG, String.format("User Already exists: <%s>", firebaseAuth.getCurrentUser().getDisplayName()));
             startActivity(intentSetProfile);
         }
 
@@ -122,21 +122,21 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "requestCode" + requestCode);
-        Log.d(TAG, "resultCode" + resultCode);
-        Log.d(TAG, "data" + data);
+        //Log.d(TAG, "requestCode" + requestCode);
+        //Log.d(TAG, "resultCode" + resultCode);
+        //Log.d(TAG, "data" + data);
 
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
             case MAIL_RESULT_CODE:
-                Log.d(TAG, "Request code in onActivityResult is MAIL_RESULT_CODE");
+                //Log.d(TAG, "Request code in onActivityResult is MAIL_RESULT_CODE");
                 intentSignUp = data;
                 signupAuth();
                 break;
             // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
             case GOOGLE_RESULT_CODE:
-                Log.d(TAG, "Request code in onActivityResult is GOOGLE_RESULT_CODE");
+                //Log.d(TAG, "Request code in onActivityResult is GOOGLE_RESULT_CODE");
                 // The Task returned from this call is always completed, no need to attach
                 // a listener.android:noHistory
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -163,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void googleUpdateUI(final GoogleSignInAccount googleSignInAccount) {
 
-//        Log.d("token", googleSignInAccount.getIdToken());
+//        //Log.d("token", googleSignInAccount.getIdToken());
         AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
         firebaseAuth.signInWithCredential(authCredential)
                 .addOnCompleteListener(LoginActivity.this, AuthResultTask -> {
@@ -172,22 +172,22 @@ public class LoginActivity extends AppCompatActivity {
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         if (googleSignInAccount != null) {
                             final String userID = user.getUid();
-                            Log.d(TAG, userID);
+                            //Log.d(TAG, userID);
                             db.collection("Users").get().addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         list.add(document.getId());
-                                        Log.d(TAG, "" + list);
+                                        //Log.d(TAG, "" + list);
 
                                     }
                                     if (list.contains(userID)) {
-                                        Log.d(TAG, "User already exist - " + userID);
+                                        //Log.d(TAG, "User already exist - " + userID);
                                         list.clear();
                                         startActivity(intentSetProfile);
                                         finishAffinity();
                                         Toast.makeText(LoginActivity.this, "Logged in successfully.", Toast.LENGTH_LONG).show();
                                     } else {
-                                        Log.d(TAG, "User creating - " + userID);
+                                        //Log.d(TAG, "User creating - " + userID);
                                         list.clear();
                                         startActivity(intentSetProfile);
                                         finishAffinity();
@@ -220,23 +220,23 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void signupAuth() {
-        Log.d(TAG, "entered to signupAuth");
+        //Log.d(TAG, "entered to signupAuth");
         String firstName = intentSignUp.getStringExtra("firstName");
         String lastName = intentSignUp.getStringExtra("lastName");
         String email = intentSignUp.getStringExtra("email");
         String password = intentSignUp.getStringExtra("password");
-        Log.d(TAG, String.format("firstName:<%s>,lastName:<%s>,email:<%s>,password:<%s>", firstName, lastName, email, password));
+        //Log.d(TAG, String.format("firstName:<%s>,lastName:<%s>,email:<%s>,password:<%s>", firstName, lastName, email, password));
 
 
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "createUserWithEmail:success");
+                        //Log.d(TAG, "createUserWithEmail:success");
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         String displayName = user.getDisplayName();
                         String mail = user.getEmail();
-                        Log.d(TAG, "User extracted successfully via signup. Display name:" + displayName + ".Mail:" + mail);
+                        //Log.d(TAG, "User extracted successfully via signup. Display name:" + displayName + ".Mail:" + mail);
                         // After creating user, we should update the profile to set the display name - neeeded for SetProfile activity.
                         firebaseAuth
                                 .getCurrentUser()
@@ -245,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
                                         .setDisplayName(firstName + " " + lastName)
                                         .build())
                                 .addOnSuccessListener(v -> {
-                                    Log.d(TAG, "Updated user display name");
+                                    //Log.d(TAG, "Updated user display name");
                                     Toast toast = Toast.makeText(this.getApplication(), "User created successfully", Toast.LENGTH_LONG);
                                     toast.setGravity(Gravity.CENTER, 0, 0);
                                     toast.show();
@@ -271,10 +271,10 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success");
+                        //Log.d(TAG, "signInWithEmail:success");
 
                         FirebaseUser user = firebaseAuth.getCurrentUser();
-                        Log.d(TAG, "User extracted successfully via signup: " + user);
+                        //Log.d(TAG, "User extracted successfully via signup: " + user);
                         startActivity(intentSetProfile);
                     } else {
                         // If sign in fails, display a message to the user.

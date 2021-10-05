@@ -1,20 +1,12 @@
 package service.sitter.providers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import service.sitter.ui.parent.manageRequests.ManageRequestsFragment;
 
 public class CalendarProvider {
 
@@ -27,7 +19,7 @@ public class CalendarProvider {
         Date dateStart = null;
         Date dateEnd = null;
         try {
-            Log.d(TAG, dateString + " " + startTime);
+            //Log.d(TAG, dateString + " " + startTime);
             dateStart = sdf.parse(dateString + " " + startTime);
             dateEnd = sdf.parse(dateString + " " + endTime);
         } catch (ParseException e) {
@@ -42,7 +34,7 @@ public class CalendarProvider {
 //        int startTimeInt = Integer.parseInt(startTime);
 //        long timeInMilliseconds = LocalDateTime.of(year, month, day, startTimeInt);
 //        long timeInMilliseconds = localDate.atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
-        Log.d(TAG, "" + timeInMillisecondsStart);
+        //Log.d(TAG, "" + timeInMillisecondsStart);
         Intent i = new Intent(Intent.ACTION_EDIT);
         i.setType("vnd.android.cursor.item/event");
         i.putExtra("beginTime", timeInMillisecondsStart);

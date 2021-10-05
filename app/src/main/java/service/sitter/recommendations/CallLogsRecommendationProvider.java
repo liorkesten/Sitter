@@ -3,7 +3,6 @@ package service.sitter.recommendations;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.CallLog;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,10 +26,10 @@ public class CallLogsRecommendationProvider implements IRecommendationProvider {
 
     @Override
     public void getRecommendations(Context context, String userID) {
-        Log.d(TAG, "called to CallLogsRecommendationProvider with userId:" + userID);
+        //Log.d(TAG, "called to CallLogsRecommendationProvider with userId:" + userID);
         IDataBase db = DataBase.getInstance();
         List<Call> calls = getCallDetails(context);
-        Log.d(TAG, "calls" + calls);
+        //Log.d(TAG, "calls" + calls);
         List<Call> sortedUniqueCalls = CallsUtils.sortUniqueCallsByTheirFreq(calls);
 
         List<String> phoneNumbers = sortedUniqueCalls.stream().map(Call::getPhNumber).collect(Collectors.toList());

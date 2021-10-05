@@ -57,7 +57,7 @@ public class ConnectionsDataBase {
                 .document(connectionUuid)
                 .set(connection);
 
-        Log.d(TAG, String.format("Connection was added successfully: <%s>", connectionUuid));
+        //Log.d(TAG, String.format("Connection was added successfully: <%s>", connectionUuid));
         return true;
     }
 
@@ -77,7 +77,7 @@ public class ConnectionsDataBase {
 //        Connections.remove(connectionUuid);
         firestore.collection(COLLECTION_FIRESTORE_NAME).document(connectionUuid).delete();
 
-        Log.d(TAG, String.format("Connection was deleted successfully: <%s>", connectionUuid));
+        //Log.d(TAG, String.format("Connection was deleted successfully: <%s>", connectionUuid));
         return true;
     }
 
@@ -96,7 +96,7 @@ public class ConnectionsDataBase {
                         List<DocumentSnapshot> documentSnapshots = value.getDocuments();
                         documentSnapshots.forEach(doc -> connections.add(doc.toObject(Connection.class)));
                         liveDateConnections.setValue(connections);
-                        Log.d(TAG, "[getLiveDataConnectionsOfParent] All connections extracted successfully" + connections);
+                        //Log.d(TAG, "[getLiveDataConnectionsOfParent] All connections extracted successfully" + connections);
                     }
                 });
         return liveDateConnections;
@@ -117,7 +117,7 @@ public class ConnectionsDataBase {
                         List<DocumentSnapshot> documentSnapshots = value.getDocuments();
                         documentSnapshots.forEach(doc -> connections.add(doc.toObject(Connection.class)));
                         liveDateConnections.setValue(connections);
-                        Log.d(TAG, "[getLiveDataConnectionsOfBabysitter] All connections extracted successfully" + connections);
+                        //Log.d(TAG, "[getLiveDataConnectionsOfBabysitter] All connections extracted successfully" + connections);
                     }
                 });
         return liveDateConnections;
@@ -151,7 +151,7 @@ public class ConnectionsDataBase {
     }
 
     public void getConnectionsOfParent(String userID, IGetConnections iGetConnections) {
-        Log.d(TAG, "[getConnectionsOfParent] Getting connections of parent:" + userID);
+        //Log.d(TAG, "[getConnectionsOfParent] Getting connections of parent:" + userID);
         firestore.collection(COLLECTION_FIRESTORE_NAME)
                 .whereEqualTo("sideAUId", userID)
                 .get()
@@ -160,7 +160,7 @@ public class ConnectionsDataBase {
                         Log.e(TAG, "Unexpected behavior - snapshot is null");
                     }
                     List<Connection> connections = snapshot.toObjects(Connection.class);
-                    Log.d(TAG, "[getConnectionsOfParent] Extracted connections:" + connections);
+                    //Log.d(TAG, "[getConnectionsOfParent] Extracted connections:" + connections);
                     iGetConnections.apply(connections);
                 });
     }
@@ -170,7 +170,7 @@ public class ConnectionsDataBase {
             Log.e(TAG, "parents is null or empty" + parents);
             return;
         }
-        Log.d(TAG, "[getConnectionsOfParents] Getting connections of parents:" + parents);
+        //Log.d(TAG, "[getConnectionsOfParents] Getting connections of parents:" + parents);
         List<String> parentsIDs = parents.stream().map(p -> p.getUuid()).collect(Collectors.toList());
         firestore.collection(COLLECTION_FIRESTORE_NAME)
                 .whereIn("sideAUId", parentsIDs)
@@ -180,7 +180,7 @@ public class ConnectionsDataBase {
                         Log.e(TAG, "Unexpected behavior - snapshot is null");
                     }
                     List<Connection> connections = snapshot.toObjects(Connection.class);
-                    Log.d(TAG, "[getConnectionsOfParents] Extracted connections:" + connections);
+                    //Log.d(TAG, "[getConnectionsOfParents] Extracted connections:" + connections);
                     iGetConnections.apply(connections);
                 });
     }

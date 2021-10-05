@@ -2,18 +2,14 @@ package service.sitter.ui.parent.connections;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -126,11 +122,11 @@ public class ConnectionsFragment extends Fragment {
         add_connection_button.setOnClickListener(v -> {
             String phoneNumber = editTextAddConnection.getText().toString();
             if (phoneNumber == null || phoneNumber.length() != 10) {
-                Log.d(TAG, "can't click on add connection button - phone number should be with 10 chars");
+                //Log.d(TAG, "can't click on add connection button - phone number should be with 10 chars");
                 prettyToastProvider.showToast("Please enter valid phone - 10 digits", getActivity().getApplication());
                 return;
             }
-            Log.d(TAG, "add_connection_button was clicked");
+            //Log.d(TAG, "add_connection_button was clicked");
             prettyToastProvider.showToast("looking for babysitter...", this.getContext());
             db.getBabysitterByPhoneNumber(phoneNumber, new IOnGettingBabysitterFromDb() {
                 @Override
@@ -159,7 +155,7 @@ public class ConnectionsFragment extends Fragment {
             if (connections == null) {
                 Log.e(TAG, "Connections is nil");
             } else {
-                Log.d(TAG, "Set new connections for connection adapter -  " + connections);
+                //Log.d(TAG, "Set new connections for connection adapter -  " + connections);
                 connectionAdapter.setConnections(connections);
                 this.connections.clear();
                 this.connections.addAll(connections);
@@ -185,7 +181,7 @@ public class ConnectionsFragment extends Fragment {
             if (recommendations == null) {
                 Log.e(TAG, "recommendations is nil");
             } else {
-                Log.d(TAG, "Set new recommendations for recommendation adapter -  " + recommendations);
+                //Log.d(TAG, "Set new recommendations for recommendation adapter -  " + recommendations);
                 this.recommendations.clear();
                 this.recommendations.addAll(recommendations);
                 RecyclerViewUtils.switchBetweenRecAndText(root, recommendations, R.id.recycler_view_recommendations, R.id.text_recycler_view_recommendations);

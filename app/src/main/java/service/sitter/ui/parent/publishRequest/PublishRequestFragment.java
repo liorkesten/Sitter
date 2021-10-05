@@ -117,7 +117,7 @@ public class PublishRequestFragment extends Fragment {
             db.addRequest(request, new IOnUploadingRequest() {
                 @Override
                 public void onSuccess() {
-                    Log.d(TAG, "request was added successfully");
+                    //Log.d(TAG, "request was added successfully");
                     prettyToastProvider.showToast("Your request was added successfully.", getActivity().getApplication());
                     // TODO add once the button was clicked, move to manage requests.
 //                    pDialog.cancel();

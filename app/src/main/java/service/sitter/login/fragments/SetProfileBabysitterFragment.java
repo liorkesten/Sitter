@@ -1,11 +1,9 @@
 package service.sitter.login.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
@@ -14,7 +12,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import service.sitter.R;
 import service.sitter.databinding.FragmentSetProfileBabysitterBinding;
-import service.sitter.databinding.FragmentSetProfileParentBinding;
 
 public class SetProfileBabysitterFragment extends Fragment {
     private static final String TAG = SetProfileBabysitterFragment.class.getSimpleName();
@@ -32,7 +29,7 @@ public class SetProfileBabysitterFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // inflaing
-        Log.d(TAG, "instance created");
+        //Log.d(TAG, "instance created");
         binding = FragmentSetProfileBabysitterBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 

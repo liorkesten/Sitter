@@ -44,16 +44,16 @@ public class RecommendationsDataBase {
                 .document(recommendationUuid)
                 .set(recommendation);
 
-        Log.d(TAG, String.format("recommendation was added successfully: <%s>", recommendationUuid));
+        //Log.d(TAG, String.format("recommendation was added successfully: <%s>", recommendationUuid));
         return true;
     }
 
     public void addRecommendations(@NonNull List<Recommendation> recommendations) {
         if (recommendations == null || recommendations.size() == 0) {
-            Log.d(TAG, "recommendations is null or empty: " + recommendations);
+            //Log.d(TAG, "recommendations is null or empty: " + recommendations);
             return;
         }
-        Log.d(TAG, "Adding new recommendations: " + recommendations);
+        //Log.d(TAG, "Adding new recommendations: " + recommendations);
         Map<String, Recommendation> idToRec = recommendations
                 .stream()
                 .collect(Collectors.toMap(Recommendation::getUuid, item -> item));
@@ -65,7 +65,7 @@ public class RecommendationsDataBase {
 //                .collection(COLLECTION_FIRESTORE_NAME)
 //                .add(idToRec);
 
-        Log.d(TAG, String.format("recommendations was added successfully: <%s>", recommendations));
+        //Log.d(TAG, String.format("recommendations was added successfully: <%s>", recommendations));
     }
 
     /**
@@ -81,33 +81,33 @@ public class RecommendationsDataBase {
                 .document(recommendationUuid)
                 .delete();
 
-        Log.d(TAG, String.format("recommendation was deleted successfully: <%s>", recommendationUuid));
+        //Log.d(TAG, String.format("recommendation was deleted successfully: <%s>", recommendationUuid));
         return true;
     }
 
     public LiveData<List<Recommendation>> getLiveDataRecommendationsOfParent(String parentUuid) {
-        Log.d(TAG, "Listening. parentUuid:" + parentUuid);
+        //Log.d(TAG, "Listening. parentUuid:" + parentUuid);
         MutableLiveData<List<Recommendation>> liveDataRequests = new MutableLiveData<>();
         firestore
                 .collection(COLLECTION_FIRESTORE_NAME)
                 .whereEqualTo(FieldPath.of("connection", "sideAUId"), parentUuid)
 //                .whereEqualTo("isUsed", false)
                 .addSnapshotListener((value, err) -> {
-                    Log.d(TAG, "Listening inside the snapshot");
+                    //Log.d(TAG, "Listening inside the snapshot");
                     if (err != null) {
                         Log.e(TAG, String.format("Failed to extract recommendations of parent <%s>,  due to: %s", parentUuid, err));
                     } else if (value == null) {
                         Log.e(TAG, String.format("Failed to extract recommendations of parent <%s>, due to: value is null", parentUuid));
                     } else {
                         if (value.size() == 0) {
-                            Log.d(TAG, String.format("No results for parent: <%s>", parentUuid));
+                            //Log.d(TAG, String.format("No results for parent: <%s>", parentUuid));
                             return;
                         }
                         List<Recommendation> recommendations = new ArrayList<>();
                         List<DocumentSnapshot> documentSnapshots = value.getDocuments();
                         documentSnapshots.forEach(doc -> recommendations.add(doc.toObject(Recommendation.class)));
                         liveDataRequests.setValue(recommendations);
-                        Log.d(TAG, "All recommendations extracted successfully" + recommendations);
+                        //Log.d(TAG, "All recommendations extracted successfully" + recommendations);
                     }
                 });
         return liveDataRequests;

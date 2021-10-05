@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -76,13 +75,13 @@ public class SetProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "created");
+        //Log.d(TAG, "created");
         // get info from registration
         db = DataBase.getInstance();
         sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            Log.d(TAG, "Error with fetching user - user is null");
+            //Log.d(TAG, "Error with fetching user - user is null");
             exit(101);
         }
 
@@ -90,7 +89,7 @@ public class SetProfileActivity extends AppCompatActivity {
         if (canSkipSetProfileActivityUsingSP()) {
             skipSetProfileActivityUsingSP();
         }
-        Log.d(TAG, String.format("Trying to find babysitter with ID <%s> ", currentUser.getUid()));
+        //Log.d(TAG, String.format("Trying to find babysitter with ID <%s> ", currentUser.getUid()));
         db.getBabysitter(currentUser.getUid(), new IOnGettingBabysitterFromDb() {
             @Override
             public void babysitterFound(Babysitter babysitter) {
@@ -105,7 +104,7 @@ public class SetProfileActivity extends AppCompatActivity {
                                 }
                             }, null);
                 } else {
-                    Log.d(TAG, "Babysitter found: " + babysitter);
+                    //Log.d(TAG, "Babysitter found: " + babysitter);
                     SharedPreferencesUtils.saveBabysitterToSP(sp, babysitter);
                     moveToBabysitterActivity();
                 }
@@ -113,8 +112,8 @@ public class SetProfileActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(String phoneNumber) {
-                Log.d(TAG, String.format("Babysitter with ID <%s> didn't found: ", currentUser.getUid()));
-                Log.d(TAG, String.format("Trying to find parent with ID <%s> ", currentUser.getUid()));
+                //Log.d(TAG, String.format("Babysitter with ID <%s> didn't found: ", currentUser.getUid()));
+                //Log.d(TAG, String.format("Trying to find parent with ID <%s> ", currentUser.getUid()));
 
             }
         });
@@ -151,7 +150,7 @@ public class SetProfileActivity extends AppCompatActivity {
         // radio group listener
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             userType = (checkedId == R.id.parent_radio_button) ? UserCategory.Parent : UserCategory.Babysitter;
-            Log.d("SetProfile", "onCheckedChanged, isParent:  " + userType);
+            //Log.d("SetProfile", "onCheckedChanged, isParent:  " + userType);
             Fragment fragment = (userType == UserCategory.Parent) ? setProfileParentFragment : setProfileBabysitterFragment;
             getSupportFragmentManager()
                     .beginTransaction()
@@ -267,7 +266,7 @@ public class SetProfileActivity extends AppCompatActivity {
     }
 
     private void addBabysitter(String profilePictureUriStr, String phoneNumber, String locationStr) {
-        Log.d(TAG, "creating new Babysitter");
+        //Log.d(TAG, "creating new Babysitter");
         boolean hasMobility = setProfileBabysitterFragment.getLiveDataHasMobility().getValue();
         Babysitter babysitter = new Babysitter(firstName, lastName, email, phoneNumber, locationStr, profilePictureUriStr, hasMobility);
         babysitter.setUuid(currentUser.getUid());
@@ -284,7 +283,7 @@ public class SetProfileActivity extends AppCompatActivity {
     }
 
     private void addParent(String profilePictureUriStr, String phoneNumber, String locationStr) {
-        Log.d(TAG, "creating new Parent");
+        //Log.d(TAG, "creating new Parent");
         setProfileParentFragment.getLiveDataChildren().
                 observe(this, newChildren -> this.children = new ArrayList<>(newChildren));
         Parent parent = new Parent(firstName, lastName, email, phoneNumber, locationStr, profilePictureUriStr, children, payment);

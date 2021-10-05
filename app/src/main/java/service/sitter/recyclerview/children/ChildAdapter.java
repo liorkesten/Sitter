@@ -2,7 +2,6 @@ package service.sitter.recyclerview.children;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +9,6 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +43,7 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
      * @param children are list of new children that the adapter should load.
      */
     public void setChildren(List<Child> children) {
-        Log.d(TAG, "Get new children array:" + children.toString());
+        //Log.d(TAG, "Get new children array:" + children.toString());
         this.children.clear();
         this.children.addAll(children);
         notifyDataSetChanged();
@@ -68,11 +65,11 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildViewHolder> {
         String age = Integer.toString(child.getAge());
         holder.getAgeTextView().setText(age);
         if (shouldFetchImages) {
-            Log.d(TAG, "shouldFetchImages is true");
+            //Log.d(TAG, "shouldFetchImages is true");
 //            Glide.with(context).load(child.getImage()).into(holder.getImageView());
             ImagesUtils.updateImageView(this.context, child.getImage(), holder.getImageView());
         } else {
-            Log.d(TAG, "shouldFetchImages is false");
+            //Log.d(TAG, "shouldFetchImages is false");
             holder.getImageView().setImageURI(Uri.parse(child.getImage()));
         }
         // Set image button:

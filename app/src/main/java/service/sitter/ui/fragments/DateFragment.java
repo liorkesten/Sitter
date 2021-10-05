@@ -2,7 +2,6 @@ package service.sitter.ui.fragments;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,19 +47,19 @@ public class DateFragment extends Fragment {
                         buttonDate.setText(DateUtils.getFormattedDate(newDate));
                         LocalDate oldDate = currentDateLiveData.getValue();
                         currentDateLiveData.setValue(newDate);
-                        Log.d(TAG, String.format(("Date changed from <%s> to <%s>"), oldDate, newDate));
+                        //Log.d(TAG, String.format(("Date changed from <%s> to <%s>"), oldDate, newDate));
 
                     }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 
             datePickerDialog.show();
         });
 
-        Log.d("DateFragment", "created4");
+        //Log.d("DateFragment", "created4");
         return view;
     }
 
     public LiveData<LocalDate> getLiveData() {
-        Log.d("DateFragment", currentDateLiveData.toString());
+        //Log.d("DateFragment", currentDateLiveData.toString());
         return currentDateLiveData;
     }
 }

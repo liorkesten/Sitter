@@ -1,7 +1,6 @@
 package service.sitter.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.material.slider.Slider;
-
 import service.sitter.R;
-import service.sitter.login.fragments.SetProfileParentFragment;
 
 public class PaymentFragment extends Fragment {
 
@@ -43,14 +39,14 @@ public class PaymentFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_payment, container, false);
-        Log.d("PaymentFragment onViewCreated", "created");
+        //Log.d("PaymentFragment onViewCreated", "created");
         TextView titleTextView = view.findViewById(R.id.payment_title);
         titleTextView.setText(getString(R.string.payment_title) + " " + defaultPayment+ "$");
 
         paymentSlider = (com.google.android.material.slider.Slider) view.findViewById(R.id.paymentSlider);
         paymentSlider.setValue(defaultPayment);
         paymentSlider.addOnChangeListener((slider, value, fromUser) -> {
-            Log.d(TAG, "payment changed to: " + value);
+            //Log.d(TAG, "payment changed to: " + value);
             paymentLiveData.setValue((int) value);
             titleTextView.setText(getString(R.string.payment_title) +" " + (int) value+"$");
 

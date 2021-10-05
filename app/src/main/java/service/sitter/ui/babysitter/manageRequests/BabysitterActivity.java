@@ -97,7 +97,7 @@ public class BabysitterActivity extends AppCompatActivity {
             if (requests == null) {
                 Log.e(TAG, "Requests is nil");
             } else {
-                Log.d(TAG, "Set new requests for request IncomingRequestAdapter adapter-  " + requests);
+                //Log.d(TAG, "Set new requests for request IncomingRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
                 RecyclerViewUtils.switchBetweenRecAndText(findViewById(android.R.id.content).getRootView()  , requests, R.id.babysitter_recycler_view_incoming_requests, R.id.text_recycler_view_upcoming_requests);
 
@@ -120,7 +120,7 @@ public class BabysitterActivity extends AppCompatActivity {
             if (requests == null) {
                 Log.e(TAG, "Requests is nil");
             } else {
-                Log.d(TAG, "Set new requests for  ApprovedRequestAdapter adapter-  " + requests);
+                //Log.d(TAG, "Set new requests for  ApprovedRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
                 RecyclerViewUtils.switchBetweenRecAndText(findViewById(android.R.id.content).getRootView()  , requests, R.id.babysitter_recycler_view_approved_requests, R.id.text_recycler_view_approved_requests);
             }
@@ -141,7 +141,7 @@ public class BabysitterActivity extends AppCompatActivity {
             if (requests == null) {
                 Log.e(TAG, "Requests is nil");
             } else {
-                Log.d(TAG, "Set new requests for  ArchivedRequestAdapter adapter-  " + requests);
+                //Log.d(TAG, "Set new requests for  ArchivedRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
                 RecyclerViewUtils.switchBetweenRecAndText(findViewById(android.R.id.content).getRootView()  , requests, R.id.babysitter_recycler_view_history_requests, R.id.text_recycler_view_history_requests);
 

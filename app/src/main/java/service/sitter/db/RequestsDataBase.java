@@ -52,7 +52,7 @@ public class RequestsDataBase {
                 .addOnSuccessListener(unused -> listener.onSuccess())
                 .addOnFailureListener(listener::onFailure);
 
-        Log.d(TAG, String.format("request was added successfully: <%s>", requestUuid));
+        //Log.d(TAG, String.format("request was added successfully: <%s>", requestUuid));
         return true;
     }
 
@@ -71,7 +71,7 @@ public class RequestsDataBase {
 //        Requests.remove(requestUuid);
         firestore.collection(COLLECTION_FIRESTORE_NAME).document(requestUuid).delete();
 
-        Log.d(TAG, String.format("request was deleted successfully: <%s>", requestUuid));
+        //Log.d(TAG, String.format("request was deleted successfully: <%s>", requestUuid));
         return true;
     }
 
@@ -105,10 +105,10 @@ public class RequestsDataBase {
                     } else {
                         List<Request> requests = new ArrayList<>();
                         List<DocumentSnapshot> documentSnapshots = value.getDocuments();
-                        Log.d(TAG, documentSnapshots.toString());
+                        //Log.d(TAG, documentSnapshots.toString());
                         documentSnapshots.forEach(doc -> requests.add(doc.toObject(Request.class)));
                         liveDataRequests.setValue(requests);
-                        Log.d(TAG, "All requests extracted successfully");
+                        //Log.d(TAG, "All requests extracted successfully");
                     }
                 });
         return liveDataRequests;
@@ -142,7 +142,7 @@ public class RequestsDataBase {
 ////                        List<DocumentSnapshot> documentSnapshots = value.getDocuments();
 ////                        documentSnapshots.forEach(doc -> requests.add(doc.toObject(Request.class)));
 ////                        liveDataRequests.setValue(requests);
-////                        Log.d(TAG, "All requests extracted successfully");
+////                        //Log.d(TAG, "All requests extracted successfully");
 ////                    }
 ////                });
 ////        return liveDataRequests;

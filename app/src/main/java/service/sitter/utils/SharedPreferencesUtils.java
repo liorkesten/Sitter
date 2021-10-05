@@ -1,7 +1,5 @@
 package service.sitter.utils;
 
-import static java.lang.System.exit;
-
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -20,13 +18,13 @@ public class SharedPreferencesUtils {
     private static SharedPreferences SP;
 
     public static void saveParentToSP(SharedPreferences sp, @NonNull Parent parent) {
-        Log.d(TAG, String.format("Saving parent into SP.\nsp:<%s>\nparent: <%s>", sp, parent));
+        //Log.d(TAG, String.format("Saving parent into SP.\nsp:<%s>\nparent: <%s>", sp, parent));
         String serializedParent = _GSON.toJson(parent);
         sp.edit().putString(_PARENT_KEY_SP, serializedParent).apply();
     }
 
     public static void saveBabysitterToSP(SharedPreferences sp, @NonNull Babysitter babysitter) {
-        Log.d(TAG, String.format("Saving babysitter into SP.\nsp:<%s>\nparent: <%s>", sp, babysitter));
+        //Log.d(TAG, String.format("Saving babysitter into SP.\nsp:<%s>\nparent: <%s>", sp, babysitter));
         String serializedBabysitter = _GSON.toJson(babysitter);
         sp.edit().putString(_BABYSITTER_KEY_SP, serializedBabysitter).apply();
     }
@@ -45,7 +43,7 @@ public class SharedPreferencesUtils {
 //            exit(150);
             return null;
         }
-        Log.d(TAG, "Extracted parent: " + parent.toString());
+        //Log.d(TAG, "Extracted parent: " + parent.toString());
         return parent;
     }
 
@@ -63,7 +61,7 @@ public class SharedPreferencesUtils {
 //            exit(150);
             return null;
         }
-        Log.d(TAG, "Extracted babysitter: " + babysitter.toString());
+        //Log.d(TAG, "Extracted babysitter: " + babysitter.toString());
         return babysitter;
     }
 

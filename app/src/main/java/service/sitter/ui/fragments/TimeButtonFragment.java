@@ -2,15 +2,12 @@ package service.sitter.ui.fragments;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Calendar;
 
@@ -43,7 +40,7 @@ public class TimeButtonFragment extends Fragment {
                 buttonTime.setText(buttonText);
                 if (listener != null) {
                     listener.onButtonClicked(buttonText);
-                    Log.d("TimeButtonFragment", buttonText);
+                    //Log.d("TimeButtonFragment", buttonText);
                 }
             }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
             tpd.show();

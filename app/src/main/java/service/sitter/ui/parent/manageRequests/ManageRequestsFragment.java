@@ -1,19 +1,12 @@
 package service.sitter.ui.parent.manageRequests;
 
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -34,7 +27,6 @@ import service.sitter.models.Request;
 import service.sitter.models.RequestStatus;
 import service.sitter.models.UserCategory;
 import service.sitter.providers.CalendarProvider;
-import service.sitter.recyclerview.requests.babysitter.IRequestAdapterListener;
 import service.sitter.recyclerview.requests.babysitter.approved.ApprovedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.archived.ArchivedRequestAdapter;
 import service.sitter.recyclerview.requests.babysitter.incoming.IncomingRequestAdapter;
@@ -119,7 +111,7 @@ public class ManageRequestsFragment extends Fragment {
             if (requests == null) {
                 Log.e(TAG, "Requests is null");
             } else {
-                Log.d(TAG, "Set new requests for request IncomingRequestAdapter adapter-  " + requests);
+                //Log.d(TAG, "Set new requests for request IncomingRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
                 RecyclerViewUtils.switchBetweenRecAndText(root, requests, R.id.recycler_view_upcoming_requests, R.id.text_recycler_view_upcoming_requests);
             }
@@ -140,7 +132,7 @@ public class ManageRequestsFragment extends Fragment {
             if (requests == null) {
                 Log.e(TAG, "Requests is null");
             } else {
-                Log.d(TAG, "Set new requests for  ApprovedRequestAdapter adapter-  " + requests);
+                //Log.d(TAG, "Set new requests for  ApprovedRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
                 RecyclerViewUtils.switchBetweenRecAndText(root, requests, R.id.recycler_view_approved_requests, R.id.text_recycler_view_approved_requests);
             }
@@ -170,7 +162,7 @@ public class ManageRequestsFragment extends Fragment {
             if (requests == null) {
                 Log.e(TAG, "Requests is null");
             } else {
-                Log.d(TAG, "Set new requests for  ArchivedRequestAdapter adapter-  " + requests);
+                //Log.d(TAG, "Set new requests for  ArchivedRequestAdapter adapter-  " + requests);
                 adapter.setRequests(requests);
                 RecyclerViewUtils.switchBetweenRecAndText(root, requests, R.id.recycler_view_history_requests, R.id.text_recycler_view_history_requests);
             }

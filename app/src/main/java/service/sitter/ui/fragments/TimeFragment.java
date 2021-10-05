@@ -1,7 +1,6 @@
 package service.sitter.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,7 @@ public class TimeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_time, container, false);
-        Log.d("TimePickerFragment onViewCreated", "created");
+        //Log.d("TimePickerFragment onViewCreated", "created");
         ((TextView) view.findViewById(R.id.timeTitle)).setText(this.title);
         TimeButtonFragment timeButtonFragment = new TimeButtonFragment(this.defaultTime, time -> currentTimeLiveData.setValue(time));
 

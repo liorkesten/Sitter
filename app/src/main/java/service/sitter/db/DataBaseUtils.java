@@ -7,8 +7,6 @@ import android.util.Log;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import service.sitter.utils.ImagesUtils;
-
 public class DataBaseUtils {
     private static final String TAG = DataBaseUtils.class.getSimpleName();
 
@@ -19,7 +17,7 @@ public class DataBaseUtils {
     // UploadImage method
     public static void uploadImage(Uri filePath, String imageID, IOnSuccessLoadingImage listener) {
         if (filePath != null) {
-            Log.d(TAG, String.format("uploading filepath: <%s> and imageID: <%s>", filePath, imageID));
+            //Log.d(TAG, String.format("uploading filepath: <%s> and imageID: <%s>", filePath, imageID));
             // Defining the child of storageReference
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageReference = storage.getReference();
@@ -32,7 +30,7 @@ public class DataBaseUtils {
 //                        if (listener != null) {
 //                            listener.onSuccess(imageID);
 //                        }
-                        Log.d(TAG, String.format("Child image was added successfully: <%s>", imageID));
+                        //Log.d(TAG, String.format("Child image was added successfully: <%s>", imageID));
 
 
                     })
@@ -43,7 +41,7 @@ public class DataBaseUtils {
                                         = (100.0
                                         * taskSnapshot.getBytesTransferred()
                                         / taskSnapshot.getTotalByteCount());
-                                Log.d(TAG, "Uploaded " + (int) progress + "%");
+                                //Log.d(TAG, "Uploaded " + (int) progress + "%");
                             });
         }
     }
@@ -54,12 +52,12 @@ public class DataBaseUtils {
         StorageReference ref = mImageStorage.child("images").child(imageName);
         ref.getDownloadUrl()
                 .addOnSuccessListener(uri -> {
-                    Log.d(TAG, "successful downloaded image: " + uri);
+                    //Log.d(TAG, "successful downloaded image: " + uri);
                     if (onSuccessLoadingImage != null){
                         onSuccessLoadingImage.onSuccess(uri);
                     }
                     String imageUrl = uri.toString();
-                    Log.d(TAG, "successful downloaded image after apply listener: " + imageUrl);
+                    //Log.d(TAG, "successful downloaded image after apply listener: " + imageUrl);
                 })
                 .addOnFailureListener(e -> Log.e(TAG, e.getMessage()));
 
