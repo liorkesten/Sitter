@@ -110,6 +110,7 @@ public class ApprovedRequestAdapter extends RecyclerView.Adapter<ApprovedRequest
                 public void babysitterFound(Babysitter babysitter) {
                     View viewInflated = LayoutInflater.from(holder.getRootView().getContext()).inflate(R.layout.popup_layout, (ViewGroup) holder.getRootView(), false);
                     listener = request1 -> openPopUpWindow(holder.getRootView(), request, babysitter, viewInflated);
+                    holder.getRootView().setOnClickListener(v -> listener.onButtonClicked(request));
                     TextView name = viewInflated.findViewById(R.id.item_babysitter_request_archived_name_value);
                     TextView mobility = viewInflated.findViewById(R.id.item_babysitter_mobility_edit);
                     name.setText(babysitter.getFirstName());
